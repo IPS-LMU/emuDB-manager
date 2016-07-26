@@ -5,7 +5,7 @@ import {DatabaseInfo} from "./database-info";
 @Injectable()
 export class ProjectDataService {
   private info:ProjectInfo = {
-    name: "DACH: Typologie",
+    name: "Typologie der Vokal- und Konsonantenquantitäten (DACH)",
     databases: [{
       name: "corpus1",
       dbConfig: {},
@@ -98,6 +98,10 @@ export class ProjectDataService {
     }
 
     return null;
+  }
+
+  public getName():string {
+    return this.info.name;
   }
 
 }
