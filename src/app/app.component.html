@@ -28,12 +28,14 @@
         </ul>
         <ul class="nav nav-sidebar">
           <li routerLinkActive="active"><a routerLink="/databases">Databases <span
-            class="badge pull-right">3</span></a></li>
+            class="badge pull-right">{{databases.length}}</span></a></li>
           <li routerLinkActive="active"><a routerLink="/bundle-lists">Bundle lists <span
-            class="badge pull-right">5
-          </span></a></li>
+            class="badge pull-right">{{bundleLists.length}}</span></a></li>
           <li routerLinkActive="active"><a routerLink="/uploads">Uploads
             <span class="badge pull-right">2</span></a></li>
+        </ul>
+        <ul class="nav nav-sidebar">
+          <li routerLinkActive="active"><a routerLink="/progress">Progress</a></li>
         </ul>
       </div>
 

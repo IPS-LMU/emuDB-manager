@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 import {ProjectDataService} from "./project-data.service";
+import {DatabaseInfo} from "./database-info";
+import {BundleList} from "./bundle-list";
 
 
 
@@ -13,6 +15,13 @@ import {ProjectDataService} from "./project-data.service";
   directives: [ROUTER_DIRECTIVES],
   providers: [ProjectDataService]
 })
-export class AppComponent {
-  title = 'app works!';
+export class AppComponent implements OnInit {
+  private databases:DatabaseInfo[] = [];
+  private bundleLists:BundleList[] = [];
+
+	constructor(private projectDataService: ProjectDataService) {}
+
+	ngOnInit():any {
+    this.databases = this.projectDataService.getAllDatabases();
+  }
 }
