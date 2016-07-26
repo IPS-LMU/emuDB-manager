@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {DatabasesOverviewComponent} from "../databases-overview/databases-overview.component";
+import {DatabaseInfo} from "../database-info";
+import {ProjectDataService} from "../project-data.service";
 
 @Component({
   moduleId: module.id,
@@ -9,10 +11,13 @@ import {DatabasesOverviewComponent} from "../databases-overview/databases-overvi
   directives: [DatabasesOverviewComponent]
 })
 export class DatabaseDashboardComponent implements OnInit {
+  private databases: DatabaseInfo[] = [];
+  private selectedDB: DatabaseInfo;
 
-  constructor() { }
+  constructor(private projectDataService: ProjectDataService) { }
 
   ngOnInit() {
+    this.databases = this.projectDataService.getAllDatabases();
   }
 
 }

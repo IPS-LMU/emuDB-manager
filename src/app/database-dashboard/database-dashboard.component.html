@@ -2,5 +2,11 @@
 
 <emudbmanager-databases-overview></emudbmanager-databases-overview>
 
-<h2 class="sub-header">Create database</h2>
+<div>
+Create new database: <input> <button class="btn btn-default">OK</button>
+</div>
+
+<div *ngIf="selectedDB">
+  <h2 class="sub-header">Details: {{selectedDB.name}}</h2>
+</div>
 
