@@ -3,6 +3,7 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 import {ProjectDataService} from "./project-data.service";
 import {DatabaseInfo} from "./database-info";
 import {BundleList} from "./bundle-list";
+import {ProjectComponent} from "./project/project.component";
 
 
 
@@ -12,7 +13,7 @@ import {BundleList} from "./bundle-list";
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
-  directives: [ROUTER_DIRECTIVES],
+  directives: [ROUTER_DIRECTIVES, ProjectComponent],
   providers: [ProjectDataService]
 })
 export class AppComponent implements OnInit {

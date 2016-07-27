@@ -41,6 +41,7 @@ const barrels: string[] = [
   'app/uploads-overview',
   'app/database-dashboard',
   'app/dashboard',
+  'app/project',
   /** @cli-barrel */
 ];
 
