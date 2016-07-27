@@ -9,42 +9,21 @@
       <th>Comments</th>
     </tr>
     </thead>
+
     <tbody>
-    <tr>
-      <td>corpus1</td>
-      <td>kleber</td>
-      <td>820</td>
-      <td>0 (0 %)</td>
-      <td>0 (0 %)</td>
-    </tr>
-    <tr>
-      <td>corpus1</td>
-      <td>leah.meyer</td>
-      <td>220</td>
-      <td>173 (79 %)</td>
-      <td>12 (5 %)</td>
-    </tr>
-    <tr>
-      <td>corpus2</td>
-      <td>sepp.wurzel</td>
-      <td>60</td>
-      <td>50 (83 %)</td>
-      <td>2 (3 %)</td>
-    </tr>
-    <tr>
-      <td>blahDB-1</td>
-      <td>sylvia.moosmueller</td>
-      <td>505</td>
-      <td>200 (40 %)</td>
-      <td>0 (0 %)</td>
-    </tr>
-    <tr>
-      <td>blahDB-1</td>
-      <td>sepp.wurzel</td>
-      <td>505</td>
-      <td>505 (100 %)</td>
-      <td>12 (2 %)</td>
-    </tr>
+
+    <template ngFor let-database [ngForOf]="databases">
+      <template ngFor let-bundleList [ngForOf]="database.bundleLists">
+        <tr>
+          <td>{{database.name}}</td>
+          <td>{{bundleList.name}}</td>
+          <td>{{bundleList.items.length}}</td>
+          <td>{{countFinishedItems(bundleList)}} ({{percentageFinishedItems(bundleList)}} %)</td>
+          <td>{{countCommentedItems(bundleList)}} ({{percentageCommentedItems(bundleList)}} %)</td>
+        </tr>
+      </template>
+    </template>
+
     </tbody>
   </table>
 </div>

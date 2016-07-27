@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.projectName = this.projectDataService.getName();
     this.databases = this.projectDataService.getAllDatabases();
-    this.bundleLists = [];
+    this.bundleLists = this.projectDataService.getAllBundleLists();
   }
 
 }

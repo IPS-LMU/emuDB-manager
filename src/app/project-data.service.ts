@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ProjectInfo} from "./project-info";
 import {DatabaseInfo} from "./database-info";
+import {bundleListMaxMustermann} from "./max.mustermann_bundleList";
+import {BundleList} from "./bundle-list";
 
 @Injectable()
 export class ProjectDataService {
@@ -78,10 +80,20 @@ export class ProjectDataService {
         "h"
       ]
     }
+
+    this.info.databases[0].bundleLists.push(bundleListMaxMustermann);
   }
 
   public getAllDatabases():DatabaseInfo[] {
     return this.info.databases;
+  }
+
+  public getAllBundleLists():BundleList[] {
+    var result:BundleList[] = [];
+    for (let i=0; i<this.info.databases.length; ++i) {
+      result = result.concat(this.info.databases[i].bundleLists);
+    }
+    return result;
   }
 
   /**

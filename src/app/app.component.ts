@@ -23,5 +23,6 @@ export class AppComponent implements OnInit {
 
 	ngOnInit():any {
     this.databases = this.projectDataService.getAllDatabases();
+    this.bundleLists = this.projectDataService.getAllBundleLists();
   }
 }
