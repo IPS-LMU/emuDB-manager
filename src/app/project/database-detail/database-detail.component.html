@@ -1,5 +1,10 @@
 <h1 class="page-header">Database: {{database.name}}</h1>
 
+<p>
+	<button class="btn btn-default">Download</button>
+	<button class="btn btn-primary">EMU-webApp</button>
+</p>
+
 <h2 class="sub-header">Bundle lists <span class="badge">{{database.bundleLists.length}}</span></h2>
 
 <emudbmanager-bundle-lists-overview [database]="database.name"></emudbmanager-bundle-lists-overview>
