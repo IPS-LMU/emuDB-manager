@@ -1,0 +1,7 @@
+* {
+  text-align: center;
+}
+
+:host {
+  background-color: red;
+}

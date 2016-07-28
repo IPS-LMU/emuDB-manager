@@ -1,11 +1,13 @@
 import { provideRouter, RouterConfig } from '@angular/router';
 import {projectRoutes} from "./project/project.routes";
-import {ProjectComponent} from "./project/project.component";
+import {WelcomeComponent} from "./welcome/welcome.component";
 
 
 const routes: RouterConfig = [
   ...projectRoutes,
-  { path: '**', component: ProjectComponent }
+  { path: '', redirectTo: '/login', pathMatch: 'full'},
+  { path: 'login', component: WelcomeComponent },
+  { path: '**', component: WelcomeComponent },
 ];
 
 export const appRouterProviders = [

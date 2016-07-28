@@ -42,6 +42,7 @@ const barrels: string[] = [
   'app/database-dashboard',
   'app/dashboard',
   'app/project',
+  'app/welcome',
   /** @cli-barrel */
 ];
 

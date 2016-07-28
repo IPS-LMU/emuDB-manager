@@ -9,7 +9,6 @@ export const projectRoutes:RouterConfig = [{
   children: [
     {path: '', component: DashboardComponent},
     {path: 'databases', component: DatabaseDashboardComponent},
-    //{ path: '', redirectTo: '/overview', pathMatch: 'full'},
-    //{path: '**', component: DashboardComponent}
+    {path: '**', component: DashboardComponent}
   ]
 }];
