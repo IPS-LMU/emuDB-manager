@@ -1,7 +1,13 @@
-* {
+:host {
   text-align: center;
 }
 
-:host {
-  background-color: red;
+.panel {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.panel-info .panel-body{
+  text-align: left;
 }
