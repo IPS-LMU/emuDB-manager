@@ -7,8 +7,10 @@ export const projectRoutes:RouterConfig = [{
   path: 'project',
   component: ProjectComponent,
   children: [
-    {path: '', component: DashboardComponent},
+    {path: 'overview', component: DashboardComponent},
     {path: 'databases', component: DatabaseDashboardComponent},
-    {path: '**', component: DashboardComponent}
+    {path: 'bundle-lists', component: DashboardComponent},
+    {path: 'uploads', component: DashboardComponent},
+    {path: 'progress', component: DashboardComponent},
   ]
 }];
