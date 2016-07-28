@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {ProjectInfo} from "./project-info";
-import {DatabaseInfo} from "./database-info";
+import {ProjectInfo} from "./types/project-info";
+import {DatabaseInfo} from "./types/database-info";
 import {bundleListMaxMustermann} from "./max.mustermann_bundleList";
-import {BundleList} from "./bundle-list";
+import {BundleList} from "./types/bundle-list";
 
 @Injectable()
 export class ProjectDataService {

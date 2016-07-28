@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {BundleList} from "../bundle-list";
-import {ProjectDataService} from "../project-data.service";
-import {DatabaseInfo} from "../database-info";
+import {BundleList} from "../../types/bundle-list";
+import {ProjectDataService} from "../../project-data.service";
+import {DatabaseInfo} from "../../types/database-info";
 
 @Component({
   moduleId: module.id,

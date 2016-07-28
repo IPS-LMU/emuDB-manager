@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {ProjectDataService} from "../project-data.service";
-import {DatabaseInfo} from "../database-info";
+import {ProjectDataService} from "../../project-data.service";
+import {DatabaseInfo} from "../../types/database-info";
 
 @Component({
   moduleId: module.id,

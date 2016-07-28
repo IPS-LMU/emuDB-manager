@@ -1,4 +1,4 @@
-import {BundleList} from "./bundle-list";
+import {BundleList} from "./types/bundle-list";
 export var bundleListMaxMustermann:BundleList = {
   name: "max.mustermann",
   status: "active",

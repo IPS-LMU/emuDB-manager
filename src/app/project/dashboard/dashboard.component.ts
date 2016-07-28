@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {DatabasesOverviewComponent} from "../databases-overview/databases-overview.component";
 import {BundleListsOverviewComponent} from "../bundle-lists-overview/bundle-lists-overview.component";
 import {UploadsOverviewComponent} from "../uploads-overview/uploads-overview.component";
-import {DatabaseInfo} from "../database-info";
-import {ProjectDataService} from "../project-data.service";
-import {BundleList} from "../bundle-list";
+import {DatabaseInfo} from "../../types/database-info";
+import {ProjectDataService} from "../../project-data.service";
+import {BundleList} from "../../types/bundle-list";
 
 @Component({
   moduleId: module.id,

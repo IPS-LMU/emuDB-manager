@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {DatabasesOverviewComponent} from "../databases-overview/databases-overview.component";
-import {DatabaseInfo} from "../database-info";
-import {ProjectDataService} from "../project-data.service";
+import {DatabaseInfo} from "../../types/database-info";
+import {ProjectDataService} from "../../project-data.service";
 
 @Component({
   moduleId: module.id,

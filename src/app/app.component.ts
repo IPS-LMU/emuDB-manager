@@ -1,11 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 import {ProjectDataService} from "./project-data.service";
-import {DatabaseInfo} from "./database-info";
-import {BundleList} from "./bundle-list";
+import {DatabaseInfo} from "./types/database-info";
+import {BundleList} from "./types/bundle-list";
 import {ProjectComponent} from "./project/project.component";
-
-
 
 
 @Component({

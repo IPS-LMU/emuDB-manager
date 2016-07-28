@@ -1,6 +1,6 @@
 import {RouterConfig} from '@angular/router';
-import {DatabaseDashboardComponent} from "../database-dashboard/database-dashboard.component";
-import {DashboardComponent} from "../dashboard/dashboard.component";
+import {DatabaseDashboardComponent} from "./database-dashboard/database-dashboard.component";
+import {DashboardComponent} from "./dashboard/dashboard.component";
 import {ProjectComponent} from "./project.component";
 
 export const projectRoutes:RouterConfig = [{
