@@ -1,12 +1,14 @@
 import {Component, OnInit} from "@angular/core";
 import {ProjectDataService} from "../../project-data.service";
 import {DatabaseInfo} from "../../types/database-info";
+import {ROUTER_DIRECTIVES} from "@angular/router";
 
 @Component({
 	moduleId: module.id,
 	selector: 'emudbmanager-databases-overview',
 	templateUrl: 'databases-overview.component.html',
-	styleUrls: ['databases-overview.component.css']
+	styleUrls: ['databases-overview.component.css'],
+	directives: [ROUTER_DIRECTIVES]
 })
 export class DatabasesOverviewComponent implements OnInit {
 	private databases:DatabaseInfo[];

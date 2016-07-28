@@ -12,7 +12,7 @@
 		<tbody>
 
 		<tr *ngFor="let database of databases">
-			<td>{{database.name}}</td>
+			<td><a [routerLink]="['/project/databases', database.name]">{{database.name}}</a></td>
 			<td>{{database.sessions.length}}</td>
 			<td>{{countBundles(database)}}</td>
 			<td>
