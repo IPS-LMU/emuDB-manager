@@ -2,7 +2,7 @@
 	<table class="table table-striped">
 		<thead>
 		<tr>
-			<th>Database</th>
+			<th *ngIf="!database">Database</th>
 			<th>Editor</th>
 			<th>Bundles</th>
 			<th>Finished</th>
@@ -12,10 +12,10 @@
 
 		<tbody>
 
-		<template ngFor let-database [ngForOf]="databases">
-			<template ngFor let-bundleList [ngForOf]="database.bundleLists">
+		<template ngFor let-db [ngForOf]="databases">
+			<template ngFor let-bundleList [ngForOf]="db.bundleLists">
 				<tr>
-					<td>{{database.name}}</td>
+					<td *ngIf="!database"><a [routerLink]="['/project/databases', db.name]">{{db.name}}</a></td>
 					<td>{{bundleList.name}}</td>
 					<td>{{bundleList.items.length}}</td>
 					<td>{{countFinishedItems(bundleList)}} ({{percentageFinishedItems(bundleList)}}

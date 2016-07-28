@@ -1,24 +1,31 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, Input} from "@angular/core";
 import {BundleList} from "../../types/bundle-list";
 import {ProjectDataService} from "../../project-data.service";
 import {DatabaseInfo} from "../../types/database-info";
+import {ROUTER_DIRECTIVES} from "@angular/router";
 
 @Component({
 	moduleId: module.id,
 	selector: 'emudbmanager-bundle-lists-overview',
 	templateUrl: 'bundle-lists-overview.component.html',
-	styleUrls: ['bundle-lists-overview.component.css']
+	styleUrls: ['bundle-lists-overview.component.css'],
+	directives: [ROUTER_DIRECTIVES]
 })
 export class BundleListsOverviewComponent implements OnInit {
-	private bundleLists:BundleList[] = [];
+	@Input() database:string;
+
 	private databases:DatabaseInfo[] = [];
 
 	constructor(private projectDataService:ProjectDataService) {
 	}
 
 	ngOnInit() {
-		this.bundleLists = this.projectDataService.getAllBundleLists();
-		this.databases = this.projectDataService.getAllDatabases();
+		// fixme observe this.database
+		if (this.database) {
+			this.databases = [this.projectDataService.getDatabase(this.database)];
+		} else {
+			this.databases = this.projectDataService.getAllDatabases();
+		}
 	}
 
 	/**
