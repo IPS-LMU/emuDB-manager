@@ -3,4 +3,4 @@
 // https://www.typescriptlang.org/docs/handbook/writing-declaration-files.html
 
 /// <reference path="../typings/index.d.ts" />
-declare var module: { id: string };
+declare var module:{ id:string };

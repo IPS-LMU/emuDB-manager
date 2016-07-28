@@ -1,29 +1,33 @@
 <div class="table-responsive">
-  <table class="table table-striped">
-    <thead>
-    <tr>
-      <th>Database</th>
-      <th>Editor</th>
-      <th>Bundles</th>
-      <th>Finished</th>
-      <th>Comments</th>
-    </tr>
-    </thead>
+	<table class="table table-striped">
+		<thead>
+		<tr>
+			<th>Database</th>
+			<th>Editor</th>
+			<th>Bundles</th>
+			<th>Finished</th>
+			<th>Comments</th>
+		</tr>
+		</thead>
 
-    <tbody>
+		<tbody>
 
-    <template ngFor let-database [ngForOf]="databases">
-      <template ngFor let-bundleList [ngForOf]="database.bundleLists">
-        <tr>
-          <td>{{database.name}}</td>
-          <td>{{bundleList.name}}</td>
-          <td>{{bundleList.items.length}}</td>
-          <td>{{countFinishedItems(bundleList)}} ({{percentageFinishedItems(bundleList)}} %)</td>
-          <td>{{countCommentedItems(bundleList)}} ({{percentageCommentedItems(bundleList)}} %)</td>
-        </tr>
-      </template>
-    </template>
+		<template ngFor let-database [ngForOf]="databases">
+			<template ngFor let-bundleList [ngForOf]="database.bundleLists">
+				<tr>
+					<td>{{database.name}}</td>
+					<td>{{bundleList.name}}</td>
+					<td>{{bundleList.items.length}}</td>
+					<td>{{countFinishedItems(bundleList)}} ({{percentageFinishedItems(bundleList)}}
+						%)
+					</td>
+					<td>{{countCommentedItems(bundleList)}}
+						({{percentageCommentedItems(bundleList)}} %)
+					</td>
+				</tr>
+			</template>
+		</template>
 
-    </tbody>
-  </table>
+		</tbody>
+	</table>
 </div>

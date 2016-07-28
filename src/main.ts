@@ -4,11 +4,11 @@ import {AppComponent, environment} from './app/';
 import {appRouterProviders} from "./app/app.routes";
 
 if (environment.production) {
-  enableProdMode();
+	enableProdMode();
 }
 
 bootstrap(AppComponent, [
-  appRouterProviders
+	appRouterProviders
 ])
-  .catch(err => console.error(err));
+	.catch(err => console.error(err));
 
