@@ -7,6 +7,12 @@ import {BundleList} from "./types/bundle-list";
 @Injectable()
 export class ProjectDataService {
 	private info:ProjectInfo = {
+		name: "",
+		databases: [],
+		uploads: []
+	};
+
+	private info2:ProjectInfo = {
 		name: "Typologie der Vokal- und Konsonantenquantitäten (DACH)",
 		databases: [{
 			name: "corpus1",
@@ -65,11 +71,11 @@ export class ProjectDataService {
 
 	constructor() {
 		for (let i = 0; i < 120; ++i) {
-			this.info.databases[0].sessions.push({
+			this.info2.databases[0].sessions.push({
 				name: i.toString(),
 				bundles: []
 			});
-			this.info.databases[0].sessions[i].bundles = [
+			this.info2.databases[0].sessions[i].bundles = [
 				"a",
 				"b",
 				"c",
@@ -81,7 +87,39 @@ export class ProjectDataService {
 			]
 		}
 
-		this.info.databases[0].bundleLists.push(bundleListMaxMustermann);
+		this.info2.databases[0].bundleLists.push(bundleListMaxMustermann);
+
+		var url = 'https://www.phonetik.uni-muenchen.de/merkel-pool/emudb-manager.php';
+
+		var request:XMLHttpRequest = new XMLHttpRequest();
+		request.responseType = 'json';
+		request.open('GET', url + '?user=dach&query=projectInfo');
+
+		request.addEventListener('load', (event) => {
+			if (request.response === null) {
+				console.log({
+					message: 'Request repsonse is null',
+					action: 'retrieveFile',
+					previousError: event
+				});
+			} else if (request.status < 200 || request.status >= 300) {
+				console.log({
+					message: 'HTTP error: ' + request.status + '/' + request.statusText,
+					action: 'retrieveFile',
+					previousError: event
+				});
+			} else if (request.response.success === false) {
+				console.log(request.response.message);
+			} else {
+				this.info = request.response.data;
+				console.log(this.info);
+			}
+		});
+
+
+		request.send();
+
+
 	}
 
 	public getAllDatabases():DatabaseInfo[] {
