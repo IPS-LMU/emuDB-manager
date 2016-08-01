@@ -1,15 +1,18 @@
-<h1 class="page-header">Database: {{database.name}}</h1>
+<h1 class="page-header">Database: {{database?.name}}</h1>
 
 <p>
 	<button class="btn btn-default">Download</button>
 	<button class="btn btn-primary">EMU-webApp</button>
 </p>
 
-<h2 class="sub-header">Bundle lists <span class="badge">{{database.bundleLists.length}}</span></h2>
+<h2 class="sub-header">
+	Bundle lists <span class="badge">{{database?.bundleLists?.length}}</span>
+</h2>
 
-<emudbmanager-bundle-lists-overview [database]="database.name"></emudbmanager-bundle-lists-overview>
+<emudbmanager-bundle-lists-overview [database]="database?.name">
+</emudbmanager-bundle-lists-overview>
 
-<h2 class="sub-header">Sessions <span class="badge">{{database.sessions.length}}</span></h2>
+<h2 class="sub-header">Sessions <span class="badge">{{database?.sessions?.length}}</span></h2>
 
 <div class="table-responsive">
 	<table class="table table-striped">
@@ -21,7 +24,7 @@
 		</thead>
 
 		<tbody>
-		<tr *ngFor="let session of database.sessions">
+		<tr *ngFor="let session of database?.sessions">
 			<td>{{session.name}}</td>
 			<td>{{session.bundles.length}}</td>
 		</tr>
