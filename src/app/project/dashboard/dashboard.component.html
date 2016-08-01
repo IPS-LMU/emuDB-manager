@@ -1,9 +1,13 @@
 <h1 class="page-header">Project overview</h1>
 
-<p>
-	Project name:
-	{{projectName}}
-</p>
+<div class="panel panel-primary">
+	<div class="panel-heading"><span class="panel-title">{{projectName}}</span></div>
+	<div class="panel-body">
+		<p>Number of databases: {{databases.length}}</p>
+		<p>Number of bundle lists: {{bundleLists.length}}</p>
+		<p>Number of uploads: 2</p>
+	</div>
+</div>
 
 <h2 class="sub-header">Databases <span class="badge">{{databases.length}}</span></h2>
 <emudbmanager-databases-overview></emudbmanager-databases-overview>
