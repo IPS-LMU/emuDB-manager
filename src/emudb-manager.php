@@ -7,7 +7,7 @@ $dataDirectory = '/homes/markusjochim/manager-data';
 $directory = authorize();
 $data = compileData($directory);
 
-echo json_encode($data);
+echo json_encode($data, JSON_PRETTY_PRINT);
 die();
 
 //////////
@@ -72,7 +72,7 @@ function authorize () {
 	$result->success = false;
 	$result->message = 'Bad username or password';
 
-	echo json_encode($result);
+	echo json_encode($result, JSON_PRETTY_PRINT);
 	die();
 }
 
@@ -166,7 +166,10 @@ function readDatabase ($directory) {
 
 	while (false !== ($entry = $dirHandle->read())) {
 		if ($entry === 'bundleLists') {
-			// ...
+			$db->bundleLists = readBundleLists($directory . '/' . $entry);
+			if ($db->bundleLists === false) {
+				return false;
+			}
 		} else if (substr($entry, -4) === '_ses') {
 			$session = readSession ($directory . '/' . $entry);
 
@@ -181,6 +184,83 @@ function readDatabase ($directory) {
 	}
 
 	return $db;
+}
+
+/**
+ * Read a bundle list dir and look for bundle lists inside it and
+ * inside subdirs named *_status. An array of BundleList objects is returned.
+ *
+ * @param directory The directory to traverse.
+ * @returns An array of BundleList objects or false in case of failure.
+ */
+function readBundleLists ($directory) {
+	$bundleLists = array();
+
+	$dirHandle = dir ($directory);
+
+	if ($dirHandle === false || is_null($dirHandle)) {
+		return false;
+	}
+
+	while (false !== ($entry = $dirHandle->read())) {
+		if (substr($entry, -16) === '_bundleList.json') {
+			$bundleList = new BundleList();
+			$bundleList->name = substr($entry, 0, -16);
+			$bundleList->status = '';
+			$bundleList->items = parseBundleList($directory . '/' . $entry);
+			if ($bundleList->items === false) {
+				return false;
+			}
+			$bundleLists[] = $bundleList;
+		} else if (substr($entry, -7) === '_status') {
+			$subdirHandle = dir ($directory . '/' . $entry);
+
+			if ($subdirHandle === false || is_null($subdirHandle)) {
+				return false;
+			}
+
+			while (false !== ($subdirEntry = $subdirHandle->read())) {
+				if (substr($subdirEntry, -16) === '_bundleList.json') {
+					$bundleList = new BundleList();
+					$bundleList->name = substr($subdirEntry, 0, -16);
+					$bundleList->status = substr($entry, 0, -7);
+					$bundleList->items = parseBundleList(
+						$directory . '/' . $entry . '/' . $subdirEntry
+					);
+					if ($bundleList->items === false) {
+						return false;
+					}
+					$bundleLists[] = $bundleList;
+				}
+			}
+		}
+	}
+
+	return $bundleLists;
+}
+
+function parseBundleList ($file) {
+	$length = filesize ($file);
+	if ($length === false) {
+		return false;
+	}
+
+	$fh = fopen($file, 'r');
+	if ($fh === false) {
+		return false;
+	}
+
+	$contents = fread($fh, $length);
+	if ($contents === false) {
+		return false;
+	}
+
+	$object = json_decode($contents);
+	if (is_null($object)) {
+		return false;
+	}
+
+	return $object;
 }
 
 /**
