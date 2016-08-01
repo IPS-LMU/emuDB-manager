@@ -1,9 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {ROUTER_DIRECTIVES} from "@angular/router";
 import {ProjectDataService} from "./project-data.service";
-import {DatabaseInfo} from "./types/database-info";
-import {BundleList} from "./types/bundle-list";
 import {ProjectComponent} from "./project/project.component";
+import {HTTP_PROVIDERS} from "@angular/http";
+import "./rxjs-operators";
 
 
 @Component({
@@ -12,17 +12,12 @@ import {ProjectComponent} from "./project/project.component";
 	templateUrl: 'app.component.html',
 	styleUrls: ['app.component.css'],
 	directives: [ROUTER_DIRECTIVES, ProjectComponent],
-	providers: [ProjectDataService]
+	providers: [ProjectDataService, HTTP_PROVIDERS]
 })
 export class AppComponent implements OnInit {
-	private databases:DatabaseInfo[] = [];
-	private bundleLists:BundleList[] = [];
-
 	constructor(private projectDataService:ProjectDataService) {
 	}
 
 	ngOnInit():any {
-		this.databases = this.projectDataService.getAllDatabases();
-		this.bundleLists = this.projectDataService.getAllBundleLists();
 	}
 }
