@@ -25,7 +25,6 @@ export class BundleListsOverviewComponent implements OnDestroy {
 	}
 
 	@Input() set database(database:string) {
-		console.log('new value for database', database);
 		this._database = database;
 
 		if (this.sub) {
