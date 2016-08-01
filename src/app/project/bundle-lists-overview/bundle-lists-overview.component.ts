@@ -1,8 +1,9 @@
-import {Component, OnInit, Input} from "@angular/core";
+import {Component, Input, OnDestroy} from "@angular/core";
 import {BundleList} from "../../types/bundle-list";
 import {ProjectDataService} from "../../project-data.service";
 import {DatabaseInfo} from "../../types/database-info";
 import {ROUTER_DIRECTIVES} from "@angular/router";
+import {Subscription} from "rxjs/Rx";
 
 @Component({
 	moduleId: module.id,
@@ -11,20 +12,41 @@ import {ROUTER_DIRECTIVES} from "@angular/router";
 	styleUrls: ['bundle-lists-overview.component.css'],
 	directives: [ROUTER_DIRECTIVES]
 })
-export class BundleListsOverviewComponent implements OnInit {
-	@Input() database:string;
-
+export class BundleListsOverviewComponent implements OnDestroy {
+	private _database:string;
 	private databases:DatabaseInfo[] = [];
+	private sub:Subscription;
 
 	constructor(private projectDataService:ProjectDataService) {
 	}
 
-	ngOnInit() {
-		// fixme observe this.database
+	get database():string {
+		return this._database;
+	}
+
+	@Input() set database(database:string) {
+		console.log('new value for database', database);
+		this._database = database;
+
+		if (this.sub) {
+			this.sub.unsubscribe();
+			this.sub.unsubscribe();
+		}
+
 		if (this.database) {
-			this.databases = [this.projectDataService.getDatabase(this.database)];
+			this.sub = this.projectDataService.getDatabase(this.database).subscribe(next => {
+				this.databases = [next];
+			});
 		} else {
-			this.databases = this.projectDataService.getAllDatabases();
+			this.sub = this.projectDataService.getAllDatabases().subscribe(next => {
+				this.databases = next;
+			});
+		}
+	}
+
+	ngOnDestroy() {
+		if (this.sub) {
+			this.sub.unsubscribe();
 		}
 	}
 
