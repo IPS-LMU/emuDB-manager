@@ -61,6 +61,26 @@ export class ProjectDataService {
 		});
 	}
 
+	public getBundleList(database:string, name:string, status:string):Observable<BundleList> {
+		return this.info.map((x:ProjectInfo) => {
+			console.log('looking for bl ', database, name, status);
+			for (let i = 0; i < x.databases.length; ++i) {
+				if (x.databases[i].name === database) {
+					for (let j = 0; j < x.databases[i].bundleLists.length; ++ j) {
+						if (
+							x.databases[i].bundleLists[j].name === name
+							&& x.databases[i].bundleLists[j].status === status
+						) {
+							return x.databases[i].bundleLists[j];
+						}
+					}
+				}
+			}
+
+			return null;
+		});
+	}
+
 	/**
 	 * Returns the info object for a single database
 	 *

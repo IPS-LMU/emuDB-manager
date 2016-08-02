@@ -1,0 +1,66 @@
+<h1 class="page-header">Bundle list view</h1>
+
+<div class="panel panel-default">
+
+	<div class="panel-heading"><span class="panel-title">Info</span></div>
+
+	<div class="table-responsive">
+		<table class="table table-striped">
+			<tbody>
+			<tr>
+				<td>Database</td>
+				<td>{{params['database']}}</td>
+			</tr>
+			<tr>
+				<td>Editor</td>
+				<td>{{params['name']}}</td>
+			</tr>
+			<tr>
+				<td>Status</td>
+				<td>{{params['status']}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<span class="panel-title">
+			Bundles <span class="badge">{{items.length}}</span>
+		</span>
+	</div>
+
+	<div class="panel-body">
+		<input type="checkbox" [(ngModel)]="showUncommented" aria-label="Show uncommented items"
+		       id="showUncommented">
+		<label for="showUncommented">Show uncommented items</label>
+	</div>
+
+	<div class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Session</th>
+				<th>Bundle</th>
+				<th>Finished editing</th>
+				<th>Comment</th>
+			</tr>
+			</thead>
+
+			<tbody>
+			<tr *ngFor="let item of items">
+				<td>{{item.session}}</td>
+				<td>{{item.name}}</td>
+				<td>
+					<span *ngIf="item.finishedEditing" class="glyphicon glyphicon-ok"></span>
+					<span *ngIf="!item.finishedEditing" class="glyphicon glyphicon-remove"></span>
+				</td>
+				<td>{{item.comment}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+</div>
