@@ -6,7 +6,7 @@ import {Subscription} from "rxjs/Rx";
 
 @Component({
 	moduleId: module.id,
-	selector: 'app-database-dashboard',
+	selector: 'emudbmanager-database-dashboard',
 	templateUrl: 'database-dashboard.component.html',
 	styleUrls: ['database-dashboard.component.css'],
 	directives: [DatabasesOverviewComponent]

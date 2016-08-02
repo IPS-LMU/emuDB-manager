@@ -6,7 +6,7 @@ import {ProjectDataService} from "../../project-data.service";
 
 @Component({
 	moduleId: module.id,
-	selector: 'app-bundle-lists-dashboard',
+	selector: 'emudbmanager-bundle-lists-dashboard',
 	templateUrl: 'bundle-lists-dashboard.component.html',
 	styleUrls: ['bundle-lists-dashboard.component.css'],
 	directives: [BundleListsOverviewComponent]
