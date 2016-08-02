@@ -5,16 +5,29 @@
 	<button class="btn btn-primary">EMU-webApp</button>
 </p>
 
-<h2 class="sub-header">
-	Bundle lists <span class="badge">{{database?.bundleLists?.length}}</span>
-</h2>
+<hr>
 
-<emudbmanager-bundle-lists-overview [database]="database?.name">
+<ul class="nav nav-tabs nav-justified">
+	<li role="presentation" [ngClass]="{active: state === 'BundleLists'}">
+		<a (click)="state = 'BundleLists'">
+			Bundle lists <span class="badge">{{database?.bundleLists?.length}}</span>
+		</a>
+	</li>
+	<li role="presentation" [ngClass]="{active: state === 'Sessions'}">
+		<a (click)="state = 'Sessions'">
+			Sessions <span class="badge">{{database?.sessions?.length}}</span>
+		</a>
+	</li>
+	<li role="presentation" [ngClass]="{disabled: true, active: state === 'EWAConfig'}">
+		<a>EMU-webApp config</a>
+	</li>
+</ul>
+
+<emudbmanager-bundle-lists-overview *ngIf="state === 'BundleLists'" [database]="database?.name">
 </emudbmanager-bundle-lists-overview>
 
-<h2 class="sub-header">Sessions <span class="badge">{{database?.sessions?.length}}</span></h2>
 
-<div class="table-responsive">
+<div *ngIf="state === 'Sessions'" class="table-responsive">
 	<table class="table table-striped">
 		<thead>
 		<tr>

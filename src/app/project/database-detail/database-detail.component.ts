@@ -5,6 +5,8 @@ import {ActivatedRoute} from "@angular/router";
 import {BundleListsOverviewComponent} from "../bundle-lists-overview/bundle-lists-overview.component";
 import {Subscription} from "rxjs/Rx";
 
+type State = 'BundleLists' | 'Session' | 'EWAConfig';
+
 @Component({
 	moduleId: module.id,
 	selector: 'emudbmanager-database-detail',
@@ -15,6 +17,7 @@ import {Subscription} from "rxjs/Rx";
 export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private database:DatabaseInfo;
 	private sub:Subscription;
+	private state:State = 'BundleLists';
 
 	constructor(private projectDataService:ProjectDataService, private route:ActivatedRoute) {
 	}
