@@ -5,7 +5,7 @@ import {ActivatedRoute} from "@angular/router";
 import {BundleListsOverviewComponent} from "../bundle-lists-overview/bundle-lists-overview.component";
 import {Subscription} from "rxjs/Rx";
 
-type State = 'BundleLists' | 'Session' | 'EWAConfig';
+type State = 'BundleLists' | 'Session' | 'EWAConfig' | 'Rename';
 
 @Component({
 	moduleId: module.id,

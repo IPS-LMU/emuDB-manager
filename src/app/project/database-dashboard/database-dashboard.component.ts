@@ -29,13 +29,4 @@ export class DatabaseDashboardComponent implements OnInit,OnDestroy {
 			this.sub.unsubscribe();
 		}
 	}
-
-	private createDatabase(name:string) {
-		this.databases.push({
-			name: name,
-			bundleLists: [],
-			dbConfig: {},
-			sessions: []
-		});
-	}
 }

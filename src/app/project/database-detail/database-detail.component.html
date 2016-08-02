@@ -1,8 +1,8 @@
 <h1 class="page-header">Database: {{database?.name}}</h1>
 
 <p>
-	<button class="btn btn-default">Download</button>
 	<button class="btn btn-primary">EMU-webApp</button>
+	<button class="btn btn-default">Download</button>
 </p>
 
 <hr>
@@ -22,6 +22,11 @@
 		</li>
 		<li role="presentation" [ngClass]="{disabled: true, active: state === 'EWAConfig'}">
 			<a>EMU-webApp config</a>
+		</li>
+		<li role="presentation" [ngClass]="{active: state === 'Rename'}">
+			<a (click)="state = 'Rename'">
+				Rename database
+			</a>
 		</li>
 	</ul>
 
