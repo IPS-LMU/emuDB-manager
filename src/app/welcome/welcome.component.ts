@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {ROUTER_DIRECTIVES} from "@angular/router";
+import {ROUTER_DIRECTIVES, Router} from "@angular/router";
 
 @Component({
 	moduleId: module.id,
@@ -9,11 +9,25 @@ import {ROUTER_DIRECTIVES} from "@angular/router";
 	directives: [ROUTER_DIRECTIVES]
 })
 export class WelcomeComponent implements OnInit {
+	private loginFailed:boolean = false;
+	private password:string;
+	private username:string;
 
-	constructor() {
+	constructor(private router:Router) {
 	}
 
 	ngOnInit() {
 	}
 
+	private checkLogin() {
+		this.loginFailed = false;
+
+		window.setTimeout(() => {
+			if (this.username === 'dach') {
+				this.router.navigate(['/project/overview']);
+			} else {
+				this.loginFailed = true;
+			}
+		}, 500);
+	}
 }

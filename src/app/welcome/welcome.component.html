@@ -4,7 +4,19 @@
 	<div class="panel-heading">Login</div>
 	<div class="panel-body">
 		<p>
-			<a routerLink="/project/overview">Go to project</a>
+			<input class="form-control" placeholder="Username" [(ngModel)]="username">
+		</p>
+
+		<p>
+			<input class="form-control" type="password" placeholder="Password" [(ngModel)]="password">
+		</p>
+		<p>
+			<button (click)="checkLogin()" class="btn btn-default">
+				Login (fake so far)
+			</button>
+		</p>
+		<p *ngIf="loginFailed" class="alert alert-danger" role="alert">
+			Invalid login credentials supplied.
 		</p>
 	</div>
 </div>
