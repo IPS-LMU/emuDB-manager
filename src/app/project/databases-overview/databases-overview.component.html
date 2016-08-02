@@ -5,7 +5,7 @@
 			<th>Name</th>
 			<th>Sessions</th>
 			<th>Bundles</th>
-			<th>Editors</th>
+			<th>Bundle lists</th>
 			<th>Actions</th>
 		</tr>
 		</thead>
@@ -17,7 +17,10 @@
 			<td>{{countBundles(database)}}</td>
 			<td>
 				<ul>
-					<li *ngFor="let bundleList of database.bundleLists">{{bundleList.name}}</li>
+					<li *ngFor="let bundleList of database.bundleLists">
+						{{bundleList.name}}
+						<span *ngIf="bundleList.status">({{bundleList.status}})</span>
+					</li>
 				</ul>
 			</td>
 			<td>
