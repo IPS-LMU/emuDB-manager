@@ -7,40 +7,45 @@
 
 <hr>
 
-<ul class="nav nav-tabs nav-justified">
-	<li role="presentation" [ngClass]="{active: state === 'BundleLists'}">
-		<a (click)="state = 'BundleLists'">
-			Bundle lists <span class="badge">{{database?.bundleLists?.length}}</span>
-		</a>
-	</li>
-	<li role="presentation" [ngClass]="{active: state === 'Sessions'}">
-		<a (click)="state = 'Sessions'">
-			Sessions <span class="badge">{{database?.sessions?.length}}</span>
-		</a>
-	</li>
-	<li role="presentation" [ngClass]="{disabled: true, active: state === 'EWAConfig'}">
-		<a>EMU-webApp config</a>
-	</li>
-</ul>
+<div class="panel panel-default">
 
-<emudbmanager-bundle-lists-overview *ngIf="state === 'BundleLists'" [database]="database?.name">
-</emudbmanager-bundle-lists-overview>
+	<ul class="panel-body nav nav-pills nav-justified">
+		<li role="presentation" [ngClass]="{active: state === 'BundleLists'}">
+			<a (click)="state = 'BundleLists'">
+				Bundle lists <span class="badge">{{database?.bundleLists?.length}}</span>
+			</a>
+		</li>
+		<li role="presentation" [ngClass]="{active: state === 'Sessions'}">
+			<a (click)="state = 'Sessions'">
+				Sessions <span class="badge">{{database?.sessions?.length}}</span>
+			</a>
+		</li>
+		<li role="presentation" [ngClass]="{disabled: true, active: state === 'EWAConfig'}">
+			<a>EMU-webApp config</a>
+		</li>
+	</ul>
 
 
-<div *ngIf="state === 'Sessions'" class="table-responsive">
-	<table class="table table-striped">
-		<thead>
-		<tr>
-			<th>Name</th>
-			<th>Bundles</th>
-		</tr>
-		</thead>
+	<emudbmanager-bundle-lists-overview *ngIf="state === 'BundleLists'" [database]="database?.name">
+	</emudbmanager-bundle-lists-overview>
 
-		<tbody>
-		<tr *ngFor="let session of database?.sessions">
-			<td>{{session.name}}</td>
-			<td>{{session.bundles.length}}</td>
-		</tr>
-		</tbody>
-	</table>
+
+	<div *ngIf="state === 'Sessions'" class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Name</th>
+				<th>Bundles</th>
+			</tr>
+			</thead>
+
+			<tbody>
+			<tr *ngFor="let session of database?.sessions">
+				<td>{{session.name}}</td>
+				<td>{{session.bundles.length}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
 </div>
