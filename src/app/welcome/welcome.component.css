@@ -18,3 +18,7 @@
 .panel-primary .panel-body {
 	text-align: left;
 }
+
+.alert .glyphicon {
+	cursor: pointer;
+}

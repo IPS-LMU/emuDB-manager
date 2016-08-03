@@ -3,21 +3,27 @@
 <div class="panel panel-default">
 	<div class="panel-heading">Login</div>
 	<div class="panel-body">
-		<p>
-			<input class="form-control" placeholder="Username" [(ngModel)]="username">
-		</p>
+		<form (ngSubmit)="checkLogin()">
+			<p>
+				<input autofocus class="form-control" placeholder="Username" [(ngModel)]="username"
+				       name="username">
+			</p>
 
-		<p>
-			<input class="form-control" type="password" placeholder="Password" [(ngModel)]="password">
-		</p>
-		<p>
-			<button (click)="checkLogin()" class="btn btn-default">
-				Login (fake so far)
-			</button>
-		</p>
-		<p *ngIf="loginFailed" class="alert alert-danger" role="alert">
-			Invalid login credentials supplied.
-		</p>
+			<p>
+				<input class="form-control" type="password" placeholder="Password"
+				       [(ngModel)]="password" name="password">
+			</p>
+			<p>
+				<button type="submit" class="btn btn-default">
+					Login
+				</button>
+			</p>
+			<p *ngIf="loginFailed" class="alert alert-danger" role="alert">
+				Invalid login credentials supplied.
+				<span class="pull-right glyphicon glyphicon-remove-sign"
+				      (click)="loginFailed = false"></span>
+			</p>
+		</form>
 	</div>
 </div>
 
