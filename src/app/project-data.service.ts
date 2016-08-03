@@ -4,6 +4,7 @@ import {DatabaseInfo} from "./types/database-info";
 import {BundleList} from "./types/bundle-list";
 import {Http, Response} from "@angular/http";
 import {Observable, Observer} from "rxjs/Rx";
+import {SessionInfo} from "./types/session-info";
 
 @Injectable()
 export class ProjectDataService {
@@ -66,7 +67,7 @@ export class ProjectDataService {
 			console.log('looking for bl ', database, name, status);
 			for (let i = 0; i < x.databases.length; ++i) {
 				if (x.databases[i].name === database) {
-					for (let j = 0; j < x.databases[i].bundleLists.length; ++ j) {
+					for (let j = 0; j < x.databases[i].bundleLists.length; ++j) {
 						if (
 							x.databases[i].bundleLists[j].name === name
 							&& x.databases[i].bundleLists[j].status === status
@@ -102,5 +103,13 @@ export class ProjectDataService {
 		return this.info.map((x:ProjectInfo) => {
 			return x.name;
 		});
+	}
+
+	public countBundles(sessions:SessionInfo[]):number {
+		let result = 0;
+		for (let i = 0; i < sessions.length; ++i) {
+			result += sessions[i].bundles.length;
+		}
+		return result;
 	}
 }

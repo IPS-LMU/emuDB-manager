@@ -14,7 +14,7 @@
 		<tr *ngFor="let database of databases">
 			<td>{{database.name}}</td>
 			<td>{{database.sessions.length}}</td>
-			<td>{{countBundles(database)}}</td>
+			<td>{{projectDataService.countBundles(database.sessions)}}</td>
 			<td>
 				<ul>
 					<li *ngFor="let bundleList of database.bundleLists">

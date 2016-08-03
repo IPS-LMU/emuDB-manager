@@ -29,13 +29,4 @@ export class DatabasesOverviewComponent implements OnInit,OnDestroy {
 			this.sub.unsubscribe();
 		}
 	}
-
-	private countBundles(db:DatabaseInfo):number {
-		let result = 0;
-		for (let i = 0; i < db.sessions.length; ++i) {
-			result += db.sessions[i].bundles.length;
-		}
-		return result;
-	}
-
 }
