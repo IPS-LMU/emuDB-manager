@@ -3,6 +3,7 @@ import {BundleListsOverviewComponent} from "../bundle-lists-overview/bundle-list
 import {BundleList} from "../../types/bundle-list";
 import {Subscription} from "rxjs/Rx";
 import {ProjectDataService} from "../../project-data.service";
+import {DatabaseInfo} from "../../types/database-info";
 
 type State = 'Overview' | 'Generator';
 
@@ -14,22 +15,30 @@ type State = 'Overview' | 'Generator';
 	directives: [BundleListsOverviewComponent]
 })
 export class BundleListsDashboardComponent implements OnInit,OnDestroy {
-	private bundleLists: BundleList[];
+	private bundleLists:BundleList[];
+	private databases:DatabaseInfo[];
 	private state:State = 'Overview';
-	private subBundleLists: Subscription;
+	private subBundleLists:Subscription;
+	private subDatabases:Subscription;
 
-	constructor(private projectDataService: ProjectDataService) {
+	constructor(private projectDataService:ProjectDataService) {
 	}
 
 	ngOnInit() {
 		this.subBundleLists = this.projectDataService.getAllBundleLists().subscribe(next => {
 			this.bundleLists = next;
 		});
+		this.subDatabases = this.projectDataService.getAllDatabases().subscribe(next => {
+			this.databases = next;
+		});
 	}
 
 	ngOnDestroy() {
 		if (this.subBundleLists) {
 			this.subBundleLists.unsubscribe();
+		}
+		if (this.subDatabases) {
+			this.subDatabases.unsubscribe();
 		}
 	}
 

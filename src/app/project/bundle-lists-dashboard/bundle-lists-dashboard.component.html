@@ -20,6 +20,107 @@
 	</emudbmanager-bundle-lists-overview>
 
 	<div *ngIf="state === 'Generator'" class="panel-body">
+		<form class="container-fluid">
+			<div class="row">
+				<p class="col-md-4">
+					Select the database for which to generate a bundle list:
+				</p>
 
+				<p class="col-md-8">
+					<select class="form-control">
+						<option *ngFor="let database of databases">{{database.name}}</option>
+					</select>
+				</p>
+			</div>
+
+			<hr>
+
+			<div class="row">
+				<p class="col-md-4">
+					What bundles from what sessions shall be included?
+				</p>
+
+				<ul class="col-md-4">
+					<div class="radio">
+						<label>
+							<input name="bundles" type="radio"> All bundles from all sessions
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input name="bundles" type="radio"> All bundles from a particular session
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input name="bundles" type="radio"> A particular bundle from all sessions
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input name="bundles" type="radio"> All bundles matching a particular
+							pattern, from all sessions matching a particular pattern
+						</label>
+					</div>
+				</ul>
+
+				<p class="col-md-4">
+				</p>
+			</div>
+
+			<hr>
+
+			<div class="row">
+				<p class="col-md-4">
+					How many bundle lists shall be generated?
+				</p>
+
+				<div class="col-md-4">
+					<div class="radio">
+						<label>
+							<input name="persons" type="radio"> For a single person
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input name="persons" type="radio"> For multiple persons (1 person per bundle)
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input name="persons" type="radio"> For multiple persons (multiple persons per bundle)
+						</label>
+					</div>
+				</div>
+
+				<p class="col-md-4">
+				</p>
+			</div>
+
+			<hr>
+
+			<div class="row">
+				<p class="col-md-4">
+					In case of multiple persons, the bundles will be distributed evenly among the
+					persons. How shall they be distributed?
+				</p>
+
+				<ul class="col-md-4">
+					<div class="radio">
+						<label>
+							<input name="order" type="radio"> Randomly
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input name="order" type="radio"> In a sorted manner
+						</label>
+					</div>
+				</ul>
+
+				<p class="col-md-4">
+				</p>
+			</div>
+		</form>
 	</div>
 </div>
