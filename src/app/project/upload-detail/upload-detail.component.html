@@ -1,6 +1,11 @@
 <h1 class="page-header">Uploaded database</h1>
 
-UUID (Universally Unique Identifier): {{upload?.uuid}}
+<p>
+	UUID (Universally Unique Identifier): {{upload?.uuid}}
+</p>
+<p>
+	Upload date: {{upload?.date}}
+</p>
 
 <hr>
 
@@ -24,12 +29,38 @@ UUID (Universally Unique Identifier): {{upload?.uuid}}
 		</li>
 	</ul>
 
-	<div *ngIf="state === 'Sessions'" class="panel-body">
-		table of sessions
+	<div *ngIf="state === 'Sessions'" class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Name</th>
+				<th>Bundles</th>
+			</tr>
+			</thead>
+
+			<tbody>
+			<tr *ngFor="let session of upload?.sessions">
+				<td>{{session.name}}</td>
+				<td>{{session.bundles.length}}</td>
+			</tr>
+			</tbody>
+		</table>
 	</div>
 
 	<div *ngIf="state === 'Rename'" class="panel-body">
-		new upload
+		<form>
+			<p>
+				Current name of the uploaded database: {{database?.name}}
+			</p>
+
+			<p>
+				<input class="form-control" placeholder="New name">
+			</p>
+
+			<p>
+				<button type="submit" class="btn btn-default">Rename</button>
+			</p>
+		</form>
 	</div>
 
 	<div *ngIf="state === 'Merge'" class="panel-body">
