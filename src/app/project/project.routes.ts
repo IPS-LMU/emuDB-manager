@@ -19,7 +19,7 @@ export const projectRoutes:RouterConfig = [{
 		{path: 'bundle-lists/:database/:name', component: BundleListDetailComponent},
 		{path: 'bundle-lists/:database/:name/:status', component: BundleListDetailComponent},
 		{path: 'uploads', component: UploadsDashboardComponent},
-		{path: 'uploads/detail', component: UploadDetailComponent},
+		{path: 'uploads/:uuid', component: UploadDetailComponent},
 		{path: 'progress', component: DashboardComponent},
 	]
 }];

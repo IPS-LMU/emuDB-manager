@@ -6,6 +6,7 @@ import {DatabaseInfo} from "../../types/database-info";
 import {ProjectDataService} from "../../project-data.service";
 import {BundleList} from "../../types/bundle-list";
 import {Subscription} from "rxjs/Rx";
+import {UploadInfo} from "../../types/upload-info";
 
 @Component({
 	moduleId: module.id,
@@ -21,21 +22,27 @@ export class DashboardComponent implements OnInit,OnDestroy {
 	private subBundleLists:Subscription;
 	private subDatabases:Subscription;
 	private subProjectName:Subscription;
+	private subUploads:Subscription;
+	private uploads:UploadInfo[] = [];
 
 	constructor(private projectDataService:ProjectDataService) {
 	}
 
 	ngOnInit() {
-		this.projectDataService.getName().subscribe(next => {
+		this.subProjectName = this.projectDataService.getName().subscribe(next => {
 			this.projectName = next;
 		});
 
-		this.projectDataService.getAllDatabases().subscribe(next => {
+		this.subBundleLists = this.projectDataService.getAllBundleLists().subscribe(next => {
+			this.bundleLists = next;
+		});
+
+		this.subDatabases = this.projectDataService.getAllDatabases().subscribe(next => {
 			this.databases = next;
 		});
 
-		this.projectDataService.getAllBundleLists().subscribe(next => {
-			this.bundleLists = next;
+		this.subUploads = this.projectDataService.getAllUploads().subscribe(next => {
+			this.uploads = next;
 		});
 	}
 
@@ -48,6 +55,9 @@ export class DashboardComponent implements OnInit,OnDestroy {
 		}
 		if (this.subProjectName) {
 			this.subProjectName.unsubscribe();
+		}
+		if (this.subUploads) {
+			this.subUploads.unsubscribe();
 		}
 	}
 }

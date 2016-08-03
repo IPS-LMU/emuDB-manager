@@ -5,6 +5,7 @@ import {BundleList} from "./types/bundle-list";
 import {Http, Response} from "@angular/http";
 import {Observable, Observer} from "rxjs/Rx";
 import {SessionInfo} from "./types/session-info";
+import {UploadInfo} from "./types/upload-info";
 
 @Injectable()
 export class ProjectDataService {
@@ -102,6 +103,23 @@ export class ProjectDataService {
 	public getName():Observable<string> {
 		return this.info.map((x:ProjectInfo) => {
 			return x.name;
+		});
+	}
+
+	public getAllUploads():Observable<UploadInfo[]> {
+		return this.info.map((x:ProjectInfo) => {
+			return x.uploads;
+		});
+	}
+
+	public getUpload(uuid:string):Observable<UploadInfo> {
+		return this.info.map((x:ProjectInfo) => {
+			for (let i = 0; i < x.uploads.length; ++i) {
+				if (x.uploads[i].uuid === uuid) {
+					return x.uploads[i];
+				}
+			}
+			return null;
 		});
 	}
 

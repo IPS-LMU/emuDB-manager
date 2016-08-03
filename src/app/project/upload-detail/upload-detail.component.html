@@ -1,11 +1,15 @@
 <h1 class="page-header">Uploaded database</h1>
 
+UUID (Universally Unique Identifier): {{upload?.uuid}}
+
+<hr>
+
 <div class="panel panel-default">
 
 	<ul class="panel-body nav nav-pills nav-justified">
 		<li role="presentation" [ngClass]="{active: state === 'Sessions'}">
 			<a (click)="state = 'Sessions'">
-				Sessions <span class="badge">?</span>
+				Sessions <span class="badge">{{upload?.sessions?.length}}</span>
 			</a>
 		</li>
 		<li role="presentation" [ngClass]="{active: state === 'Rename'}">

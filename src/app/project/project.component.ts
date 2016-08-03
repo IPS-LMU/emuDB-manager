@@ -4,6 +4,7 @@ import {BundleList} from "../types/bundle-list";
 import {ProjectDataService} from "../project-data.service";
 import {ROUTER_DIRECTIVES} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
+import {UploadInfo} from "../types/upload-info";
 
 @Component({
 	moduleId: module.id,
@@ -17,16 +18,21 @@ export class ProjectComponent implements OnInit,OnDestroy {
 	private databases:DatabaseInfo[] = [];
 	private subBundleLists:Subscription;
 	private subDatabases:Subscription;
+	private subUploads:Subscription;
+	private uploads:UploadInfo[] = [];
 
 	constructor(private projectDataService:ProjectDataService) {
 	}
 
 	ngOnInit():any {
-		this.projectDataService.getAllDatabases().subscribe(next => {
+		this.subBundleLists = this.projectDataService.getAllBundleLists().subscribe(next => {
+			this.bundleLists = next;
+		});
+		this.subDatabases = this.projectDataService.getAllDatabases().subscribe(next => {
 			this.databases = next;
 		});
-		this.projectDataService.getAllBundleLists().subscribe(next => {
-			this.bundleLists = next;
+		this.subUploads = this.projectDataService.getAllUploads().subscribe(next => {
+			this.uploads = next;
 		});
 	}
 
@@ -36,6 +42,9 @@ export class ProjectComponent implements OnInit,OnDestroy {
 		}
 		if (this.subDatabases) {
 			this.subDatabases.unsubscribe();
+		}
+		if (this.subUploads) {
+			this.subUploads.unsubscribe();
 		}
 	}
 }

@@ -2,30 +2,22 @@
 	<table class="table table-striped">
 		<thead>
 		<tr>
+			<th>Unique identifier (UUID)</th>
 			<th>Upload date</th>
 			<th>Sessions</th>
 			<th>Bundles</th>
 			<th>Actions</th>
 		</tr>
 		</thead>
+
 		<tbody>
-		<tr>
-			<td>2016-05-12 09:42</td>
-			<td>2</td>
-			<td>62</td>
-			<td class="clearfix">
-				<button [routerLink]="['/project/uploads/detail']" class="btn btn-default">
-					View &amp; edit
-				</button>
-				<button class="btn btn-danger">Delete</button>
-			</td>
-		</tr>
-		<tr>
-			<td>2016-06-16 10:38</td>
-			<td>5</td>
-			<td>165</td>
-			<td class="clearfix">
-				<button [routerLink]="['/project/uploads/detail']" class="btn btn-default">
+		<tr *ngFor="let upload of uploads">
+			<td>{{upload.uuid}}</td>
+			<td>{{upload.date}}</td>
+			<td>{{upload.sessions.length}}</td>
+			<td>{{projectDataService.countBundles(upload.sessions)}}</td>
+			<td>
+				<button [routerLink]="['/project/uploads', upload.uuid]" class="btn btn-default">
 					View &amp; edit
 				</button>
 				<button class="btn btn-danger">Delete</button>
