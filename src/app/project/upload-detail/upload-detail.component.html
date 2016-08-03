@@ -1,0 +1,35 @@
+<h1 class="page-header">Uploaded database</h1>
+
+<div class="panel panel-default">
+
+	<ul class="panel-body nav nav-pills nav-justified">
+		<li role="presentation" [ngClass]="{active: state === 'Sessions'}">
+			<a (click)="state = 'Sessions'">
+				Sessions <span class="badge">?</span>
+			</a>
+		</li>
+		<li role="presentation" [ngClass]="{active: state === 'Rename'}">
+			<a (click)="state = 'Rename'">
+				Rename
+			</a>
+		</li>
+		<li role="presentation" [ngClass]="{active: state === 'Merge'}">
+			<a (click)="state = 'Merge'">
+				Merge
+			</a>
+		</li>
+	</ul>
+
+	<div *ngIf="state === 'Sessions'" class="panel-body">
+		table of sessions
+	</div>
+
+	<div *ngIf="state === 'Rename'" class="panel-body">
+		new upload
+	</div>
+
+	<div *ngIf="state === 'Merge'" class="panel-body">
+		Merge into existing or save as new database
+	</div>
+
+</div>
