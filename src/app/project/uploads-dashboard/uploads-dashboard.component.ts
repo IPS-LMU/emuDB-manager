@@ -1,6 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {UploadsOverviewComponent} from "../uploads-overview/uploads-overview.component";
 
+type State = 'Overview' | 'New';
+
 @Component({
 	moduleId: module.id,
 	selector: 'emudbmanager-uploads-dashboard',
@@ -9,6 +11,7 @@ import {UploadsOverviewComponent} from "../uploads-overview/uploads-overview.com
 	directives: [UploadsOverviewComponent]
 })
 export class UploadsDashboardComponent implements OnInit {
+	private state:State = 'Overview';
 	private uploads = [1,2];
 
 	constructor() {
