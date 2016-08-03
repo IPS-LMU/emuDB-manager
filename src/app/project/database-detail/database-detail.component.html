@@ -54,7 +54,19 @@
 	</div>
 
 	<div *ngIf="state === 'Rename'" class="panel-body">
-		Rename
+		<form>
+			<p>
+				Current name of the database: {{database?.name}}
+			</p>
+
+			<p>
+				<input class="form-control" placeholder="New name">
+			</p>
+
+			<p>
+				<button type="submit" class="btn btn-default">Rename</button>
+			</p>
+		</form>
 	</div>
 
 </div>
