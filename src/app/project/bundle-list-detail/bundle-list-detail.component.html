@@ -1,10 +1,26 @@
-<h1 class="page-header">Bundle list view</h1>
+<h1 class="page-header">Individual bundle list</h1>
 
 <div class="panel panel-default">
 
-	<div class="panel-heading"><span class="panel-title">Info</span></div>
+	<ul class="panel-body nav nav-pills nav-justified">
+		<li role="presentation" [ngClass]="{active: state === 'Info'}">
+			<a (click)="state = 'Info'">
+				Info
+			</a>
+		</li>
+		<li role="presentation" [ngClass]="{active: state === 'CommentedBundles'}">
+			<a (click)="state = 'CommentedBundles'">
+				Commented bundles <span class="badge">{{commentedBundles?.length}}</span>
+			</a>
+		</li>
+		<li role="presentation" [ngClass]="{active: state === 'AllBundles'}">
+			<a (click)="state = 'AllBundles'">
+				All bundles <span class="badge">{{allBundles?.length}}</span>
+			</a>
+		</li>
+	</ul>
 
-	<div class="table-responsive">
+	<div *ngIf="state === 'Info'" class="table-responsive">
 		<table class="table table-striped">
 			<tbody>
 			<tr>
@@ -23,22 +39,8 @@
 		</table>
 	</div>
 
-</div>
 
-<div class="panel panel-default">
-	<div class="panel-heading">
-		<span class="panel-title">
-			Bundles <span class="badge">{{items.length}}</span>
-		</span>
-	</div>
-
-	<div class="panel-body">
-		<input type="checkbox" [(ngModel)]="showUncommented" aria-label="Show uncommented items"
-		       id="showUncommented">
-		<label for="showUncommented">Show uncommented items</label>
-	</div>
-
-	<div class="table-responsive">
+	<div *ngIf="state === 'CommentedBundles'" class="table-responsive">
 		<table class="table table-striped">
 			<thead>
 			<tr>
@@ -50,12 +52,39 @@
 			</thead>
 
 			<tbody>
-			<tr *ngFor="let item of items">
+			<tr *ngFor="let item of commentedBundles">
 				<td>{{item.session}}</td>
 				<td>{{item.name}}</td>
 				<td>
 					<span *ngIf="item.finishedEditing" class="glyphicon glyphicon-ok"></span>
-					<span *ngIf="!item.finishedEditing" class="glyphicon glyphicon-remove"></span>
+					<span *ngIf="!item.finishedEditing"
+					      class="glyphicon glyphicon-remove"></span>
+				</td>
+				<td>{{item.comment}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div *ngIf="state === 'AllBundles'" class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Session</th>
+				<th>Bundle</th>
+				<th>Finished editing</th>
+				<th>Comment</th>
+			</tr>
+			</thead>
+
+			<tbody>
+			<tr *ngFor="let item of allBundles">
+				<td>{{item.session}}</td>
+				<td>{{item.name}}</td>
+				<td>
+					<span *ngIf="item.finishedEditing" class="glyphicon glyphicon-ok"></span>
+					<span *ngIf="!item.finishedEditing"
+					      class="glyphicon glyphicon-remove"></span>
 				</td>
 				<td>{{item.comment}}</td>
 			</tr>

@@ -2,8 +2,9 @@ import {Component, OnInit, OnDestroy} from "@angular/core";
 import {Subscription} from "rxjs/Rx";
 import {ActivatedRoute} from "@angular/router";
 import {ProjectDataService} from "../../project-data.service";
-import {BundleList} from "../../types/bundle-list";
 import {BundleListItem} from "../../types/bundle-list-item";
+
+type State = 'Info' | 'AllBundles' | 'CommentedItems';
 
 @Component({
 	moduleId: module.id,
@@ -12,10 +13,10 @@ import {BundleListItem} from "../../types/bundle-list-item";
 	styleUrls: ['bundle-list-detail.component.css']
 })
 export class BundleListDetailComponent implements OnInit,OnDestroy {
-	private bundleList:BundleList;
-	private items:BundleListItem[] = [];
+	private allBundles:BundleListItem[] = [];
+	private commentedBundles:BundleListItem[] = [];
 	private params;
-	private _showUncommented:boolean = false;
+	private state:State = 'Info';
 	private subParams:Subscription;
 
 	constructor(private projectDataService:ProjectDataService,
@@ -35,8 +36,10 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 				nextParams['name'],
 				nextParams['status']
 			).subscribe(nextBundleList => {
-				this.bundleList = nextBundleList;
-				this.filterItems();
+				this.allBundles = nextBundleList.items;
+				this.commentedBundles = nextBundleList.items.filter(element => {
+					return element.comment !== '';
+				});
 			});
 		});
 	}
@@ -46,24 +49,4 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 			this.subParams.unsubscribe();
 		}
 	}
-
-	get showUncommented():boolean {
-		return this._showUncommented;
-	}
-
-	set showUncommented(value:boolean) {
-		this._showUncommented = value;
-		this.filterItems();
-	}
-
-	private filterItems () {
-		if (this._showUncommented) {
-			this.items = this.bundleList.items;
-		} else {
-			this.items = this.bundleList.items.filter(element => {
-				return element.comment !== '';
-			});
-		}
-	}
-
 }
