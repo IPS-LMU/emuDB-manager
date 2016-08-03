@@ -1,6 +1,25 @@
-<h1 class="page-header">Bundle lists <span class="badge">{{bundleLists?.length}}</span></h1>
+<h1 class="page-header">Bundle lists</h1>
 
-<emudbmanager-bundle-lists-overview database="">
+<div class="panel panel-default">
 
-</emudbmanager-bundle-lists-overview>
+	<ul class="panel-body nav nav-pills nav-justified">
+		<li role="presentation" [ngClass]="{active: state === 'Overview'}">
+			<a (click)="state = 'Overview'">
+				Existing bundle lists <span class="badge">{{bundleLists?.length}}</span>
+			</a>
+		</li>
+		<li role="presentation" [ngClass]="{active: state === 'Generator'}">
+			<a (click)="state = 'Generator'">
+				Generate bundle list
+			</a>
+		</li>
+	</ul>
 
+	<emudbmanager-bundle-lists-overview *ngIf="state === 'Overview'" database="">
+
+	</emudbmanager-bundle-lists-overview>
+
+	<div *ngIf="state === 'Generator'" class="panel-body">
+
+	</div>
+</div>

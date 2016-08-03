@@ -4,6 +4,8 @@ import {BundleList} from "../../types/bundle-list";
 import {Subscription} from "rxjs/Rx";
 import {ProjectDataService} from "../../project-data.service";
 
+type State = 'Overview' | 'Generator';
+
 @Component({
 	moduleId: module.id,
 	selector: 'emudbmanager-bundle-lists-dashboard',
@@ -13,6 +15,7 @@ import {ProjectDataService} from "../../project-data.service";
 })
 export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 	private bundleLists: BundleList[];
+	private state:State = 'Overview';
 	private subBundleLists: Subscription;
 
 	constructor(private projectDataService: ProjectDataService) {
