@@ -16,23 +16,27 @@ type State = 'BundleLists' | 'Session' | 'EWAConfig' | 'Rename';
 })
 export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private database:DatabaseInfo;
-	private sub:Subscription;
+	private subParams:Subscription;
+	private subDatabase:Subscription;
 	private state:State = 'BundleLists';
 
 	constructor(private projectDataService:ProjectDataService, private route:ActivatedRoute) {
 	}
 
 	ngOnInit() {
-		this.sub = this.route.params.subscribe(params => {
-			this.projectDataService.getDatabase(params['name']).subscribe(next => {
-				this.database = next;
+		this.subParams = this.route.params.subscribe(params => {
+			this.subDatabase = this.projectDataService.getDatabase(params['name']).subscribe(nextDatabase => {
+				this.database = nextDatabase;
 			});
 		})
 	}
 
 	ngOnDestroy() {
-		if (this.sub) {
-			this.sub.unsubscribe();
+		if (this.subParams) {
+			this.subParams.unsubscribe();
+		}
+		if (this.subDatabase) {
+			this.subDatabase.unsubscribe();
 		}
 	}
 }
