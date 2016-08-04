@@ -1,14 +1,30 @@
 <?php
 
-header("Access-Control-Allow-Origin: *");
+//////////
+// Configuration
 
+header("Access-Control-Allow-Origin: *");
 $dataDirectory = '/homes/markusjochim/manager-data';
 
-$directory = authorize();
-$data = compileData($directory);
+//
+//////////
 
+
+//////////
+// Main code:
+// - Check authorization
+// - Execute client query
+// - Echo JSON response
+
+// If the supplied credentials are invalid, the authorize function will echo
+// JSON data and then die()
+$authToken = authorize();
+$data = executeQuery($authToken);
 echo json_encode($data, JSON_PRETTY_PRINT);
 die();
+
+//
+//////////
 
 //////////
 // Type definitions
@@ -58,6 +74,11 @@ class Result {
 	public $data;
 }
 
+class AuthToken {
+	public $projectName;
+	public $projectDir;
+}
+
 //
 //////////
 
@@ -71,19 +92,23 @@ class Result {
 function authorize () {
 	global $dataDirectory;
 
-	if ($_GET['user'] === 'dach') {
-		return $dataDirectory . '/dach';
+	if ($_GET['user'] === 'dach' && $_GET['password'] === 'dach') {
+		$result = new AuthToken();
+		$result->projectDir = $dataDirectory . '/dach';
+		$result->projectName = 'Typologie der Vokal- und Konsonantenquantitäten (DACH)';
+		return $result;
 	}
 
 	$result = new Result();
 	$result->success = false;
 	$result->message = 'Bad username or password';
+	$result->data = 'BADLOGIN';
 
 	echo json_encode($result, JSON_PRETTY_PRINT);
 	die();
 }
 
-function compileData ($directory) {
+function executeQuery ($authToken) {
 	$result = new Result();
 
 	switch ($_GET['query']) {
@@ -95,14 +120,14 @@ function compileData ($directory) {
 			$result->data = new Dataset();
 
 			// Project name
-			$result->data->name = basename($directory);
+			$result->data->name = $authToken->projectName;
 
 			$result->data->uploads = array(new Upload());
 			$result->data->uploads[0]->uuid = "ce284f56-f212-477f-9701-14289b8891c1";
 			$result->data->uploads[0]->date = "2016-05-21 10:38 CEST";
 
 			// Find databases belonging to the project
-			$databases = readProjectDirectory ($directory);
+			$databases = readProjectDirectory ($authToken->projectDir);
 			if ($databases === false) {
 				$result->success = false;
 				$result->message = 'Reading the project directory failed.';
