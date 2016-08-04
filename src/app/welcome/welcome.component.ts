@@ -1,5 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {ROUTER_DIRECTIVES, Router} from "@angular/router";
+import {ProjectDataService} from "../project-data.service";
+import {Subscription} from "rxjs/Rx";
 
 @Component({
 	moduleId: module.id,
@@ -11,9 +13,12 @@ import {ROUTER_DIRECTIVES, Router} from "@angular/router";
 export class WelcomeComponent implements OnInit {
 	private loginFailed:boolean = false;
 	private password:string;
+	private sub:Subscription;
+	private unknownError:boolean = false;
 	private username:string;
 
-	constructor(private router:Router) {
+	constructor(private projectDataService:ProjectDataService,
+	            private router:Router) {
 	}
 
 	ngOnInit() {
@@ -22,12 +27,20 @@ export class WelcomeComponent implements OnInit {
 	private checkLogin() {
 		this.loginFailed = false;
 
-		window.setTimeout(() => {
-			if (this.username === 'dach') {
-				this.router.navigate(['/project/overview']);
-			} else {
+		if (this.sub) {
+			return;
+		}
+
+		this.sub = this.projectDataService.login(this.username, this.password).subscribe(next => {
+			this.router.navigate(['/project/overview']);
+			this.sub = null;
+		}, error => {
+			if (error === 'BADLOGIN') {
 				this.loginFailed = true;
+			} else {
+				this.unknownError = true;
 			}
-		}, 500);
+			this.sub = null;
+		});
 	}
 }

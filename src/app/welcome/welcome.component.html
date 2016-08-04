@@ -23,6 +23,20 @@
 				<span class="pull-right glyphicon glyphicon-remove-sign"
 				      (click)="loginFailed = false"></span>
 			</p>
+			<div *ngIf="unknownError" class="alert alert-danger" role="alert">
+				<span class="pull-right glyphicon glyphicon-remove-sign"
+				      (click)="unknownError = false">
+				</span>
+
+				<p>
+					An unknown error has occurred. The project data could not be loaded.
+				</p>
+
+				<p>
+					Please check your internet connection, or consult your system administrator
+					or the software provider.
+				</p>
+			</div>
 		</form>
 	</div>
 </div>

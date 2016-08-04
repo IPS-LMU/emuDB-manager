@@ -2,59 +2,86 @@ import {Injectable} from "@angular/core";
 import {ProjectInfo} from "./types/project-info";
 import {DatabaseInfo} from "./types/database-info";
 import {BundleList} from "./types/bundle-list";
-import {Http, Response} from "@angular/http";
-import {Observable, Observer} from "rxjs/Rx";
+import {Http, URLSearchParams} from "@angular/http";
+import {Observable, Observer, ConnectableObservable} from "rxjs/Rx";
 import {SessionInfo} from "./types/session-info";
 import {UploadInfo} from "./types/upload-info";
 
 @Injectable()
 export class ProjectDataService {
-	private info:Observable<ProjectInfo>;
+	private infoObservable:ConnectableObservable<ProjectInfo>;
 	private infoObserver:Observer<ProjectInfo>;
-
+	private password:string;
 	private url = 'https://www.phonetik.uni-muenchen.de/merkel-pool/emudb-manager.php';
+	private username:string;
 
 	constructor(private http:Http) {
-		this.info = Observable.create(observer => {
+		this.createHotObservable();
+	}
+
+	private createHotObservable():void {
+		this.infoObservable = Observable.create(observer => {
 			this.infoObserver = observer;
-			this.fetchData();
-		}).publishReplay(1).refCount();
+		}).publishReplay(1);
+		this.infoObservable.connect();
 	}
 
 	public fetchData():void {
-		console.log('fetching data');
+		console.log('Fetching data');
+
+		let params = new URLSearchParams();
+		params.set('query', 'projectInfo');
+		params.set('user', this.username);
+		params.set('password', this.password);
+
 		this.http
-			.get(this.url + '?user=dach&query=projectInfo')
-			.map(this.extractData)
-			.catch(this.handleError)
-			.subscribe(value => {
-				this.infoObserver.next(value);
+			.get(this.url, {search: params})
+			.map(response => {
+				return response.json();
+			})
+			.catch(error => {
+				return Observable.throw('Error during download', error);
+			})
+			.subscribe((next:any) => {
+				console.log('Received JSON data', next);
+
+				if (next.success === true) {
+					this.infoObserver.next(next.data);
+				} else {
+					if (next.data === 'BADLOGIN') {
+						this.infoObserver.error('BADLOGIN');
+						this.createHotObservable();
+					} else {
+						this.infoObserver.error('UNKNOWN ERROR');
+					}
+				}
 			});
 	}
 
-	private extractData(res:Response) {
-		let body = res.json();
+	public login(username:string, password:string):Observable<void> {
+		this.username = username;
+		this.password = password;
 
-		if (body.success === true) {
-			return body.data || {};
-		} else {
-			return {};
-		}
+		this.fetchData();
+
+		return this.infoObservable.map((x:ProjectInfo) => {
+			return null;
+		});
 	}
 
-	private handleError(error:any) {
-		console.log('Error during download', error);
-		return Observable.throw('Error during download');
+	public logout():void {
+		this.createHotObservable();
 	}
+
 
 	public getAllDatabases():Observable<DatabaseInfo[]> {
-		return this.info.map((x:ProjectInfo) => {
+		return this.infoObservable.map((x:ProjectInfo) => {
 			return x.databases;
 		});
 	}
 
 	public getAllBundleLists():Observable<BundleList[]> {
-		return this.info.map((x:ProjectInfo) => {
+		return this.infoObservable.map((x:ProjectInfo) => {
 			let result:BundleList[] = [];
 			for (let i = 0; i < x.databases.length; ++i) {
 				result = result.concat(x.databases[i].bundleLists);
@@ -64,7 +91,7 @@ export class ProjectDataService {
 	}
 
 	public getBundleList(database:string, name:string, status:string):Observable<BundleList> {
-		return this.info.map((x:ProjectInfo) => {
+		return this.infoObservable.map((x:ProjectInfo) => {
 			for (let i = 0; i < x.databases.length; ++i) {
 				if (x.databases[i].name === database) {
 					for (let j = 0; j < x.databases[i].bundleLists.length; ++j) {
@@ -89,7 +116,7 @@ export class ProjectDataService {
 	 * @returns A DatabaseInfo object if the DB exists, otherwise null
 	 */
 	public getDatabase(name:string):Observable<DatabaseInfo> {
-		return this.info.map((x:ProjectInfo) => {
+		return this.infoObservable.map((x:ProjectInfo) => {
 			for (let i = 0; i < x.databases.length; ++i) {
 				if (x.databases[i].name === name) {
 					return x.databases[i];
@@ -100,19 +127,19 @@ export class ProjectDataService {
 	}
 
 	public getName():Observable<string> {
-		return this.info.map((x:ProjectInfo) => {
+		return this.infoObservable.map((x:ProjectInfo) => {
 			return x.name;
 		});
 	}
 
 	public getAllUploads():Observable<UploadInfo[]> {
-		return this.info.map((x:ProjectInfo) => {
+		return this.infoObservable.map((x:ProjectInfo) => {
 			return x.uploads;
 		});
 	}
 
 	public getUpload(uuid:string):Observable<UploadInfo> {
-		return this.info.map((x:ProjectInfo) => {
+		return this.infoObservable.map((x:ProjectInfo) => {
 			for (let i = 0; i < x.uploads.length; ++i) {
 				if (x.uploads[i].uuid === uuid) {
 					return x.uploads[i];

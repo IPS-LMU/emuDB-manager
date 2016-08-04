@@ -2,7 +2,7 @@ import {Component, OnInit, OnDestroy} from "@angular/core";
 import {DatabaseInfo} from "../types/database-info";
 import {BundleList} from "../types/bundle-list";
 import {ProjectDataService} from "../project-data.service";
-import {ROUTER_DIRECTIVES} from "@angular/router";
+import {ROUTER_DIRECTIVES, Router} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 import {UploadInfo} from "../types/upload-info";
 
@@ -21,7 +21,8 @@ export class ProjectComponent implements OnInit,OnDestroy {
 	private subUploads:Subscription;
 	private uploads:UploadInfo[] = [];
 
-	constructor(private projectDataService:ProjectDataService) {
+	constructor(private projectDataService:ProjectDataService,
+	            private router:Router) {
 	}
 
 	ngOnInit():any {
@@ -46,5 +47,10 @@ export class ProjectComponent implements OnInit,OnDestroy {
 		if (this.subUploads) {
 			this.subUploads.unsubscribe();
 		}
+	}
+
+	private logout():void {
+		this.projectDataService.logout();
+		this.router.navigate(['/project']);
 	}
 }
