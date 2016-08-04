@@ -14,6 +14,13 @@ die();
 // Type definitions
 //
 
+class Upload {
+	public $uuid;
+	public $date;
+	public $name;
+	public $sessions;
+}
+
 class Session {
 	public $name;
 	public $bundles;
@@ -89,7 +96,10 @@ function compileData ($directory) {
 
 			// Project name
 			$result->data->name = basename($directory);
-			$result->data->uploads = array();
+
+			$result->data->uploads = array(new Upload());
+			$result->data->uploads[0]->uuid = "ce284f56-f212-477f-9701-14289b8891c1";
+			$result->data->uploads[0]->date = "2016-05-21 10:38 CEST";
 
 			// Find databases belonging to the project
 			$databases = readProjectDirectory ($directory);
@@ -101,6 +111,12 @@ function compileData ($directory) {
 			} else {
 				$result->data->databases = $databases;
 				$result->success = true;
+
+				//debug
+				$result->data->uploads[0]->sessions =
+				$result->data->databases[2]->sessions;
+				//end debug
+
             	return $result;
 			}
 		break;
