@@ -1,10 +1,24 @@
 <?php
 
+// (c) 2016 Markus Jochim <markusjochim@phonetik.uni-muenchen.de>
+
 //////////
 // Configuration
 
 header("Access-Control-Allow-Origin: *");
 $dataDirectory = '/homes/markusjochim/manager-data';
+
+//
+//////////
+
+
+//////////
+// Include helper files
+//
+
+require_once 'type_definitions.php';
+require_once 'json_file.php';
+require_once 'rename_db.php';
 
 //
 //////////
@@ -25,63 +39,6 @@ die();
 
 //
 //////////
-
-//////////
-// Type definitions
-//
-
-class Upload {
-	public $uuid;
-	public $date;
-	public $name;
-	public $sessions;
-}
-
-class Session {
-	public $name;
-	public $bundles;
-}
-
-class BundleListItem {
-	public $name;
-	public $session;
-	public $finishedEditing;
-	public $comment;
-}
-
-class BundleList {
-	public $name;
-	public $status;
-	public $items;
-}
-
-class Database {
-	public $name;
-	public $dbConfig;
-	public $bundleLists;
-	public $sessions;
-}
-
-class Dataset {
-	public $name;
-	public $databases;
-	public $uploads;
-}
-
-class Result {
-	public $success;
-	public $message;
-	public $data;
-}
-
-class AuthToken {
-	public $projectName;
-	public $projectDir;
-}
-
-//
-//////////
-
 
 //////////
 // Functions
@@ -248,7 +205,7 @@ function readBundleLists ($directory) {
 			$bundleList = new BundleList();
 			$bundleList->name = substr($entry, 0, -16);
 			$bundleList->status = '';
-			$bundleList->items = parseBundleList($directory . '/' . $entry);
+			$bundleList->items = load_json_file($directory . '/' . $entry);
 			if ($bundleList->items === false) {
 				return false;
 			}
@@ -265,7 +222,7 @@ function readBundleLists ($directory) {
 					$bundleList = new BundleList();
 					$bundleList->name = substr($subdirEntry, 0, -16);
 					$bundleList->status = substr($entry, 0, -7);
-					$bundleList->items = parseBundleList(
+					$bundleList->items = load_json_file(
 						$directory . '/' . $entry . '/' . $subdirEntry
 					);
 					if ($bundleList->items === false) {
@@ -278,30 +235,6 @@ function readBundleLists ($directory) {
 	}
 
 	return $bundleLists;
-}
-
-function parseBundleList ($file) {
-	$length = filesize ($file);
-	if ($length === false) {
-		return false;
-	}
-
-	$fh = fopen($file, 'r');
-	if ($fh === false) {
-		return false;
-	}
-
-	$contents = fread($fh, $length);
-	if ($contents === false) {
-		return false;
-	}
-
-	$object = json_decode($contents);
-	if (is_null($object)) {
-		return false;
-	}
-
-	return $object;
 }
 
 /**
