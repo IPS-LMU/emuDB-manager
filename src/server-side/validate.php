@@ -6,7 +6,7 @@
 // However, it is no security issue if it is called directly, because it only
 // contains functions (thus, no code is executed).
 
-require_once 'helper_result.php';
+require_once 'result_helper.php';
 
 /**
  * Check whether a given name is a valid database name, which means it can
@@ -20,20 +20,20 @@ function validateDatabaseName ($name) {
 	$result = preg_match('/[^a-zA-Z0-9\-_]/', $name);
 
 	if ($result === false) {
-		return helperFailure(
+		return negativeResult(
 			'REGEX_FAILED',
 			'Failed to check whether a given database name is valid'
 		);
 	}
 
 	if ($result === 1) {
-		return helperFailure(
+		return negativeResult(
 			'INVALID_DATABASE_NAME',
 			'The specified database name is invalid'
 		);
 	}
 
-	return helperSuccess(null);
+	return positiveResult(null);
 }
 
 ?>

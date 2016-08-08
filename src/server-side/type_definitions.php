@@ -49,7 +49,7 @@ class AuthToken {
 	public $projectDir;
 }
 
-class HelperResult {
+class Result {
 	public $success; // Boolean
 	public $data;    // Machine-readable (error string or result data)
 	public $message; // human-readable error string (in case of success: empty string)

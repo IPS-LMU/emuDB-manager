@@ -16,10 +16,10 @@ $dataDirectory = '/homes/markusjochim/manager-data';
 // Include helper files
 //
 
-require_once 'helper_result.php';
 require_once 'json_file.php';
 require_once 'project_info.php';
 require_once 'rename_db.php';
+require_once 'result_helper.php';
 require_once 'type_definitions.php';
 require_once 'validate.php';
 
@@ -59,7 +59,7 @@ function authorize () {
 		return $result;
 	}
 
-	$result = helperFailure (
+	$result = negativeResult (
 		'BAD_LOGIN',
 		'Bad username or password'
 	);
@@ -77,7 +77,7 @@ function authorize () {
 function executeQuery ($authToken) {
 	switch ($_GET['query']) {
 		case 'login':
-			return helperSuccess(null);
+			return positiveResult(null);
 		break;
 
 		case 'rename_db':
@@ -103,7 +103,7 @@ function executeQuery ($authToken) {
 		break;
 
 		default:
-			return helperFailure (
+			return negativeResult (
 				'INVALID_QUERY',
 				'An invalid query has been performed.'
 			);

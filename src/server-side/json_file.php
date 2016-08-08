@@ -7,7 +7,7 @@
 // contains functions (thus, no code is executed).
 
 require_once 'type_definitions.php';
-require_once 'helper_result.php';
+require_once 'result_helper.php';
 
 /**
  * Opens a file, decodes the JSON contained in it and returns the decoded
@@ -19,7 +19,7 @@ require_once 'helper_result.php';
 function load_json_file ($filename) {
 	$length = filesize ($filename);
 	if ($length === false) {
-		return helperFailure (
+		return negativeResult (
 			'LOAD_JSON_FAILED',
 			'Loading a JSON file failed'
 		);
@@ -27,7 +27,7 @@ function load_json_file ($filename) {
 
 	$fh = fopen($filename, 'r');
 	if ($fh === false) {
-		return helperFailure (
+		return negativeResult (
 			'LOAD_JSON_FAILED',
 			'Loading a JSON file failed'
 		);
@@ -35,7 +35,7 @@ function load_json_file ($filename) {
 
 	$contents = fread($fh, $length);
 	if ($contents === false) {
-		return helperFailure (
+		return negativeResult (
 			'LOAD_JSON_FAILED',
 			'Loading a JSON file failed'
 		);
@@ -46,13 +46,13 @@ function load_json_file ($filename) {
 
 	$object = json_decode($contents);
 	if (is_null($object)) {
-		return helperFailure (
+		return negativeResult (
 			'PARSE_JSON_FAILED',
 			'Loading a JSON file failed'
 		);
 	}
 
-	return helperSuccess($object);
+	return positiveResult($object);
 }
 
 /**
@@ -66,7 +66,7 @@ function save_json_file ($object, $filename) {
 	$json = json_encode($object);
 
 	if ($json === false) {
-		return helperFailure (
+		return negativeResult (
 			'SAVE_JSON_FAILED',
 			'Saving a JSON file failed'
 		);
@@ -74,14 +74,14 @@ function save_json_file ($object, $filename) {
 
 	$fh = fopen ($filename, 'w');
 	if ($fh === false) {
-		return helperFailure (
+		return negativeResult (
 			'SAVE_JSON_FAILED',
 			'Saving a JSON file failed'
 		);
 	}
 
 	if (fwrite ($fh, $json) === false) {
-		return helperFailure (
+		return negativeResult (
 			'SAVE_JSON_FAILED',
 			'Saving a JSON file failed'
 		);
@@ -90,7 +90,7 @@ function save_json_file ($object, $filename) {
 	fclose($fh);
 	// fclose errors are ignored
 
-	return helperSuccess(null);
+	return positiveResult(null);
 }
 
 ?>

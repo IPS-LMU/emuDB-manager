@@ -11,8 +11,8 @@ require_once 'type_definitions.php';
 /**
  * Returns a HelperResult object with success set to false
  */
-function helperFailure ($machineReadable, $humanReadable) {
-	$result = new HelperResult();
+function negativeResult ($machineReadable, $humanReadable) {
+	$result = new Result();
 	$result->success = false;
 	$result->data = $machineReadable;
 	$result->message = $humanReadable;
@@ -22,8 +22,8 @@ function helperFailure ($machineReadable, $humanReadable) {
 /**
  * Returns a HelperResult object with success set to true
  */
-function helperSuccess ($data) {
-	$result = new HelperResult();
+function positiveResult ($data) {
+	$result = new Result();
 	$result->success = true;
 	$result->data = $data;
 	$result->message = "";

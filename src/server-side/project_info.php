@@ -6,6 +6,10 @@
 // However, it is no security issue if it is called directly, because it only
 // contains functions (thus, no code is executed)
 
+require_once 'json_file.php';
+require_once 'result_helper.php';
+require_once 'type_definitions.php';
+
 
 /**
  * Compile a Dataset object containing info about all databases and uploads
@@ -54,7 +58,7 @@ function readDirOfUploads ($directory) {
 	$result[0]->date = '2016-05-21 10:38 CEST';
 	// end fake data
 
-	return helperSuccess($result);
+	return positiveResult($result);
 }
 
 
@@ -69,7 +73,7 @@ function readDirOfDatabases ($directory) {
 	$dirHandle = dir($directory);
 
 	if ($dirHandle === false || is_null($dirHandle)) {
-		return helperFailure(
+		return negativeResult(
 			'LIST_DIR_FAILED',
 			'Failed to read directory of databases.'
 		);
@@ -91,7 +95,7 @@ function readDirOfDatabases ($directory) {
 		}
 	}
 
-	return helperSuccess($result);
+	return positiveResult($result);
 }
 
 /**
@@ -110,7 +114,7 @@ function readDatabase ($directory) {
 	$dirHandle = dir($directory);
 
 	if ($dirHandle === false || is_null($dirHandle)) {
-		return helperFailure(
+		return negativeResult(
 			'LIST_DIR_FAILED',
 			'Failed to read database directory.'
 		);
@@ -149,7 +153,7 @@ function readDatabase ($directory) {
 		}
 	}
 
-	return helperSuccess($db);
+	return positiveResult($db);
 }
 
 /**
@@ -165,7 +169,7 @@ function readBundleLists ($directory) {
 	$dirHandle = dir ($directory);
 
 	if ($dirHandle === false || is_null($dirHandle)) {
-		return helperFailure(
+		return negativeResult(
 			'LIST_DIR_FAILED',
 			'Failed to read directory of bundle lists.'
 		);
@@ -189,7 +193,7 @@ function readBundleLists ($directory) {
 			$subdirHandle = dir ($directory . '/' . $entry);
 
 			if ($subdirHandle === false || is_null($subdirHandle)) {
-				return helperFailure(
+				return negativeResult(
 					'LIST_DIR_FAILED',
 					'Failed to read directory of bundle lists.'
 				);
@@ -216,7 +220,7 @@ function readBundleLists ($directory) {
 		}
 	}
 
-	return helperSuccess($bundleLists);
+	return positiveResult($bundleLists);
 }
 
 /**
@@ -234,7 +238,7 @@ function readSession ($directory) {
 	$dirHandle = dir ($directory);
 
 	if ($dirHandle === false || is_null($dirHandle)) {
-		return helperFailure(
+		return negativeResult(
 			'LIST_DIR_FAILED',
 			'Failed to read session directory.'
 		);
@@ -249,7 +253,7 @@ function readSession ($directory) {
 		}
 	}
 
-	return helperSuccess($session);
+	return positiveResult($session);
 }
 
 ?>
