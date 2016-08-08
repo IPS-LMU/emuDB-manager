@@ -44,12 +44,6 @@ class Dataset {
 	public $uploads;
 }
 
-class Result {
-	public $success;
-	public $data;
-	public $message;
-}
-
 class AuthToken {
 	public $projectName;
 	public $projectDir;
