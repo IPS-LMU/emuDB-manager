@@ -20,8 +20,8 @@ require_once 'json_file.php';
 function rename_db($projectDir, $db, $newName) {
 	$result = new helperResult();
 
-	$dbDir = $projectDir . '/' . $db . '_emuDB';
-	$newDbDir = $projectDir . '/' . $newName . '_emuDB';
+	$dbDir = $projectDir . '/databases/' . $db . '_emuDB';
+	$newDbDir = $projectDir . '/databases/' . $newName . '_emuDB';
 
 	// Make sure no database with $newName exists already
 	if (file_exists($newDbDir)) {
@@ -53,7 +53,7 @@ function rename_db($projectDir, $db, $newName) {
 	// Change database configuration file
 	$configObject = load_json_file($newDbConfig);
 
-	if ($configObject === false) {
+	if ($configObject->success !== true) {
 		return helperFailure(
 			'LOAD_DBCONFIG_FAILED',
 			'Opening the database configuration file failed.'
@@ -61,7 +61,7 @@ function rename_db($projectDir, $db, $newName) {
 	}
 
 	// Make sure the DBconfig.json has had the correct name
-	if ($configObject->name !== $db) {
+	if ($configObject->data->name !== $db) {
 		return helperFailure(
 			'DBCONFIG_INCORRECT',
 			'The name contained in the database configuration file does not'
@@ -70,8 +70,9 @@ function rename_db($projectDir, $db, $newName) {
 		);
 	}
 
-	$configObject->name = $newName;
-	if (save_json_file($configObject, $newDbConfig) === false) {
+	$configObject->data->name = $newName;
+	$status = save_json_file($configObject->data, $newDbConfig);
+	if ($status->success !== true) {
 		return helperFailure(
 			'DBCONFIG_CHANGE_FAILED',
 			'The database configuration file could not be changed.'

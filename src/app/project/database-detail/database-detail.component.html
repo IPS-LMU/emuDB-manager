@@ -54,13 +54,30 @@
 	</div>
 
 	<div *ngIf="state === 'Rename'" class="panel-body">
-		<form>
+		<form (ngSubmit)="renameDatabase()">
 			<p>
 				Current name of the database: {{database?.name}}
 			</p>
 
 			<p>
-				<input class="form-control" placeholder="New name">
+				<input class="form-control" placeholder="New name" [(ngModel)]="newName"
+				       name="newName">
+			</p>
+
+			<p *ngIf="renameSuccess" class="alert alert-success">
+				<button type="button" class="close" aria-label="Close" (click)="renameSuccess = ''">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+				{{renameSuccess}}
+			</p>
+
+			<p *ngIf="renameError" class="alert alert-danger">
+				<button type="button" class="close" aria-label="Close" (click)="renameError = ''">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+				{{renameError}}
 			</p>
 
 			<p>

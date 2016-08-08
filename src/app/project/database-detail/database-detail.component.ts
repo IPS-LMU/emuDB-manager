@@ -16,6 +16,9 @@ type State = 'BundleLists' | 'Session' | 'EWAConfig' | 'Rename';
 })
 export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private database:DatabaseInfo;
+	private newName:string = '';
+	private renameError:string = '';
+	private renameSuccess:string = '';
 	private subParams:Subscription;
 	private subDatabase:Subscription;
 	private state:State = 'BundleLists';
@@ -38,5 +41,24 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 		if (this.subDatabase) {
 			this.subDatabase.unsubscribe();
 		}
+	}
+
+	private renameDatabase () {
+		this.renameError = '';
+		this.renameSuccess = '';
+
+		this.projectDataService.renameDatabase(this.database.name, this.newName).subscribe (next => {
+			this.renameSuccess = 'Successfully renamed';
+			this.projectDataService.fetchData();
+
+			if (this.subDatabase) {
+				this.subDatabase.unsubscribe();
+			}
+			this.subDatabase = this.projectDataService.getDatabase(this.newName).subscribe(nextDatabase => {
+				this.database = nextDatabase;
+			});
+		}, error => {
+			this.renameError = error.message;
+		});
 	}
 }

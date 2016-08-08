@@ -6,6 +6,7 @@ import {Http, URLSearchParams} from "@angular/http";
 import {Observable, Observer, ConnectableObservable} from "rxjs/Rx";
 import {SessionInfo} from "./types/session-info";
 import {UploadInfo} from "./types/upload-info";
+import {ServerResponse} from "./types/server-response";
 
 @Injectable()
 export class ProjectDataService {
@@ -27,34 +28,39 @@ export class ProjectDataService {
 	}
 
 	public fetchData():void {
-		console.log('Fetching data');
-
 		let params = new URLSearchParams();
 		params.set('query', 'project_info');
+
+		this.serverQuery(params).subscribe((next:any) => {
+			console.log('Received JSON data', next);
+
+			if (next.success === true) {
+				this.infoObserver.next(next.data);
+			} else {
+				if (next.data === 'BADLOGIN') {
+					this.infoObserver.error('BADLOGIN');
+					this.createHotObservable();
+				} else {
+					this.infoObserver.error('UNKNOWN ERROR');
+				}
+			}
+		});
+	}
+
+	private serverQuery(params:URLSearchParams):Observable<ServerResponse> {
+		console.log ('Querying server', params);
 		params.set('user', this.username);
 		params.set('password', this.password);
 
-		this.http
+		return this.http
 			.get(this.url, {search: params})
 			.map(response => {
-				return response.json();
+				let json = response.json();
+				console.log('Received JSON data', json);
+				return json;
 			})
 			.catch(error => {
 				return Observable.throw('Error during download', error);
-			})
-			.subscribe((next:any) => {
-				console.log('Received JSON data', next);
-
-				if (next.success === true) {
-					this.infoObserver.next(next.data);
-				} else {
-					if (next.data === 'BADLOGIN') {
-						this.infoObserver.error('BADLOGIN');
-						this.createHotObservable();
-					} else {
-						this.infoObserver.error('UNKNOWN ERROR');
-					}
-				}
 			});
 	}
 
@@ -155,5 +161,24 @@ export class ProjectDataService {
 			result += sessions[i].bundles.length;
 		}
 		return result;
+	}
+
+	public renameDatabase (oldName:string, newName:string):Observable<void> {
+		let params = new URLSearchParams();
+		params.set('query', 'rename_db');
+		params.set('old_name', oldName);
+		params.set('new_name', newName);
+
+		return Observable.create(observer => {
+			this.serverQuery(params).subscribe((next:any) => {
+				if (next.success === true) {
+					observer.next(null);
+					observer.complete();
+				} else {
+					observer.error(next);
+				}
+			});
+
+		});
 	}
 }
