@@ -12,7 +12,7 @@ export class ProjectDataService {
 	private infoObservable:ConnectableObservable<ProjectInfo>;
 	private infoObserver:Observer<ProjectInfo>;
 	private password:string;
-	private url = 'https://www.phonetik.uni-muenchen.de/merkel-pool/emudb-manager.php';
+	private url = 'https://www.phonetik.uni-muenchen.de/merkel-pool/emudb-manager/emudb-manager.php';
 	private username:string;
 
 	constructor(private http:Http) {
@@ -30,7 +30,7 @@ export class ProjectDataService {
 		console.log('Fetching data');
 
 		let params = new URLSearchParams();
-		params.set('query', 'projectInfo');
+		params.set('query', 'project_info');
 		params.set('user', this.username);
 		params.set('password', this.password);
 
