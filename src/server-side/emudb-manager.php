@@ -17,7 +17,7 @@ $dataDirectory = '/homes/markusjochim/manager-data';
 //
 
 require_once 'json_file.php';
-require_once 'project_info.php'
+require_once 'project_info.php';
 require_once 'rename_db.php';
 require_once 'type_definitions.php';
 require_once 'validate.php';

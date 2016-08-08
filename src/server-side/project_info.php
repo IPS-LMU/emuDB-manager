@@ -22,18 +22,20 @@ function project_info ($authToken) {
 		$result->data->name = $authToken->projectName;
 
 		// Find databases belonging to the project
-		$databases = readDirOfDatabases ($dbDir);
-		if ($databases->success !== true) {
-			return $databases;
+		$dbStat = readDirOfDatabases ($dbDir);
+		if ($dbStat->success === true) {
+			$result->data->databases = $dbStat->data;
+		} else {
+			return $dbStat;
 		}
-		$result->data->databases = $databases->data;
 
 		// Find uploads belonging to the project
-		$uploads = readDirOfUploads ($uploadDir);
-		if ($uploads->success !== true) {
-			return $uploads;
+		$uploadsStat = readDirOfUploads ($uploadDir);
+		if ($uploadsStat->success === true) {
+			$result->data->uploads = $uploadsStat->data;
+		} else {
+			return $uploadsStat;
 		}
-		$result->data->uploads = $uploads->data;
 
 		$result->success = true;
 
@@ -52,7 +54,7 @@ function readDirOfUploads ($directory) {
 	$result[0]->date = '2016-05-21 10:38 CEST';
 	// end fake data
 
-	return $result;
+	return helperSuccess($result);
 }
 
 
@@ -147,7 +149,7 @@ function readDatabase ($directory) {
 		}
 	}
 
-	return $db;
+	return helperSuccess($db);
 }
 
 /**
