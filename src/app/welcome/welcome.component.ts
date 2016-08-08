@@ -15,6 +15,7 @@ export class WelcomeComponent implements OnInit {
 	private password:string;
 	private sub:Subscription;
 	private unknownError:boolean = false;
+	private unknownErrorMessage:string = '';
 	private username:string;
 
 	constructor(private projectDataService:ProjectDataService,
@@ -34,16 +35,16 @@ export class WelcomeComponent implements OnInit {
 
 		this.sub = this.projectDataService.login(this.username, this.password).subscribe(next => {
 			this.router.navigate(['/project/overview']);
-			this.sub.unsubscribe();
-			this.sub = null;
 		}, error => {
-			console.log(error);
-			if (error === 'BADLOGIN') {
+			if (error.data === 'BADLOGIN') {
 				this.loginFailed = true;
 			} else {
 				this.unknownError = true;
+				this.unknownErrorMessage = error.message;
 			}
-			this.sub.unsubscribe();
+
+			this.sub = null;
+		}, () => {
 			this.sub = null;
 		});
 	}

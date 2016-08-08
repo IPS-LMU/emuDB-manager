@@ -32,8 +32,6 @@ export class ProjectDataService {
 		params.set('query', 'project_info');
 
 		this.serverQuery(params).subscribe((next:any) => {
-			console.log('Received JSON data', next);
-
 			if (next.success === true) {
 				this.infoObserver.next(next.data);
 			} else {
@@ -65,13 +63,22 @@ export class ProjectDataService {
 	}
 
 	public login(username:string, password:string):Observable<void> {
-		this.username = username;
-		this.password = password;
+		return Observable.create(observer => {
+			this.username = username;
+			this.password = password;
 
-		this.fetchData();
+			let params = new URLSearchParams();
+			params.set('query', 'project_info');
 
-		return this.infoObservable.map((x:ProjectInfo) => {
-			return null;
+			this.serverQuery(params).subscribe((next:any) => {
+				if (next.success === true) {
+					observer.next(null);
+					observer.complete();
+					this.fetchData();
+				} else {
+					observer.error(next);
+				}
+			});
 		});
 	}
 
@@ -164,12 +171,12 @@ export class ProjectDataService {
 	}
 
 	public renameDatabase (oldName:string, newName:string):Observable<void> {
-		let params = new URLSearchParams();
-		params.set('query', 'rename_db');
-		params.set('old_name', oldName);
-		params.set('new_name', newName);
-
 		return Observable.create(observer => {
+			let params = new URLSearchParams();
+			params.set('query', 'rename_db');
+			params.set('old_name', oldName);
+			params.set('new_name', newName);
+
 			this.serverQuery(params).subscribe((next:any) => {
 				if (next.success === true) {
 					observer.next(null);
@@ -178,7 +185,6 @@ export class ProjectDataService {
 					observer.error(next);
 				}
 			});
-
 		});
 	}
 }
