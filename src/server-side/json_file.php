@@ -3,8 +3,8 @@
 // (c) 2016 Markus Jochim <markusjochim@phonetik.uni-muenchen.de>
 
 // This script should be included and not called directly.
-// However, it is unproblematic if it is called directly, because it only
-// contains functions.
+// However, it is no security issue if it is called directly, because it only
+// contains functions (thus, no code is executed).
 
 /**
  * Opens a file, decodes the JSON contained in it and returns the decoded
