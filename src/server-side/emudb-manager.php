@@ -16,9 +16,10 @@ $dataDirectory = '/homes/markusjochim/manager-data';
 // Include helper files
 //
 
-require_once 'type_definitions.php';
 require_once 'json_file.php';
 require_once 'rename_db.php';
+require_once 'type_definitions.php';
+require_once 'validate.php';
 
 //
 //////////
@@ -33,8 +34,8 @@ require_once 'rename_db.php';
 // If the supplied credentials are invalid, the authorize function will echo
 // JSON data and then die()
 $authToken = authorize();
-$data = executeQuery($authToken);
-echo json_encode($data, JSON_PRETTY_PRINT);
+$result = executeQuery($authToken);
+echo json_encode($result, JSON_PRETTY_PRINT);
 die();
 
 //
@@ -65,14 +66,38 @@ function authorize () {
 	die();
 }
 
+/**
+ * Check which query the client sent and act accordingly.
+ *
+ * The main thing this function does is validate client input and call a
+ * sub-routine to handle the query.
+ */
 function executeQuery ($authToken) {
-	$result = new Result();
-
 	switch ($_GET['query']) {
+		case 'rename_db':
+			$result = validateDatabaseName($_GET['old_name']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateDatabaseName($_GET['new_name']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return rename_db (
+				$authToken->projectDir,
+				$_GET['old_name'],
+				$_GET['new_name']
+			);
+		break;
+
 		case 'projectInfo':
 			// For projectInfo, we compile a large JSON object containing
 			// information about every database of the project, including its
 			// sessions, bundles, and bundle lists.
+
+			$result = new Result();
 
 			$result->data = new Dataset();
 

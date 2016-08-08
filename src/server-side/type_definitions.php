@@ -42,8 +42,8 @@ class Dataset {
 
 class Result {
 	public $success;
-	public $message;
 	public $data;
+	public $message;
 }
 
 class AuthToken {
