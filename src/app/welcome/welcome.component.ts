@@ -26,6 +26,7 @@ export class WelcomeComponent implements OnInit {
 
 	private checkLogin() {
 		this.loginFailed = false;
+		this.unknownError = false;
 
 		if (this.sub) {
 			return;
@@ -33,13 +34,16 @@ export class WelcomeComponent implements OnInit {
 
 		this.sub = this.projectDataService.login(this.username, this.password).subscribe(next => {
 			this.router.navigate(['/project/overview']);
+			this.sub.unsubscribe();
 			this.sub = null;
 		}, error => {
+			console.log(error);
 			if (error === 'BADLOGIN') {
 				this.loginFailed = true;
 			} else {
 				this.unknownError = true;
 			}
+			this.sub.unsubscribe();
 			this.sub = null;
 		});
 	}
