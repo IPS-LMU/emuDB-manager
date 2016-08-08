@@ -35,8 +35,8 @@ export class ProjectDataService {
 			if (next.success === true) {
 				this.infoObserver.next(next.data);
 			} else {
-				if (next.data === 'BADLOGIN') {
-					this.infoObserver.error('BADLOGIN');
+				if (next.data === 'BAD_LOGIN') {
+					this.infoObserver.error('BAD_LOGIN');
 					this.createHotObservable();
 				} else {
 					this.infoObserver.error('UNKNOWN ERROR');
@@ -68,7 +68,7 @@ export class ProjectDataService {
 			this.password = password;
 
 			let params = new URLSearchParams();
-			params.set('query', 'project_info');
+			params.set('query', 'login');
 
 			this.serverQuery(params).subscribe((next:any) => {
 				if (next.success === true) {

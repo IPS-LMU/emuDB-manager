@@ -36,7 +36,7 @@ export class WelcomeComponent implements OnInit {
 		this.sub = this.projectDataService.login(this.username, this.password).subscribe(next => {
 			this.router.navigate(['/project/overview']);
 		}, error => {
-			if (error.data === 'BADLOGIN') {
+			if (error.data === 'BAD_LOGIN') {
 				this.loginFailed = true;
 			} else {
 				this.unknownError = true;
