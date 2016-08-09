@@ -3,6 +3,7 @@ import {Subscription} from "rxjs/Rx";
 import {ActivatedRoute} from "@angular/router";
 import {ProjectDataService} from "../../project-data.service";
 import {BundleListItem} from "../../types/bundle-list-item";
+import {BundleList} from "../../types/bundle-list";
 
 type State = 'Info' | 'AllBundles' | 'CommentedItems';
 
@@ -14,9 +15,18 @@ type State = 'Info' | 'AllBundles' | 'CommentedItems';
 })
 export class BundleListDetailComponent implements OnInit,OnDestroy {
 	private allBundles:BundleListItem[] = [];
+	private bundleList:BundleList;
 	private commentedBundles:BundleListItem[] = [];
-	private params;
+	private database:string = '';
+	private infoEditor = {
+		isEditing: false,
+		messageError: '',
+		messageSuccess: '',
+		newName: '',
+		newStatus: ''
+	};
 	private state:State = 'Info';
+	private subBundleList:Subscription;
 	private subParams:Subscription;
 
 	constructor(private projectDataService:ProjectDataService,
@@ -29,13 +39,16 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 				nextParams['status'] = '';
 			}
 
-			this.params = nextParams;
-
-			this.projectDataService.getBundleList(
+			this.subBundleList = this.projectDataService.getBundleList(
 				nextParams['database'],
 				nextParams['name'],
 				nextParams['status']
 			).subscribe(nextBundleList => {
+				this.database = nextParams['database'];
+
+				this.bundleList = nextBundleList;
+				this.infoEditor.newName = nextBundleList.name;
+				this.infoEditor.newStatus = nextBundleList.status;
 				this.allBundles = nextBundleList.items;
 				this.commentedBundles = nextBundleList.items.filter(element => {
 					return element.comment !== '';
@@ -47,6 +60,54 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 	ngOnDestroy() {
 		if (this.subParams) {
 			this.subParams.unsubscribe();
+		}
+	}
+
+	private submitNewInfo () {
+		let newName = this.infoEditor.newName;
+		let newStatus = this.infoEditor.newStatus;
+		this.toggleEditInfo();
+
+		this.infoEditor.messageError = '';
+		this.infoEditor.messageSuccess = '';
+
+		this.projectDataService.editBundle(
+			this.database,
+			this.bundleList.name,
+			this.bundleList.status,
+			newName, newStatus
+		).subscribe (next => {
+			this.infoEditor.messageSuccess = 'Successfully edited.';
+			this.projectDataService.fetchData();
+
+			if (this.subBundleList) {
+				this.subBundleList.unsubscribe();
+			}
+			this.subBundleList = this.projectDataService.getBundleList(
+				this.database,
+				this.infoEditor.newName,
+				this.infoEditor.newStatus
+			).subscribe(nextBundleList => {
+				this.bundleList = nextBundleList;
+				this.infoEditor.newName = nextBundleList.name;
+				this.infoEditor.newStatus = nextBundleList.status;
+				this.allBundles = nextBundleList.items;
+				this.commentedBundles = nextBundleList.items.filter(element => {
+					return element.comment !== '';
+				});
+			});
+		}, error => {
+			this.infoEditor.messageError = error.message;
+		});
+	}
+
+	private toggleEditInfo () {
+		if (this.infoEditor.isEditing) {
+			this.infoEditor.newName = this.bundleList.name;
+			this.infoEditor.newStatus = this.bundleList.status;
+			this.infoEditor.isEditing = false;
+		} else {
+			this.infoEditor.isEditing = true;
 		}
 	}
 }

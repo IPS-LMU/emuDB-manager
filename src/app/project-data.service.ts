@@ -13,7 +13,7 @@ export class ProjectDataService {
 	private infoObservable:ConnectableObservable<ProjectInfo>;
 	private infoObserver:Observer<ProjectInfo>;
 	private password:string;
-	private url = 'https://www.phonetik.uni-muenchen.de/merkel-pool/emudb-manager/emudb-manager.php';
+	private url = 'https://www.phonetik.uni-muenchen.de/devel/emudb-manager/emudb-manager.php';
 	private username:string;
 
 	constructor(private http:Http) {
@@ -185,6 +185,16 @@ export class ProjectDataService {
 					observer.error(next);
 				}
 			});
+		});
+	}
+
+	public editBundle (database:string,
+	                   name:string,
+	                   status:string,
+	                   newName:string,
+	                   newStatus:string):Observable<void> {
+		return Observable.create(observer => {
+			observer.error({success: false, message: 'jippie', data: 'JIPII'});
 		});
 	}
 }

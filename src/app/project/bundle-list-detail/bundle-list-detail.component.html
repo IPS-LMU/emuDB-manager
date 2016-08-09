@@ -20,25 +20,75 @@
 		</li>
 	</ul>
 
-	<div *ngIf="state === 'Info'" class="table-responsive">
-		<table class="table table-striped">
-			<tbody>
-			<tr>
-				<td>Database</td>
-				<td>{{params['database']}}</td>
-			</tr>
-			<tr>
-				<td>Editor</td>
-				<td>{{params['name']}}</td>
-			</tr>
-			<tr>
-				<td>Status</td>
-				<td>{{params['status']}}</td>
-			</tr>
-			</tbody>
-		</table>
-	</div>
+	<div *ngIf="state === 'Info'">
+		<div class="table-responsive">
+			<table class="table table-striped">
+				<tbody>
+				<tr>
+					<td>Database</td>
+					<td>{{database}}</td>
+				</tr>
+				<tr>
+					<td>Editor</td>
+					<td>
+						<span *ngIf="!infoEditor.isEditing">{{bundleList?.name}}</span>
+						<input *ngIf="infoEditor.isEditing" class="form-control"
+						       placeholder="New name"
+						       [(ngModel)]="infoEditor.newName"
+						       name="newName">
+					</td>
+				</tr>
+				<tr>
+					<td>Status</td>
+					<td>
+						<span *ngIf="!infoEditor.isEditing">{{bundleList?.status}}</span>
+						<input *ngIf="infoEditor.isEditing" class="form-control"
+						       placeholder="New status"
+						       [(ngModel)]="infoEditor.newStatus"
+						       name="newStatus">
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
 
+		<div class="panel-body">
+			<p>
+				<button class="btn btn-default" [ngClass]="{active: infoEditor.isEditing}"
+				        (click)="toggleEditInfo()">
+					Edit
+				</button>
+			</p>
+
+			<p *ngIf="infoEditor.messageSuccess" class="alert alert-success">
+				<button type="button" class="close" aria-label="Close"
+				        (click)="infoEditor.messageSuccess = ''">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+				{{infoEditor.messageSuccess}}
+			</p>
+
+			<p *ngIf="infoEditor.messageError" class="alert alert-danger">
+				<button type="button" class="close" aria-label="Close"
+				        (click)="infoEditor.messageError = ''">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+				{{infoEditor.messageError}}
+			</p>
+		</div>
+
+		<div *ngIf="infoEditor.isEditing === true" class="panel-body">
+			<form (ngSubmit)="submitNewInfo()">
+
+
+				<p>
+					<button type="submit" class="btn btn-default">Save</button>
+				</p>
+			</form>
+		</div>
+	</div>
 
 	<div *ngIf="state === 'CommentedBundles'" class="table-responsive">
 		<table class="table table-striped">
