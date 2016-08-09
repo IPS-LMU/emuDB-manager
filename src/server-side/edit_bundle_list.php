@@ -26,18 +26,18 @@ function edit_bundle_list (
 	$newStatus,
 	$newName)
 {
-	$dbDir = $projectDir . '/databases/' . $db . '/bundleLists';
+	$dbDir = $projectDir . '/databases/' . $db . '_emuDB/bundleLists';
 
-	if ($old_status === '') {
+	if ($oldStatus === '') {
 		$oldDirectory = $dbDir;
 	} else {
-		$oldDirectory = $dbDir . '/' . $old_status . '_status';
+		$oldDirectory = $dbDir . '/' . $oldStatus . '_status';
 	}
 
-	if ($new_status === '') {
+	if ($newStatus === '') {
 		$newDirectory = $dbDir;
 	} else {
-		$newDirectory = $dbDir . '/' . $new_status . '_status';
+		$newDirectory = $dbDir . '/' . $newStatus . '_status';
 	}
 
 	$oldName = $oldName . '_bundleList.json';
@@ -48,7 +48,8 @@ function edit_bundle_list (
 	if (filetype($oldDirectory . '/' . $oldName) !== 'file') {
 		return negativeResult(
 			'NAME_DOES_NOT_EXIST',
-			'The given bundle list does not exist.'
+			'The given bundle list does not exist. ' . $oldDirectory . '/' .
+			$oldName
 		);
 	}
 

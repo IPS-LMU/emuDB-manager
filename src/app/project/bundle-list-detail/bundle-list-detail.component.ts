@@ -88,6 +88,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 				this.infoEditor.newName,
 				this.infoEditor.newStatus
 			).subscribe(nextBundleList => {
+				// @todo on successful rename, move to newly named bundle list
 				this.bundleList = nextBundleList;
 				this.infoEditor.newName = nextBundleList.name;
 				this.infoEditor.newStatus = nextBundleList.status;
