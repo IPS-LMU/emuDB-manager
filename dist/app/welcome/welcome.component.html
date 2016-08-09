@@ -1,0 +1,74 @@
+<h1 class="page-header">emuDB Manager</h1>
+
+<div class="panel panel-default">
+	<div class="panel-heading">Login</div>
+	<div class="panel-body">
+		<form (ngSubmit)="checkLogin()">
+			<p>
+				<input autofocus class="form-control" placeholder="Username" [(ngModel)]="username"
+				       name="username">
+			</p>
+
+			<p>
+				<input class="form-control" type="password" placeholder="Password"
+				       [(ngModel)]="password" name="password">
+			</p>
+			<p>
+				<button type="submit" class="btn btn-default">
+					Login
+				</button>
+			</p>
+			<p *ngIf="loginFailed" class="alert alert-danger" role="alert">
+				Invalid login credentials supplied.
+				<span class="pull-right glyphicon glyphicon-remove-sign"
+				      (click)="loginFailed = false"></span>
+			</p>
+			<div *ngIf="unknownError" class="alert alert-danger" role="alert">
+				<span class="pull-right glyphicon glyphicon-remove-sign"
+				      (click)="unknownError = false">
+				</span>
+
+				<p>
+					An error has occurred. The project data could not be loaded.
+				</p>
+
+				<p>
+					Please check your internet connection, or consult your system administrator
+					or the software provider.
+				</p>
+
+				<p>
+					Error message: {{unknownErrorMessage}}
+				</p>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="panel panel-primary">
+	<div class="panel-heading">What is this?</div>
+	<div class="panel-body">
+		<p>This manager is a part of the EMU Speech Database Management System (EMU
+			SDMS).</p>
+
+		<p>
+			EMU offers a unique way to store and analyse data collected in the speech
+			sciences
+			and linguistics.
+		</p>
+
+		<p>
+			This manager allows your research group to:
+		</p>
+
+		<ul>
+			<li>create and manage a number of EMU Databases</li>
+			<li>assign parts of the database to project members for segmentation,
+				labelling and
+				validation
+				tasks
+			</li>
+			<li>extend your databases with newly collected data</li>
+		</ul>
+	</div>
+</div>

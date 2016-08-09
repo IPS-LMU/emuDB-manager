@@ -1,0 +1,145 @@
+<h1 class="page-header">Individual bundle list</h1>
+
+<div class="panel panel-default">
+
+	<ul class="panel-body nav nav-pills nav-justified">
+		<li role="presentation" [ngClass]="{active: state === 'Info'}">
+			<a (click)="state = 'Info'">
+				Info
+			</a>
+		</li>
+		<li role="presentation" [ngClass]="{active: state === 'CommentedBundles'}">
+			<a (click)="state = 'CommentedBundles'">
+				Commented bundles <span class="badge">{{commentedBundles?.length}}</span>
+			</a>
+		</li>
+		<li role="presentation" [ngClass]="{active: state === 'AllBundles'}">
+			<a (click)="state = 'AllBundles'">
+				All bundles <span class="badge">{{allBundles?.length}}</span>
+			</a>
+		</li>
+	</ul>
+
+	<div *ngIf="state === 'Info'">
+		<div class="table-responsive">
+			<table class="table table-striped">
+				<tbody>
+				<tr>
+					<td>Database</td>
+					<td>{{database}}</td>
+				</tr>
+				<tr>
+					<td>Editor</td>
+					<td>
+						<span *ngIf="!infoEditor.isEditing">{{bundleList?.name}}</span>
+						<input *ngIf="infoEditor.isEditing" class="form-control"
+						       placeholder="New name"
+						       [(ngModel)]="infoEditor.newName"
+						       name="newName">
+					</td>
+				</tr>
+				<tr>
+					<td>Status</td>
+					<td>
+						<span *ngIf="!infoEditor.isEditing">{{bundleList?.status}}</span>
+						<input *ngIf="infoEditor.isEditing" class="form-control"
+						       placeholder="New status"
+						       [(ngModel)]="infoEditor.newStatus"
+						       name="newStatus">
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="panel-body">
+			<p>
+				<button class="btn btn-default" [ngClass]="{active: infoEditor.isEditing}"
+				        (click)="toggleEditInfo()">
+					Edit
+				</button>
+			</p>
+
+			<p *ngIf="infoEditor.messageSuccess" class="alert alert-success">
+				<button type="button" class="close" aria-label="Close"
+				        (click)="infoEditor.messageSuccess = ''">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+				{{infoEditor.messageSuccess}}
+			</p>
+
+			<p *ngIf="infoEditor.messageError" class="alert alert-danger">
+				<button type="button" class="close" aria-label="Close"
+				        (click)="infoEditor.messageError = ''">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+				{{infoEditor.messageError}}
+			</p>
+		</div>
+
+		<div *ngIf="infoEditor.isEditing === true" class="panel-body">
+			<form (ngSubmit)="submitNewInfo()">
+
+
+				<p>
+					<button type="submit" class="btn btn-default">Save</button>
+				</p>
+			</form>
+		</div>
+	</div>
+
+	<div *ngIf="state === 'CommentedBundles'" class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Session</th>
+				<th>Bundle</th>
+				<th>Finished editing</th>
+				<th>Comment</th>
+			</tr>
+			</thead>
+
+			<tbody>
+			<tr *ngFor="let item of commentedBundles">
+				<td>{{item.session}}</td>
+				<td>{{item.name}}</td>
+				<td>
+					<span *ngIf="item.finishedEditing" class="glyphicon glyphicon-ok"></span>
+					<span *ngIf="!item.finishedEditing"
+					      class="glyphicon glyphicon-remove"></span>
+				</td>
+				<td>{{item.comment}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div *ngIf="state === 'AllBundles'" class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Session</th>
+				<th>Bundle</th>
+				<th>Finished editing</th>
+				<th>Comment</th>
+			</tr>
+			</thead>
+
+			<tbody>
+			<tr *ngFor="let item of allBundles">
+				<td>{{item.session}}</td>
+				<td>{{item.name}}</td>
+				<td>
+					<span *ngIf="item.finishedEditing" class="glyphicon glyphicon-ok"></span>
+					<span *ngIf="!item.finishedEditing"
+					      class="glyphicon glyphicon-remove"></span>
+				</td>
+				<td>{{item.comment}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+</div>

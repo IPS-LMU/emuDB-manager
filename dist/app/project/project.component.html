@@ -1,0 +1,32 @@
+<div class="container-fluid">
+	<div class="row">
+
+		<nav class="col-sm-3 col-md-2 navbar sidebar navbar-collapse collapse">
+			<ul class="nav nav-sidebar">
+				<li routerLinkActive="active"><a routerLink="/project/overview">Project overview</a>
+				</li>
+			</ul>
+			<ul class="nav nav-sidebar">
+				<li routerLinkActive="active"><a routerLink="/project/databases">Databases <span
+					class="badge pull-right">{{databases?.length}}</span></a></li>
+				<li routerLinkActive="active"><a routerLink="/project/bundle-lists">Bundle lists
+					<span
+						class="badge pull-right">{{bundleLists?.length}}</span></a></li>
+				<li routerLinkActive="active"><a routerLink="/project/uploads">Uploads
+					<span class="badge pull-right">{{uploads?.length}}</span></a></li>
+			</ul>
+			<ul class="nav nav-sidebar">
+				<li routerLinkActive="active" class="disabled"><a>Progress</a></li>
+			</ul>
+			<ul class="nav nav-sidebar">
+				<li class="disabled"><a>Live help</a></li>
+				<li><a (click)="projectDataService.fetchData()">Refresh</a></li>
+				<li><a (click)="logout()">Logout</a></li>
+			</ul>
+		</nav>
+
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+</div>

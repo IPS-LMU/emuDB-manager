@@ -1,0 +1,8 @@
+table ul {
+	padding-left: 0;
+	list-style-position: inside;
+}
+
+td {
+	vertical-align: middle !important;
+}

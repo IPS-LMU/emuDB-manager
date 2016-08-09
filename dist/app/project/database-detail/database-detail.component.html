@@ -1,0 +1,89 @@
+<h1 class="page-header">Database: {{database?.name}}</h1>
+
+<p>
+	<button class="btn btn-primary">EMU-webApp</button>
+	<button class="btn btn-default">Download</button>
+</p>
+
+<hr>
+
+<div class="panel panel-default">
+
+	<ul class="panel-body nav nav-pills nav-justified">
+		<li role="presentation" [ngClass]="{active: state === 'BundleLists'}">
+			<a (click)="state = 'BundleLists'">
+				Bundle lists <span class="badge">{{database?.bundleLists?.length}}</span>
+			</a>
+		</li>
+		<li role="presentation" [ngClass]="{active: state === 'Sessions'}">
+			<a (click)="state = 'Sessions'">
+				Sessions <span class="badge">{{database?.sessions?.length}}</span>
+			</a>
+		</li>
+		<li role="presentation" [ngClass]="{disabled: true, active: state === 'EWAConfig'}">
+			<a>EMU-webApp config</a>
+		</li>
+		<li role="presentation" [ngClass]="{active: state === 'Rename'}">
+			<a (click)="state = 'Rename'">
+				Rename database
+			</a>
+		</li>
+	</ul>
+
+
+	<emudbmanager-bundle-lists-overview *ngIf="state === 'BundleLists'" [database]="database?.name">
+	</emudbmanager-bundle-lists-overview>
+
+
+	<div *ngIf="state === 'Sessions'" class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Name</th>
+				<th>Bundles</th>
+			</tr>
+			</thead>
+
+			<tbody>
+			<tr *ngFor="let session of database?.sessions">
+				<td>{{session.name}}</td>
+				<td>{{session.bundles.length}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div *ngIf="state === 'Rename'" class="panel-body">
+		<form (ngSubmit)="renameDatabase()">
+			<p>
+				Current name of the database: {{database?.name}}
+			</p>
+
+			<p>
+				<input class="form-control" placeholder="New name" [(ngModel)]="newName"
+				       name="newName">
+			</p>
+
+			<p *ngIf="renameSuccess" class="alert alert-success">
+				<button type="button" class="close" aria-label="Close" (click)="renameSuccess = ''">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+				{{renameSuccess}}
+			</p>
+
+			<p *ngIf="renameError" class="alert alert-danger">
+				<button type="button" class="close" aria-label="Close" (click)="renameError = ''">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+				{{renameError}}
+			</p>
+
+			<p>
+				<button type="submit" class="btn btn-default">Rename</button>
+			</p>
+		</form>
+	</div>
+
+</div>
