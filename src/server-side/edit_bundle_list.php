@@ -40,12 +40,22 @@ function edit_bundle_list (
 		$newDirectory = $dbDir . '/' . $new_status . '_status';
 	}
 
+	$oldName = $oldName . '_bundleList.json';
+	$newName = $newName . '_bundleList.json';
+
 
 
 	if (filetype($oldDirectory . '/' . $oldName) !== 'file') {
 		return negativeResult(
 			'NAME_DOES_NOT_EXIST',
 			'The given bundle list does not exist.'
+		);
+	}
+
+	if (file_exists($newDirectory . '/' .$newName)) {
+		return negativeResult(
+			'NAME_ALREADY_TAKEN',
+			'The name/status combination for the bundle list ist already taken.'
 		);
 	}
 
