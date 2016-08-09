@@ -16,6 +16,7 @@ $dataDirectory = '/homes/markusjochim/manager-data';
 // Include helper files
 //
 
+require_once 'edit_bundle_list.php';
 require_once 'json_file.php';
 require_once 'project_info.php';
 require_once 'rename_db.php';
