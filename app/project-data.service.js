@@ -14,7 +14,7 @@ var Rx_1 = require("rxjs/Rx");
 var ProjectDataService = (function () {
     function ProjectDataService(http) {
         this.http = http;
-        this.url = 'https://www.phonetik.uni-muenchen.de/devel/emudb-manager/emudb-manager.php';
+        this.url = 'https://www.phonetik.uni-muenchen.de/devel/emuDB-manager/server-side/emudb-manager.php';
         this.createHotObservable();
     }
     ProjectDataService.prototype.createHotObservable = function () {
