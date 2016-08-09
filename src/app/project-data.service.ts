@@ -194,7 +194,22 @@ export class ProjectDataService {
 	                   newName:string,
 	                   newStatus:string):Observable<void> {
 		return Observable.create(observer => {
-			observer.error({success: false, message: 'jippie', data: 'JIPII'});
+			let params = new URLSearchParams();
+			params.set('query', 'edit_bundle_list');
+			params.set('database', database);
+			params.set('old_name', name);
+			params.set('old_status', status);
+			params.set('new_name', newName);
+			params.set('new_status', newStatus);
+
+			this.serverQuery(params).subscribe((next:any) => {
+				if (next.success === true) {
+					observer.next(null);
+					observer.complete();
+				} else {
+					observer.error(next);
+				}
+			});
 		});
 	}
 }
