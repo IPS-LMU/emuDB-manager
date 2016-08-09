@@ -1,0 +1,44 @@
+<div class="table-responsive">
+	<table class="table table-striped">
+		<thead>
+		<tr>
+			<th *ngIf="!database">Database</th>
+			<th>Editor</th>
+			<th>Status</th>
+			<th>Bundles</th>
+			<th>Finished</th>
+			<th>Comments</th>
+			<th>Actions</th>
+		</tr>
+		</thead>
+
+		<tbody>
+
+		<template ngFor let-db [ngForOf]="databases">
+			<template ngFor let-bundleList [ngForOf]="db.bundleLists">
+				<tr>
+					<td *ngIf="!database"><a [routerLink]="['/project/databases', db.name]">{{db.name}}</a>
+					</td>
+					<td>{{bundleList.name}}</td>
+					<td>{{bundleList.status}}</td>
+					<td>{{bundleList.items.length}}</td>
+					<td>{{countFinishedItems(bundleList)}} ({{percentageFinishedItems(bundleList)}}
+						%)
+					</td>
+					<td>{{countCommentedItems(bundleList)}}
+						({{percentageCommentedItems(bundleList)}} %)
+					</td>
+					<td>
+						<button
+							[routerLink]="['/project/bundle-lists', db.name, bundleList.name, bundleList.status]"
+							class="btn btn-default">
+							View
+						</button>
+					</td>
+				</tr>
+			</template>
+		</template>
+
+		</tbody>
+	</table>
+</div>
