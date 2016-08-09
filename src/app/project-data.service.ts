@@ -13,7 +13,7 @@ export class ProjectDataService {
 	private infoObservable:ConnectableObservable<ProjectInfo>;
 	private infoObserver:Observer<ProjectInfo>;
 	private password:string;
-	private url = 'https://www.phonetik.uni-muenchen.de/devel/emudb-manager/emudb-manager.php';
+	private url = 'https://www.phonetik.uni-muenchen.de/devel/emuDB-manager/server-side/emudb-manager.php';
 	private username:string;
 
 	constructor(private http:Http) {
