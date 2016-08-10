@@ -14,7 +14,9 @@ var Rx_1 = require("rxjs/Rx");
 var ProjectDataService = (function () {
     function ProjectDataService(http) {
         this.http = http;
-        this.url = 'https://www.phonetik.uni-muenchen.de/devel/emuDB-manager/server-side/emudb-manager.php';
+        this.url = 'https://www.phonetik.uni-muenchen.de/devel/emuDB-manager/emudb-manager.php';
+        this.username = 'dach';
+        this.password = 'dach';
         this.createHotObservable();
     }
     ProjectDataService.prototype.createHotObservable = function () {
@@ -171,9 +173,32 @@ var ProjectDataService = (function () {
         });
     };
     ProjectDataService.prototype.editBundle = function (database, name, status, newName, newStatus) {
+        var _this = this;
         return Rx_1.Observable.create(function (observer) {
-            observer.error({ success: false, message: 'jippie', data: 'JIPII' });
+            var params = new http_1.URLSearchParams();
+            params.set('query', 'edit_bundle_list');
+            params.set('database', database);
+            params.set('old_name', name);
+            params.set('old_status', status);
+            params.set('new_name', newName);
+            params.set('new_status', newStatus);
+            _this.serverQuery(params).subscribe(function (next) {
+                if (next.success === true) {
+                    observer.next(null);
+                    observer.complete();
+                }
+                else {
+                    observer.error(next);
+                }
+            });
         });
+    };
+    ProjectDataService.prototype.getUploadURL = function () {
+        var params = new http_1.URLSearchParams();
+        params.set('user', this.username);
+        params.set('password', this.password);
+        params.set('query', 'upload');
+        return this.url + '?' + params.toString();
     };
     ProjectDataService = __decorate([
         core_1.Injectable(), 
@@ -182,4 +207,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=project-data.service.js.map
+//# sourceMappingURL=../tmp/broccoli_type_script_compiler-input_base_path-7gBrH8uH.tmp/0/src/app/project-data.service.js.map

@@ -40,4 +40,4 @@ var DatabaseDashboardComponent = (function () {
     return DatabaseDashboardComponent;
 }());
 exports.DatabaseDashboardComponent = DatabaseDashboardComponent;
-//# sourceMappingURL=database-dashboard.component.js.map
+//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-7gBrH8uH.tmp/0/src/app/project/database-dashboard/database-dashboard.component.js.map

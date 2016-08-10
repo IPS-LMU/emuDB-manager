@@ -6,4 +6,4 @@ describe('Component: BundleListsDashboard', function () {
         // expect(component).toBeTruthy();
     });
 });
-//# sourceMappingURL=bundle-lists-dashboard.component.spec.js.map
+//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-7gBrH8uH.tmp/0/src/app/project/bundle-lists-dashboard/bundle-lists-dashboard.component.spec.js.map

@@ -19,8 +19,10 @@
 
 	</emudbmanager-uploads-overview>
 
-	<div *ngIf="state === 'New'" class="panel-body">
+
+
+	<emudbmanager-upload-form *ngIf="state === 'New'" class="panel-body">
 		new upload
-	</div>
+	</emudbmanager-upload-form>
 
 </div>

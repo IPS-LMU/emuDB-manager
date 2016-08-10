@@ -6,9 +6,15 @@
  * User Configuration.
  **********************************************************************************************/
 /** Map relative paths to URLs. */
-var map = {};
+var map = {
+    'ng2-uploader': 'vendor/ng2-uploader',
+};
 /** User packages configuration. */
-var packages = {};
+var packages = {
+    'ng2-uploader': {
+        main: 'index'
+    }
+};
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /***********************************************************************************************
  * Everything underneath this line is managed by the CLI.
@@ -52,4 +58,4 @@ System.config({
 });
 // Apply the user's configuration.
 System.config({ map: map, packages: packages });
-//# sourceMappingURL=system-config.js.map
+//# sourceMappingURL=tmp/broccoli_type_script_compiler-input_base_path-7gBrH8uH.tmp/0/src/system-config.js.map

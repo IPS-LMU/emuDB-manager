@@ -16,6 +16,7 @@ $dataDirectory = '/homes/markusjochim/manager-data';
 // Include helper files
 //
 
+require_once 'edit_bundle_list.php';
 require_once 'json_file.php';
 require_once 'project_info.php';
 require_once 'rename_db.php';
@@ -76,6 +77,42 @@ function authorize () {
  */
 function executeQuery ($authToken) {
 	switch ($_GET['query']) {
+		case 'edit_bundle_list':
+			$result = validateDatabaseName($_GET['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateStatus($_GET['old_status']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateStatus($_GET['new_status']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateBundleListName($_GET['old_name']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateBundleListName($_GET['new_name']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return edit_bundle_list(
+				$authToken->projectDir,
+				$_GET['database'],
+				$_GET['old_status'],
+				$_GET['old_name'],
+				$_GET['new_status'],
+				$_GET['new_name']
+			);
+		break;
+
 		case 'login':
 			return positiveResult(null);
 		break;

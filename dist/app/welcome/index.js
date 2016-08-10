@@ -3,4 +3,4 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 __export(require('./welcome.component'));
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=../../tmp/broccoli_type_script_compiler-input_base_path-7gBrH8uH.tmp/0/src/app/welcome/index.js.map
