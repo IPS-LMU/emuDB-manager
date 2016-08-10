@@ -35,26 +35,38 @@ var BundleListDetailComponent = (function () {
             }
             _this.subBundleList = _this.projectDataService.getBundleList(nextParams['database'], nextParams['name'], nextParams['status']).subscribe(function (nextBundleList) {
                 _this.database = nextParams['database'];
-                _this.bundleList = nextBundleList;
-                _this.infoEditor.newName = nextBundleList.name;
-                _this.infoEditor.newStatus = nextBundleList.status;
-                _this.allBundles = nextBundleList.items;
-                _this.commentedBundles = nextBundleList.items.filter(function (element) {
-                    return element.comment !== '';
-                });
+                _this.setBundleList(nextBundleList);
             });
         });
     };
     BundleListDetailComponent.prototype.ngOnDestroy = function () {
+        if (this.subBundleList) {
+            this.subBundleList.unsubscribe();
+        }
         if (this.subParams) {
             this.subParams.unsubscribe();
         }
     };
-    BundleListDetailComponent.prototype.submitNewInfo = function () {
+    BundleListDetailComponent.prototype.setBundleList = function (bundleList) {
+        console.debug('New bundle list arrived', bundleList);
+        if (bundleList === null) {
+        }
+        else {
+            this.bundleList = bundleList;
+            this.infoEditor.newName = bundleList.name;
+            this.infoEditor.newStatus = bundleList.status;
+            this.allBundles = bundleList.items;
+            this.commentedBundles = bundleList.items.filter(function (element) {
+                return element.comment !== '';
+            });
+        }
+    };
+    BundleListDetailComponent.prototype.saveEditedInfo = function () {
         var _this = this;
         var newName = this.infoEditor.newName;
         var newStatus = this.infoEditor.newStatus;
-        this.toggleEditInfo();
+        this.toggleEditInfo(); // that will reset this.infoEditor.newName
+        // and .newStatus
         this.infoEditor.messageError = '';
         this.infoEditor.messageSuccess = '';
         this.projectDataService.editBundle(this.database, this.bundleList.name, this.bundleList.status, newName, newStatus).subscribe(function (next) {
@@ -63,14 +75,8 @@ var BundleListDetailComponent = (function () {
             if (_this.subBundleList) {
                 _this.subBundleList.unsubscribe();
             }
-            _this.subBundleList = _this.projectDataService.getBundleList(_this.database, _this.infoEditor.newName, _this.infoEditor.newStatus).subscribe(function (nextBundleList) {
-                _this.bundleList = nextBundleList;
-                _this.infoEditor.newName = nextBundleList.name;
-                _this.infoEditor.newStatus = nextBundleList.status;
-                _this.allBundles = nextBundleList.items;
-                _this.commentedBundles = nextBundleList.items.filter(function (element) {
-                    return element.comment !== '';
-                });
+            _this.subBundleList = _this.projectDataService.getBundleList(_this.database, newName, newStatus).subscribe(function (nextBundleList) {
+                _this.setBundleList(nextBundleList);
             });
         }, function (error) {
             _this.infoEditor.messageError = error.message;
@@ -98,4 +104,4 @@ var BundleListDetailComponent = (function () {
     return BundleListDetailComponent;
 }());
 exports.BundleListDetailComponent = BundleListDetailComponent;
-//# sourceMappingURL=bundle-list-detail.component.js.map
+//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-7gBrH8uH.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.js.map

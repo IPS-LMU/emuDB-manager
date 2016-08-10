@@ -6,4 +6,4 @@ describe('Component: Welcome', function () {
         // expect(component).toBeTruthy();
     });
 });
-//# sourceMappingURL=welcome.component.spec.js.map
+//# sourceMappingURL=../../tmp/broccoli_type_script_compiler-input_base_path-7gBrH8uH.tmp/0/src/app/welcome/welcome.component.spec.js.map
