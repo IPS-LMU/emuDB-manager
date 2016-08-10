@@ -22,6 +22,7 @@ require_once 'project_info.php';
 require_once 'rename_db.php';
 require_once 'result_helper.php';
 require_once 'type_definitions.php';
+require_once 'upload.php';
 require_once 'validate.php';
 
 //
@@ -137,6 +138,10 @@ function executeQuery ($authToken) {
 
 		case 'project_info':
 			return project_info ($authToken);
+		break;
+
+		case 'upload':
+			return upload();
 		break;
 
 		default:
