@@ -45,28 +45,42 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 				nextParams['status']
 			).subscribe(nextBundleList => {
 				this.database = nextParams['database'];
-
-				this.bundleList = nextBundleList;
-				this.infoEditor.newName = nextBundleList.name;
-				this.infoEditor.newStatus = nextBundleList.status;
-				this.allBundles = nextBundleList.items;
-				this.commentedBundles = nextBundleList.items.filter(element => {
-					return element.comment !== '';
-				});
+				this.setBundleList(nextBundleList);
 			});
 		});
 	}
 
 	ngOnDestroy() {
+		if (this.subBundleList) {
+			this.subBundleList.unsubscribe();
+		}
 		if (this.subParams) {
 			this.subParams.unsubscribe();
 		}
 	}
 
-	private submitNewInfo () {
+	private setBundleList (bundleList:BundleList) {
+		console.debug('New bundle list arrived', bundleList);
+
+		if (bundleList === null) {
+
+		} else {
+			this.bundleList = bundleList;
+			this.infoEditor.newName = bundleList.name;
+			this.infoEditor.newStatus = bundleList.status;
+
+			this.allBundles = bundleList.items;
+			this.commentedBundles = bundleList.items.filter(element => {
+				return element.comment !== '';
+			});
+		}
+	}
+
+	private saveEditedInfo () {
 		let newName = this.infoEditor.newName;
 		let newStatus = this.infoEditor.newStatus;
-		this.toggleEditInfo();
+		this.toggleEditInfo(); // that will reset this.infoEditor.newName
+		// and .newStatus
 
 		this.infoEditor.messageError = '';
 		this.infoEditor.messageSuccess = '';
@@ -85,17 +99,10 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 			}
 			this.subBundleList = this.projectDataService.getBundleList(
 				this.database,
-				this.infoEditor.newName,
-				this.infoEditor.newStatus
+				newName,
+				newStatus
 			).subscribe(nextBundleList => {
-				// @todo on successful rename, move to newly named bundle list
-				this.bundleList = nextBundleList;
-				this.infoEditor.newName = nextBundleList.name;
-				this.infoEditor.newStatus = nextBundleList.status;
-				this.allBundles = nextBundleList.items;
-				this.commentedBundles = nextBundleList.items.filter(element => {
-					return element.comment !== '';
-				});
+				this.setBundleList(nextBundleList)
 			});
 		}, error => {
 			this.infoEditor.messageError = error.message;
