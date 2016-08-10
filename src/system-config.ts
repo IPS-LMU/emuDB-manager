@@ -8,10 +8,16 @@
  * User Configuration.
  **********************************************************************************************/
 /** Map relative paths to URLs. */
-const map:any = {};
+const map:any = {
+	'ng2-uploader': 'vendor/ng2-uploader',
+};
 
 /** User packages configuration. */
-const packages:any = {};
+const packages:any = {
+	'ng2-uploader': {
+		main: 'index'
+	}
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /***********************************************************************************************
