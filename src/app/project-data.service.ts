@@ -13,10 +13,12 @@ export class ProjectDataService {
 	private infoObservable:ConnectableObservable<ProjectInfo>;
 	private infoObserver:Observer<ProjectInfo>;
 	private password:string;
-	private url = 'https://www.phonetik.uni-muenchen.de/devel/emuDB-manager/server-side/emudb-manager.php';
+	private url = 'https://www.phonetik.uni-muenchen.de/devel/emuDB-manager/emudb-manager.php';
 	private username:string;
 
 	constructor(private http:Http) {
+		this.username = 'dach';
+		this.password = 'dach';
 		this.createHotObservable();
 	}
 
@@ -211,5 +213,14 @@ export class ProjectDataService {
 				}
 			});
 		});
+	}
+
+	public getUploadURL (): string {
+		let params = new URLSearchParams();
+		params.set('user', this.username);
+		params.set('password', this.password);
+		params.set('query', 'upload');
+
+		return this.url + '?' + params.toString();
 	}
 }
