@@ -80,6 +80,30 @@ function validateBundleListName ($name) {
 	return positiveResult(null);
 }
 
+/**
+ * Check whether a given name is a valid upload file name (see also
+ * validatePlainString())
+ */
+function validateUploadFileName ($name) {
+	$result = validatePlainString($name);
+
+	if ($result === false) {
+		return negativeResult(
+			'REGEX_FAILED',
+			'Failed to check whether a given bundle list name is valid.'
+		);
+	}
+
+	if ($result === 1 || $name === '') {
+		return negativeResult(
+			'INVALID_BUNDLELIST_NAME',
+			'The specified bundle list name is invalid.'
+		);
+	}
+
+	return positiveResult(null);
+}
+
 
 /**
  * Check whether a given string is a "plain string", which is taken to
@@ -89,6 +113,8 @@ function validateBundleListName ($name) {
  * @params $string The string to check.
  * @returns {boolean} Whether the given $string is valid.
  */
-function validatePlainString ($string) {	return preg_match('/[^a-zA-Z0-9\-_]/', $string);
+function validatePlainString ($string) {
+	return preg_match('/[^a-zA-Z0-9\-_]/', $string);
 };
+
 ?>

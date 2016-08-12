@@ -141,7 +141,7 @@ function executeQuery ($authToken) {
 		break;
 
 		case 'upload':
-			return upload();
+			return upload($authToken->projectDir);
 		break;
 
 		default:
