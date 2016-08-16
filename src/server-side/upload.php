@@ -9,6 +9,7 @@
 
 require_once 'result_helper.php';
 require_once 'uuid.php';
+require_once 'validate.php';
 
 /**
  * Save an uploaded file (with the simple key 'file') to a uniqely named
@@ -61,8 +62,8 @@ function upload ($projectDir) {
 		);
 	}
 
-	$result = move_uploaded_file($_FILES['file']['tmp_name'],
-	                             $targetPath . '/' . $originalName);
+	$targetName = $targetPath . '/' . $originalName;
+	$result = move_uploaded_file($_FILES['file']['tmp_name'], $targetName);
 
 	if ($result !== true) {
 		return negativeResult(
@@ -70,6 +71,57 @@ function upload ($projectDir) {
 			'Saving the uploaded file failed.'
 		);
 	}
+
+	// Unzip uploaded file
+	$zip = new ZipArchive();
+	$res = $zip->open($targetName);
+
+	if ($res !== true) {
+		return negativeResult(
+			'UNZIP_FAILED',
+			'The uploaded file is not a valid zip file. It has been stored on'
+			. ' the server but you will not be able to use it properly.'
+		);
+	}
+
+	// Find emu DB in the zip file
+	$databaseName = '';
+	for ($i = 0; $i < $zip->numFiles; ++$i) {
+		$entry = $zip->getNameIndex($i);
+		if (substr($entry, -7) === '_emuDB/') {
+			$databaseName = substr($entry, 0, -7);
+			break;
+		}
+	}
+
+	if ($databaseName === '') {
+		return negativeResult(
+			'NO_DATABASE_IN_ZIP',
+			'The zip file you uploaded contains no emu speech database.'
+		);
+	}
+
+	$stat = validateDatabaseName($databaseName);
+
+	if ($stat->success !== true) {
+		return negativeResult(
+			'INVALID_DB_NAME',
+			'The emu database in the uploaded zip file has an invalid name '
+			. ' can only contain letters, numbers, underscores and dashes.'
+		);
+	}
+
+	$res = $zip->extractTo($targetPath, $databaseName . '_emuDB/');
+
+	if ($res !== true) {
+		return negativeResult(
+			'UNZIP_FAILED',
+			'The uploaded file is not a valid zip file. It has been stored on'
+			. ' the server but you will not be able to use it properly.'
+		);
+	}
+
+	$zip->close();
 
 	return positiveResult($uploadUUID);
 }
