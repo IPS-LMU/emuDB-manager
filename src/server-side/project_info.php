@@ -52,11 +52,45 @@ function project_info ($authToken) {
 }
 
 function readDirOfUploads ($directory) {
-	// fake data
-	$result = array(new Upload());
-	$result[0]->uuid = 'ce284f56-f212-477f-9701-14289b8891c1';
-	$result[0]->date = '2016-05-21 10:38 CEST';
-	// end fake data
+	$dirHandle = dir($directory);
+
+	if ($dirHandle === false || is_null($dirHandle)) {
+		return negativeResult(
+			'LIST_DIR_FAILED',
+			'Failed to read directory of uploads.'
+		);
+	}
+
+	$result = array();
+
+	// Each directory corresponds to one upload. The dir's name is
+	// expected to be a UUIDv4 (which however is not verified).
+	while (false !== ($entry = $dirHandle->read())) {
+		if ($entry === '.' || $entry === '..') {
+			continue;
+		}
+
+		$upload = new Upload();
+
+		$upload->uuid = $entry;
+
+		// Read modification time
+		$stat = stat ($directory . '/' . $entry);
+		if ($stat === false) {
+			return negativeResult (
+				'STAT_UPLOAD_DIR_FAILED',
+				'Failed to read an upload directory.'
+			);
+		}
+
+		$upload->date = date ("M d, Y H:i T", $stat['mtime']);
+
+		// Read name and sessions of the database contained in the upload
+		$upload->name = '';
+		$upload->sessions = array();
+
+		$result[] = $upload;
+	}
 
 	return positiveResult($result);
 }
