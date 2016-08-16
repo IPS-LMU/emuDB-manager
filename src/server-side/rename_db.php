@@ -15,9 +15,13 @@ require_once 'json_file.php';
  * _DBconfig.json file and changing the name attribute in the _DBconfig.json
  * file.
  *
- * @returns A HelperResult object
+ * @param $projectDir string The project directory for which the client has
+ *        been authorized.
+ * @param $db string The current name of the database to rename.
+ * @param $newName string The new name for the database.
+ * @return Result
  */
-function rename_db($projectDir, $db, $newName) {
+function rename_db ($projectDir, $db, $newName) {
 	$dbDir = $projectDir . '/databases/' . $db . '_emuDB';
 	$newDbDir = $projectDir . '/databases/' . $newName . '_emuDB';
 
@@ -77,7 +81,5 @@ function rename_db($projectDir, $db, $newName) {
 		);
 	}
 
-	return positiveResult (null);
+	return positiveResult(null);
 }
-
-?>

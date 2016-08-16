@@ -16,7 +16,14 @@ require_once 'json_file.php';
  * The name is changed by renaming the file.
  * The status is changed by moving it to another directory.
  *
- * @returns A HelperResult object
+ * @param $projectDir string The project directory for which the client has
+ *        been authorized.
+ * @param $db string The name of the database in which to operate.
+ * @param $oldStatus string Together with $oldName, identifies the bundle to edit.
+ * @param $oldName string Together with $oldStatus, identifies the bundle to edit.
+ * @param $newStatus string The new status for the edited bundle.
+ * @param $newName string The new name for the edited bundle.
+ * @return Result
  */
 function edit_bundle_list (
 	$projectDir,
@@ -24,8 +31,7 @@ function edit_bundle_list (
 	$oldStatus,
 	$oldName,
 	$newStatus,
-	$newName)
-{
+	$newName) {
 	$dbDir = $projectDir . '/databases/' . $db . '_emuDB/bundleLists';
 
 	if ($oldStatus === '') {
@@ -44,7 +50,6 @@ function edit_bundle_list (
 	$newName = $newName . '_bundleList.json';
 
 
-
 	if (filetype($oldDirectory . '/' . $oldName) !== 'file') {
 		return negativeResult(
 			'NAME_DOES_NOT_EXIST',
@@ -53,7 +58,7 @@ function edit_bundle_list (
 		);
 	}
 
-	if (file_exists($newDirectory . '/' .$newName)) {
+	if (file_exists($newDirectory . '/' . $newName)) {
 		return negativeResult(
 			'NAME_ALREADY_TAKEN',
 			'The name/status combination for the bundle list ist already taken.'
@@ -62,7 +67,7 @@ function edit_bundle_list (
 
 	if (filetype($newDirectory) !== 'dir') {
 		// @todo set mode explicitly
-		if ( ! mkdir($newDirectory) ) {
+		if (!mkdir($newDirectory)) {
 			return negativeResult(
 				'CREATING_STATUS_DIR_FAILED',
 				'The directory for the new status could not be created.'
@@ -70,7 +75,7 @@ function edit_bundle_list (
 		}
 	}
 
-	$result = rename ($oldDirectory . '/' . $oldName, $newDirectory . '/' . $newName);
+	$result = rename($oldDirectory . '/' . $oldName, $newDirectory . '/' . $newName);
 	if (!$result) {
 		return negativeResult(
 			'MOVING_BUNDLE_LIST_FAILED',
@@ -80,5 +85,3 @@ function edit_bundle_list (
 
 	return positiveResult(null);
 }
-
-?>

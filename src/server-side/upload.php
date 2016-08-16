@@ -12,9 +12,14 @@ require_once 'uuid.php';
 require_once 'validate.php';
 
 /**
- * Save an uploaded file (with the simple key 'file') to a uniqely named
+ * Save an uploaded file (with the simple key 'file') to a uniquely named
  * directory within the project dir. In case of success, a Result object with
  * the data field set to the unique identifier is returned.
+ *
+ * @param $projectDir string The project directory for which the client has
+ *        been authorized.
+ * @return Result An object with 'data' set to the generated UUID of the new
+ *         upload.
  */
 function upload ($projectDir) {
 	$uploadUUID = generateUUID();
@@ -36,10 +41,10 @@ function upload ($projectDir) {
 	}
 
 	$originalName = $_FILES['file']['name'];
-	$baseName = basename ($originalName, '.zip'); // this splits off .zip if
+	$baseName = basename($originalName, '.zip'); // this splits off .zip if
 	// it is there and leaves the basename intact otherwise
 
-	$result = validateUploadFilename ($baseName);
+	$result = validateUploadFilename($baseName);
 	if ($result->success !== true) {
 		return negativeResult(
 			'INVALID_FILENAME',
@@ -55,7 +60,7 @@ function upload ($projectDir) {
 		);
 	}
 
-	if (!mkdir ($targetPath)) {
+	if (!mkdir($targetPath)) {
 		return negativeResult(
 			'CREATE_UPLOAD_DIR_FAILED',
 			'Creating the directory for the upload failed.'
@@ -125,5 +130,3 @@ function upload ($projectDir) {
 
 	return positiveResult($uploadUUID);
 }
-
-?>

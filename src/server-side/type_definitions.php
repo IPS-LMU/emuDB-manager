@@ -38,7 +38,7 @@ class Database {
 	public $sessions;
 }
 
-class Dataset {
+class DataSet {
 	public $name;
 	public $databases;
 	public $uploads;
@@ -54,5 +54,3 @@ class Result {
 	public $data;    // Machine-readable (error string or result data)
 	public $message; // human-readable error string (in case of success: empty string)
 }
-
-?>

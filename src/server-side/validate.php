@@ -10,7 +10,10 @@ require_once 'result_helper.php';
 
 /**
  * Check whether a given name is a valid database name (see also
- * validatePlainString())
+ * validatePlainString()).
+ *
+ * @param $name string The name to validate.
+ * @return Result
  */
 function validateDatabaseName ($name) {
 	$result = validatePlainString($name);
@@ -34,7 +37,10 @@ function validateDatabaseName ($name) {
 
 /**
  * Check whether a given name is a valid status identifier (see also
- * validatePlainString())
+ * validatePlainString()).
+ *
+ * @param $name string The name to validate.
+ * @return Result
  */
 function validateStatus ($name) {
 	$result = validatePlainString($name);
@@ -58,7 +64,10 @@ function validateStatus ($name) {
 
 /**
  * Check whether a given name is a valid bundle list name (see also
- * validatePlainString())
+ * validatePlainString()).
+ *
+ * @param $name string The name to validate.
+ * @return Result
  */
 function validateBundleListName ($name) {
 	$result = validatePlainString($name);
@@ -82,9 +91,12 @@ function validateBundleListName ($name) {
 
 /**
  * Check whether a given name is a valid upload file name (see also
- * validatePlainString())
+ * validatePlainString()).
+ *
+ * @param $name string The name to validate.
+ * @return Result
  */
-function validateUploadFileName ($name) {
+function validateUploadFilename ($name) {
 	$result = validatePlainString($name);
 
 	if ($result === false) {
@@ -110,11 +122,9 @@ function validateUploadFileName ($name) {
  * mean that it can only contain [a-z], [A-Z], [0-9], _ and -. Most
  * importantly, no (back-) slashes are allowed to prevent path injection.
  *
- * @params $string The string to check.
- * @returns {boolean} Whether the given $string is valid.
+ * @param $string string The string to check.
+ * @return int Whether the given $string is valid.
  */
 function validatePlainString ($string) {
 	return preg_match('/[^a-zA-Z0-9\-_]/', $string);
-};
-
-?>
+}

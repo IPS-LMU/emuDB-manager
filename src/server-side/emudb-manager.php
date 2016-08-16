@@ -65,7 +65,7 @@ function authorize () {
 		return $result;
 	}
 
-	$result = negativeResult (
+	$result = negativeResult(
 		'BAD_LOGIN',
 		'Bad username or password'
 	);
@@ -79,6 +79,9 @@ function authorize () {
  *
  * The main thing this function does is validate client input and call a
  * sub-routine to handle the query.
+ *
+ * @param $authToken
+ * @return Result
  */
 function executeQuery ($authToken) {
 	switch ($_GET['query']) {
@@ -116,11 +119,11 @@ function executeQuery ($authToken) {
 				$_GET['new_status'],
 				$_GET['new_name']
 			);
-		break;
+			break;
 
 		case 'login':
 			return positiveResult(null);
-		break;
+			break;
 
 		case 'rename_db':
 			$result = validateDatabaseName($_GET['old_name']);
@@ -133,23 +136,23 @@ function executeQuery ($authToken) {
 				return $result;
 			}
 
-			return rename_db (
+			return rename_db(
 				$authToken->projectDir,
 				$_GET['old_name'],
 				$_GET['new_name']
 			);
-		break;
+			break;
 
 		case 'project_info':
-			return project_info ($authToken);
-		break;
+			return project_info($authToken);
+			break;
 
 		case 'upload':
 			return upload($authToken->projectDir);
-		break;
+			break;
 
 		default:
-			return negativeResult (
+			return negativeResult(
 				'INVALID_QUERY',
 				'An invalid query has been performed.'
 			);
@@ -158,5 +161,3 @@ function executeQuery ($authToken) {
 
 //
 //////////
-
-?>

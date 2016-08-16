@@ -9,7 +9,11 @@
 require_once 'type_definitions.php';
 
 /**
- * Returns a HelperResult object with success set to false
+ * Returns a Result object with success set to false.
+ *
+ * @param $machineReadable string A machine-readable string describing the error.
+ * @param $humanReadable string A human-readable error message.
+ * @return Result
  */
 function negativeResult ($machineReadable, $humanReadable) {
 	$result = new Result();
@@ -20,7 +24,10 @@ function negativeResult ($machineReadable, $humanReadable) {
 }
 
 /**
- * Returns a HelperResult object with success set to true
+ * Returns a Result object with success set to true.
+ *
+ * @param $data {} Whatever shall be in the 'data' field of the Result object.
+ * @return Result
  */
 function positiveResult ($data) {
 	$result = new Result();
