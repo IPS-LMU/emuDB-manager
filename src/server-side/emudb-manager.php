@@ -7,6 +7,7 @@
 
 header("Access-Control-Allow-Origin: *");
 $dataDirectory = '/homes/markusjochim/manager-data';
+date_default_timezone_set('Europe/Berlin');
 
 //
 //////////
@@ -58,6 +59,9 @@ function authorize () {
 		$result = new AuthToken();
 		$result->projectDir = $dataDirectory . '/dach';
 		$result->projectName = 'Typologie der Vokal- und Konsonantenquantitäten (DACH)';
+
+		// date_default_timezone_set ($projectSpecificTimeZone);
+
 		return $result;
 	}
 
