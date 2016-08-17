@@ -77,6 +77,16 @@ function upload ($projectDir) {
 		);
 	}
 
+	// Create data directory to unzip the uploaded file
+	$dataPath = $targetPath . '/data';
+
+	if (!mkdir($dataPath)) {
+		return negativeResult(
+			'CREATE_DATA_DIR_FAILED',
+			'Creating the unzip directory for the upload failed.'
+		);
+	}
+
 	// Unzip uploaded file
 	$zip = new ZipArchive();
 	$res = $zip->open($targetName);
@@ -116,7 +126,7 @@ function upload ($projectDir) {
 		);
 	}
 
-	$res = $zip->extractTo($targetPath, $databaseName . '_emuDB/');
+	$res = $zip->extractTo($dataPath, $databaseName . '_emuDB/');
 
 	if ($res !== true) {
 		return negativeResult(
