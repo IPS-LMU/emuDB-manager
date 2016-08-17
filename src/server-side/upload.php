@@ -56,7 +56,8 @@ function upload ($projectDir) {
 	if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
 		return negativeResult(
 			'UPLOAD_ERROR',
-			'An unknown upload error was indicated.'
+			'An unknown upload error was indicated (error code '
+			. $_FILES['file']['error'] . ')'
 		);
 	}
 
@@ -126,7 +127,7 @@ function upload ($projectDir) {
 		);
 	}
 
-	$res = $zip->extractTo($dataPath, $databaseName . '_emuDB/');
+	$res = $zip->extractTo($dataPath);
 
 	if ($res !== true) {
 		return negativeResult(

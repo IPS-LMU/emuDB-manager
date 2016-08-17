@@ -83,9 +83,8 @@ function readDirOfUploads ($directory) {
 
 		$upload->date = date("M d, Y H:i T", $stat['mtime']);
 
-		// Find the first entry in the data/ subdir. This is regarded the
-		// database because data/ is expected to contain only one file anyway
-		// (i.e. the database).
+		// Find a directory in the data/ subdir that is called *_emuDB. This is
+		// regarded the database.
 
 		$uploadDataDir = $directory . '/' . $entry . '/data';
 
@@ -102,8 +101,15 @@ function readDirOfUploads ($directory) {
 			);
 		}
 
-		$databaseDir = $iter->current();
-		if (substr($databaseDir, -6) !== '_emuDB') {
+		$databaseDir = '';
+
+		foreach ($iter as $filePath) {
+			if (substr($filePath, -6) === '_emuDB') {
+				$databaseDir = $filePath;
+			}
+		}
+
+		if ($databaseDir === '') {
 			return negativeResult(
 				'INVALID_UPLOAD_DIR',
 				'Found an upload directory that does not contain an emu'
