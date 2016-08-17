@@ -10,31 +10,47 @@ import {ProjectDataService} from "../../project-data.service";
 	directives: [UPLOAD_DIRECTIVES]
 })
 export class UploadFormComponent {
-	uploadFile: any;
-	uploadProgress: number;
-	uploadResponse: Object;
-	zone: NgZone;
-	options: {url:string} = {
+	private errorMessage:string = '';
+	private options: {url:string} = {
 		url: ''
 	};
+	private successMessage: string = '';
+	private transferMessage:string = '';
+	private uploadProgress: number;
+	private zone: NgZone;
 
 	constructor(private projectDataService: ProjectDataService) {
 		this.uploadProgress = 0;
-		this.uploadResponse = {};
 		this.zone = new NgZone({ enableLongStackTrace: false });
 		this.options.url = this.projectDataService.getUploadURL();
-		console.debug(this.options.url);
 	}
 
-	handleUpload(data): void {
-		this.uploadFile = data;
+	handleProgress(data): void {
 		this.zone.run(() => {
 			this.uploadProgress = data.progress.percent;
+
+			if (data.progress.loaded === data.progress.total) {
+				this.transferMessage = 'Upload complete. Please wait while the' +
+					' server extracts the contents of the zip file (no' +
+					' progress indicator is available for this) …';
+			}
 		});
-		let resp = data.response;
-		if (resp) {
-			resp = JSON.parse(resp);
-			this.uploadResponse = resp;
+
+		if (data.abort) {
+			this.errorMessage = 'Upload was aborted.';
+		} else if (data.error) {
+			this.errorMessage = 'Unknown error during upload.';
+		} else if (data.done) {
+			this.projectDataService.fetchData();
+
+			let response = JSON.parse(data.response);
+
+			if (response.success === true) {
+				this.successMessage = 'The server has finished processing' +
+					' the upload. It has been saved under the UUID ' + response.data + '.';
+			} else {
+				this.errorMessage = data.response.message;
+			}
 		}
 	}
 
