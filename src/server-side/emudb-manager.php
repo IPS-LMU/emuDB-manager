@@ -18,6 +18,7 @@ date_default_timezone_set('Europe/Berlin');
 //
 
 require_once 'edit_bundle_list.php';
+require_once 'delete_upload.php';
 require_once 'json_file.php';
 require_once 'project_info.php';
 require_once 'rename_db.php';
@@ -83,8 +84,21 @@ function authorize () {
  * @param $authToken
  * @return Result
  */
-function executeQuery ($authToken) {
+function executeQuery (AuthToken $authToken) {
 	switch ($_GET['query']) {
+		case 'delete_upload':
+			$result = validateUploadIdentifier($_GET['uuid']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return delete_upload(
+				$authToken->projectDir,
+				$_GET['uuid']
+			);
+
+			break;
+
 		case 'edit_bundle_list':
 			$result = validateDatabaseName($_GET['database']);
 			if ($result->success !== true) {

@@ -116,6 +116,33 @@ function validateUploadFilename ($name) {
 	return positiveResult(null);
 }
 
+/**
+ * Check whether a given string is a valid upload identifier (see also
+ * validatePlainString()).
+ *
+ * @param $string string The string to validate.
+ * @return Result
+ */
+function validateUploadIdentifier ($string) {
+	$result = validatePlainString($string);
+
+	if ($result === false) {
+		return negativeResult(
+			'REGEX_FAILED',
+			'Failed to check whether a given upload identifier is valid.'
+		);
+	}
+
+	if ($result === 1 || $string === '') {
+		return negativeResult(
+			'INVALID_UPLOAD_IDENTIFIER',
+			'The specified upload identifier is invalid.'
+		);
+	}
+
+	return positiveResult(null);
+}
+
 
 /**
  * Check whether a given string is a "plain string", which is taken to
