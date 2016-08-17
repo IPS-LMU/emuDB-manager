@@ -16,6 +16,13 @@ require_once 'result_helper.php';
  * @return Result
  */
 function validateDatabaseName ($name) {
+	if (!is_string($name)) {
+		return negativeResult(
+			'INVALID_DATABASE_NAME',
+			'The specified database name is invalid.'
+		);
+	}
+
 	$result = validatePlainString($name);
 
 	if ($result === false) {
@@ -43,6 +50,13 @@ function validateDatabaseName ($name) {
  * @return Result
  */
 function validateStatus ($name) {
+	if (!is_string($name)) {
+		return negativeResult(
+			'INVALID_STATUS',
+			'The specified status is invalid.'
+		);
+	}
+
 	$result = validatePlainString($name);
 
 	if ($result === false) {
@@ -70,6 +84,13 @@ function validateStatus ($name) {
  * @return Result
  */
 function validateBundleListName ($name) {
+	if (!is_string($name)) {
+		return negativeResult(
+			'INVALID_BUNDLELIST_NAME',
+			'The specified bundle list name is invalid.'
+		);
+	}
+
 	$result = validatePlainString($name);
 
 	if ($result === false) {
@@ -97,19 +118,26 @@ function validateBundleListName ($name) {
  * @return Result
  */
 function validateUploadFilename ($name) {
+	if (!is_string($name)) {
+		return negativeResult(
+			'INVALID_FILE_NAME',
+			'The specified file name is invalid.'
+		);
+	}
+
 	$result = validatePlainString($name);
 
 	if ($result === false) {
 		return negativeResult(
 			'REGEX_FAILED',
-			'Failed to check whether a given bundle list name is valid.'
+			'Failed to check whether a given upload file name is valid.'
 		);
 	}
 
 	if ($result === 1 || $name === '') {
 		return negativeResult(
-			'INVALID_BUNDLELIST_NAME',
-			'The specified bundle list name is invalid.'
+			'INVALID_FILE_NAME',
+			'The specified file name is invalid.'
 		);
 	}
 
@@ -124,6 +152,13 @@ function validateUploadFilename ($name) {
  * @return Result
  */
 function validateUploadIdentifier ($string) {
+	if (!is_string($string)) {
+		return negativeResult(
+			'INVALID_UPLOAD_IDENTIFIER',
+			'The specified upload identifier is invalid.'
+		);
+	}
+
 	$result = validatePlainString($string);
 
 	if ($result === false) {
