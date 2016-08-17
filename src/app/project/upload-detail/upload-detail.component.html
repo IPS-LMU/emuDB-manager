@@ -27,6 +27,11 @@
 				Merge
 			</a>
 		</li>
+		<li role="presentation" [ngClass]="{active: state === 'Delete'}">
+			<a (click)="state = 'Delete'">
+				Delete
+			</a>
+		</li>
 	</ul>
 
 	<div *ngIf="state === 'Sessions'" class="table-responsive">
@@ -65,6 +70,32 @@
 
 	<div *ngIf="state === 'Merge'" class="panel-body">
 		Merge into existing or save as new database
+	</div>
+
+	<div *ngIf="state === 'Delete'" class="panel-body">
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" [(ngModel)]="reallyDelete">
+				Delete this upload? This is irreversible!
+			</label>
+		</div>
+
+		<hr>
+
+		<p *ngIf="deleteError" class="alert alert-danger">
+			<button type="button" class="close" aria-label="Close" (click)="deleteError = ''">
+				<span aria-hidden="true">&times;</span>
+			</button>
+
+			{{deleteError}}
+		</p>
+
+		<p>
+			<button type="button" class="btn btn-danger" [disabled]="!reallyDelete"
+			        (click)="deleteUpload()">
+				Delete
+			</button>
+		</p>
 	</div>
 
 </div>

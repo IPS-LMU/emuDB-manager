@@ -223,4 +223,21 @@ export class ProjectDataService {
 
 		return this.url + '?' + params.toString();
 	}
+
+	public deleteUpload (identifier:string) {
+		return Observable.create(observer => {
+			let params = new URLSearchParams();
+			params.set('query', 'delete_upload');
+			params.set('uuid', identifier);
+
+			this.serverQuery(params).subscribe((next:any) => {
+				if (next.success === true) {
+					observer.next(null);
+					observer.complete();
+				} else {
+					observer.error(next);
+				}
+			});
+		});
+	}
 }
