@@ -46,11 +46,6 @@ function project_info ($authToken) {
 
 	$result->success = true;
 
-	// fake data
-	$result->data->uploads[0]->sessions =
-		$result->data->databases[2]->sessions;
-	// end fake data
-
 	return $result;
 }
 
@@ -88,9 +83,38 @@ function readDirOfUploads ($directory) {
 
 		$upload->date = date("M d, Y H:i T", $stat['mtime']);
 
-		// Read name and sessions of the database contained in the upload
-		$upload->name = '';
-		$upload->sessions = array();
+		// Find the first entry in the data/ subdir. This is regarded the
+		// database because data/ is expected to contain only one file anyway
+		// (i.e. the database).
+
+		$uploadDataDir = $directory . '/' . $entry . '/data';
+		$uploadDataDirHandle = dir($uploadDataDir);
+		if ($uploadDataDirHandle === false || is_null($uploadDataDirHandle)) {
+			return negativeResult(
+				'LIST_DIR_FAILED',
+				'Failed to read data directory of an upload.'
+			);
+		}
+
+		$databaseDir = $uploadDataDirHandle->read();
+		if (substr($databaseDir, -6) !== '_emuDB') {
+			return negativeResult(
+				'INVALID_UPLOAD_DIR',
+				'Found an upload directory that does not contain an emu'
+				. ' speech database'
+			);
+		}
+
+		$upload->name = substr($databaseDir, 0, -6);
+
+
+		// Read the sessions contained in the upload
+		$db = readDatabase($uploadDataDir . '/' . $databaseDir);
+		if ($db->success !== true) {
+			return $db;
+		}
+
+		$upload->sessions = $db->data->sessions;
 
 		$result[] = $upload;
 	}
@@ -139,7 +163,7 @@ function readDirOfDatabases ($directory) {
  * Read a database dir and look for sessions, bundle lists, and a DBconfig
  * file inside it. A Database object is returned.
  *
- * @param $directory string The directory to traverse.
+ * @param $directory string The directory to read.
  * @returns Result An object with 'data' set to a Database object
  */
 function readDatabase ($directory) {
