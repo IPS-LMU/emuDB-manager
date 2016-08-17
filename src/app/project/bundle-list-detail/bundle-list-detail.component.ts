@@ -85,6 +85,11 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 		this.infoEditor.messageError = '';
 		this.infoEditor.messageSuccess = '';
 
+		if (this.bundleList.name === newName && this.bundleList.status === newStatus) {
+			this.infoEditor.messageSuccess = 'No changes to be saved.';
+			return;
+		}
+
 		this.projectDataService.editBundle(
 			this.database,
 			this.bundleList.name,

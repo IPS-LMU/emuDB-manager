@@ -47,6 +47,11 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 		this.renameError = '';
 		this.renameSuccess = '';
 
+		if (this.database.name === this.newName) {
+			this.renameSuccess = 'That is already the database’s name.';
+			return;
+		}
+
 		this.projectDataService.renameDatabase(this.database.name, this.newName).subscribe (next => {
 			this.renameSuccess = 'Successfully renamed';
 			this.projectDataService.fetchData();
