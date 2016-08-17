@@ -17,11 +17,6 @@
 				Sessions <span class="badge">{{upload?.sessions?.length}}</span>
 			</a>
 		</li>
-		<li role="presentation" [ngClass]="{active: state === 'Rename'}">
-			<a (click)="state = 'Rename'">
-				Rename
-			</a>
-		</li>
 		<li role="presentation" [ngClass]="{active: state === 'Merge'}">
 			<a (click)="state = 'Merge'">
 				Merge
@@ -50,22 +45,6 @@
 			</tr>
 			</tbody>
 		</table>
-	</div>
-
-	<div *ngIf="state === 'Rename'" class="panel-body">
-		<form>
-			<p>
-				Current name of the uploaded database: {{upload?.name}}
-			</p>
-
-			<p>
-				<input class="form-control" placeholder="New name" autocomplete="off">
-			</p>
-
-			<p>
-				<button type="submit" class="btn btn-default">Rename</button>
-			</p>
-		</form>
 	</div>
 
 	<div *ngIf="state === 'Merge'" class="panel-body">

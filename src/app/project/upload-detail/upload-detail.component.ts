@@ -4,7 +4,7 @@ import {Subscription} from "rxjs/Rx";
 import {ProjectDataService} from "../../project-data.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
-type State = 'Sessions' | 'Rename' | 'Merge' | 'Delete';
+type State = 'Sessions' | 'Merge' | 'Delete';
 
 @Component({
 	moduleId: module.id,
@@ -58,4 +58,3 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 		});
 	}
 }
-
