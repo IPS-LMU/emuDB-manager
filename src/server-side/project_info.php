@@ -88,15 +88,21 @@ function readDirOfUploads ($directory) {
 		// (i.e. the database).
 
 		$uploadDataDir = $directory . '/' . $entry . '/data';
-		$uploadDataDirHandle = dir($uploadDataDir);
-		if ($uploadDataDirHandle === false || is_null($uploadDataDirHandle)) {
+
+		try {
+			$iter = new FilesystemIterator(
+				$uploadDataDir,
+				FilesystemIterator::SKIP_DOTS |
+				FilesystemIterator::CURRENT_AS_PATHNAME
+			);
+		} catch (Exception $e) {
 			return negativeResult(
 				'LIST_DIR_FAILED',
 				'Failed to read data directory of an upload.'
 			);
 		}
 
-		$databaseDir = $uploadDataDirHandle->read();
+		$databaseDir = $iter->current();
 		if (substr($databaseDir, -6) !== '_emuDB') {
 			return negativeResult(
 				'INVALID_UPLOAD_DIR',
@@ -105,11 +111,11 @@ function readDirOfUploads ($directory) {
 			);
 		}
 
-		$upload->name = substr($databaseDir, 0, -6);
+		$upload->name = basename($databaseDir, '_emuDB');
 
 
 		// Read the sessions contained in the upload
-		$db = readDatabase($uploadDataDir . '/' . $databaseDir);
+		$db = readDatabase($databaseDir);
 		if ($db->success !== true) {
 			return $db;
 		}
