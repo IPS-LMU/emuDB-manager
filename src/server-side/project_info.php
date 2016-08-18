@@ -110,23 +110,19 @@ function readDirOfUploads ($directory) {
 		}
 
 		if ($databaseDir === '') {
-			return negativeResult(
-				'INVALID_UPLOAD_DIR',
-				'Found an upload directory that does not contain an emu'
-				. ' speech database'
-			);
+			$upload->name = 'INVALID_UPLOAD';
+			$upload->sessions = array();
+		} else {
+			$upload->name = basename($databaseDir, '_emuDB');
+
+			// Read the sessions contained in the upload
+			$db = readDatabase($databaseDir);
+			if ($db->success !== true) {
+				return $db;
+			}
+
+			$upload->sessions = $db->data->sessions;
 		}
-
-		$upload->name = basename($databaseDir, '_emuDB');
-
-
-		// Read the sessions contained in the upload
-		$db = readDatabase($databaseDir);
-		if ($db->success !== true) {
-			return $db;
-		}
-
-		$upload->sessions = $db->data->sessions;
 
 		$result[] = $upload;
 	}
