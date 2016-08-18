@@ -49,7 +49,7 @@ export class UploadFormComponent {
 				this.successMessage = 'The server has finished processing' +
 					' the upload. It has been saved under the UUID ' + response.data + '.';
 			} else {
-				this.errorMessage = data.response.message;
+				this.errorMessage = response.message;
 			}
 		}
 	}

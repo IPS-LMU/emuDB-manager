@@ -123,7 +123,7 @@ function upload ($projectDir) {
 		return negativeResult(
 			'INVALID_DB_NAME',
 			'The emu database in the uploaded zip file has an invalid name '
-			. ' can only contain letters, numbers, underscores and dashes.'
+			. ' (can only contain letters, numbers, underscores and dashes).'
 		);
 	}
 
