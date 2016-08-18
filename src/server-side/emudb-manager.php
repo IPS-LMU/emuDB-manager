@@ -56,6 +56,36 @@ die();
 function authorize () {
 	global $dataDirectory;
 
+	/*
+	// Connect to database and look up the project that the client is trying
+	// to authenticate as
+
+	$dbh = new PDO('pgsql:host=postgres;dbname=webexperiment', 'user', 'pass');
+	$stmt = $dbh->prepare(
+		"SELECT
+		  proj.name,
+		  proj.description,
+		  proj.code,
+		  adm.password
+		FROM expproject proj
+		  JOIN expadmin adm ON proj.expadmin_id = adm.id
+		WHERE proj.name = :project
+		LIMIT 1"
+	);
+
+	$stmt->bindParam(':project', $_GET['user']);
+	$stmt->execute();
+
+	while ($row = $stmt->fetch()) {
+		if (password_verify($_GET['password'], $row['adm.password'])) {
+
+		} else {
+
+		}
+
+	}
+	*/
+
 	if ($_GET['user'] === 'dach' && $_GET['password'] === 'dach') {
 		$result = new AuthToken();
 		$result->projectDir = $dataDirectory . '/dach';
