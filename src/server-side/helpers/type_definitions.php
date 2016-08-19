@@ -44,13 +44,31 @@ class DataSet {
 	public $uploads;
 }
 
+class Result {
+	/**
+	 * @var bool Indicator of success or error
+	 */
+	public $success;
+
+	/**
+	 * @var mixed
+	 *
+	 * In case of success: result data
+	 *
+	 * In case of error: Error code (string) or reference to another Result
+	 * object, with the referenced object describing why the error happened
+	 * (this can be chained)
+	 */
+	public $data;
+
+	/**
+	 * @var string Human-readable error string, or empty string (in case of
+	 *      success)
+	 */
+	public $message;
+}
+
 class AuthToken {
 	public $projectName;
 	public $projectDir;
-}
-
-class Result {
-	public $success; // Boolean
-	public $data;    // Machine-readable (error string or result data)
-	public $message; // human-readable error string (in case of success: empty string)
 }
