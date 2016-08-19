@@ -7,9 +7,9 @@
 // However, it is no security issue if it is called directly, because it only
 // contains functions (thus, no code is executed).
 
-require_once 'result_helper.php';
-require_once 'uuid.php';
-require_once 'validate.php';
+require_once '../helpers/result_helper.php';
+require_once '../helpers/uuid.php';
+require_once '../helpers/validate.php';
 
 /**
  * Save an uploaded file (with the simple key 'file') to a uniquely named
