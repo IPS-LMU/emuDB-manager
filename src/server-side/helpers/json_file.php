@@ -60,10 +60,11 @@ function load_json_file ($filename) {
  *
  * @param $object object The object to encode.
  * @param $filename string The JSON file to write to.
+ * @param $options int Options to pass to json_encode()
  * @returns Result
  */
-function save_json_file ($object, $filename) {
-	$json = json_encode($object);
+function save_json_file ($object, $filename, $options = JSON_PRETTY_PRINT) {
+	$json = json_encode($object, $options);
 
 	if ($json === false) {
 		return negativeResult(
