@@ -6,57 +6,126 @@
 // However, it is no security issue if it is called directly, because it only
 // contains functions (thus, no code is executed)
 
-require_once 'json_file.php';
-require_once 'result_helper.php';
-require_once 'type_definitions.php';
+require_once '../helpers/json_file.php';
+require_once '../helpers/result_helper.php';
+require_once '../helpers/type_definitions.php';
 
 
 /**
- * Compile a Dataset object containing info about all databases and uploads
+ * Compile a DataSet object containing info about all databases and uploads
  * of a given project, as well as the project's name.
+ *
+ * @param $authToken AuthToken
+ * @return Result An object with 'data' set to a DataSet object.
  */
 function project_info ($authToken) {
-		$result = new Result();
-		$result->data = new Dataset();
+	$result = new Result();
+	$result->data = new DataSet();
 
-		$dbDir = $authToken->projectDir . '/databases';
-		$uploadDir = $authToken->projectDir . '/uploads';
+	$dbDir = $authToken->projectDir . '/databases';
+	$uploadDir = $authToken->projectDir . '/uploads';
 
-		// Project name
-		$result->data->name = $authToken->projectName;
+	// Project name
+	$result->data->name = $authToken->projectName;
 
-		// Find databases belonging to the project
-		$dbStat = readDirOfDatabases ($dbDir);
-		if ($dbStat->success === true) {
-			$result->data->databases = $dbStat->data;
-		} else {
-			return $dbStat;
-		}
+	// Find databases belonging to the project
+	$dbStat = readDirOfDatabases($dbDir);
+	if ($dbStat->success === true) {
+		$result->data->databases = $dbStat->data;
+	} else {
+		return $dbStat;
+	}
 
-		// Find uploads belonging to the project
-		$uploadsStat = readDirOfUploads ($uploadDir);
-		if ($uploadsStat->success === true) {
-			$result->data->uploads = $uploadsStat->data;
-		} else {
-			return $uploadsStat;
-		}
+	// Find uploads belonging to the project
+	$uploadsStat = readDirOfUploads($uploadDir);
+	if ($uploadsStat->success === true) {
+		$result->data->uploads = $uploadsStat->data;
+	} else {
+		return $uploadsStat;
+	}
 
-		$result->success = true;
+	$result->success = true;
 
-		// fake data
-		$result->data->uploads[0]->sessions =
-		$result->data->databases[2]->sessions;
-		// end fake data
-
-		return $result;
+	return $result;
 }
 
 function readDirOfUploads ($directory) {
-	// fake data
-	$result = array(new Upload());
-	$result[0]->uuid = 'ce284f56-f212-477f-9701-14289b8891c1';
-	$result[0]->date = '2016-05-21 10:38 CEST';
-	// end fake data
+	$dirHandle = dir($directory);
+
+	if ($dirHandle === false || is_null($dirHandle)) {
+		return negativeResult(
+			'LIST_DIR_FAILED',
+			'Failed to read directory of uploads.'
+		);
+	}
+
+	$result = array();
+
+	// Each directory corresponds to one upload. The dir's name is
+	// expected to be a UUIDv4 (which however is not verified).
+	while (false !== ($entry = $dirHandle->read())) {
+		if ($entry === '.' || $entry === '..') {
+			continue;
+		}
+
+		$upload = new Upload();
+
+		$upload->uuid = $entry;
+
+		// Read modification time
+		$stat = stat($directory . '/' . $entry);
+		if ($stat === false) {
+			return negativeResult(
+				'STAT_UPLOAD_DIR_FAILED',
+				'Failed to read an upload directory.'
+			);
+		}
+
+		$upload->date = date("M d, Y H:i T", $stat['mtime']);
+
+		// Find a directory in the data/ subdir that is called *_emuDB. This is
+		// regarded the database.
+
+		$uploadDataDir = $directory . '/' . $entry . '/data';
+
+		try {
+			$iter = new FilesystemIterator(
+				$uploadDataDir,
+				FilesystemIterator::SKIP_DOTS |
+				FilesystemIterator::CURRENT_AS_PATHNAME
+			);
+		} catch (Exception $e) {
+			return negativeResult(
+				'LIST_DIR_FAILED',
+				'Failed to read data directory of an upload.'
+			);
+		}
+
+		$databaseDir = '';
+
+		foreach ($iter as $filePath) {
+			if (substr($filePath, -6) === '_emuDB') {
+				$databaseDir = $filePath;
+			}
+		}
+
+		if ($databaseDir === '') {
+			$upload->name = 'INVALID_UPLOAD';
+			$upload->sessions = array();
+		} else {
+			$upload->name = basename($databaseDir, '_emuDB');
+
+			// Read the sessions contained in the upload
+			$db = readDatabase($databaseDir);
+			if ($db->success !== true) {
+				return $db;
+			}
+
+			$upload->sessions = $db->data->sessions;
+		}
+
+		$result[] = $upload;
+	}
 
 	return positiveResult($result);
 }
@@ -66,8 +135,8 @@ function readDirOfUploads ($directory) {
  * Read the project databases dir and look for emuDBs inside it. Every emuDB is
  * read and an array of Database objects is returned.
  *
- * @param directory The directory to traverse.
- * @returns An array of Database objects or false in case of failure.
+ * @param $directory string The directory to traverse.
+ * @returns Result An object with 'data' set to an array of Database objects.
  */
 function readDirOfDatabases ($directory) {
 	$dirHandle = dir($directory);
@@ -85,7 +154,7 @@ function readDirOfDatabases ($directory) {
 		// Directories whose name ends in _emuDB are a database.
 		// Everything else is ignored.
 		if (substr($entry, -6) === "_emuDB") {
-			$dbStat = readDatabase ($directory . '/' . $entry);
+			$dbStat = readDatabase($directory . '/' . $entry);
 
 			if ($dbStat->success === true) {
 				$result[] = $dbStat->data;
@@ -99,11 +168,11 @@ function readDirOfDatabases ($directory) {
 }
 
 /**
- * Read a database dir and look for sessions, bunde lists, and a DBconfig
+ * Read a database dir and look for sessions, bundle lists, and a DBconfig
  * file inside it. A Database object is returned.
  *
- * @param directory The directory to traverse.
- * @returns A HelperResult object.
+ * @param $directory string The directory to read.
+ * @returns Result An object with 'data' set to a Database object
  */
 function readDatabase ($directory) {
 	$db = new Database();
@@ -135,7 +204,7 @@ function readDatabase ($directory) {
 				return $bundleListsStat;
 			}
 		} else if (substr($entry, -4) === '_ses') {
-			$sessionStat = readSession ($directory . '/' . $entry);
+			$sessionStat = readSession($directory . '/' . $entry);
 
 			if ($sessionStat->success === true) {
 				$db->sessions[] = $sessionStat->data;
@@ -143,7 +212,7 @@ function readDatabase ($directory) {
 				return $sessionStat;
 			}
 		} else if ($entry === $db->name . '_DBconfig.json') {
-			$configStat = load_json_file ($directory . '/' . $entry);
+			$configStat = load_json_file($directory . '/' . $entry);
 
 			if ($configStat->success === true) {
 				$db->dbConfig = $configStat->data;
@@ -160,13 +229,13 @@ function readDatabase ($directory) {
  * Read a bundle list dir and look for bundle lists inside it and
  * inside subdirs named *_status. An array of BundleList objects is returned.
  *
- * @param directory The directory to traverse.
- * @returns A HelperResult object.
+ * @param $directory string The directory to traverse.
+ * @returns Result An object with 'data' set to an array of BundleList objects.
  */
 function readBundleLists ($directory) {
 	$bundleLists = array();
 
-	$dirHandle = dir ($directory);
+	$dirHandle = dir($directory);
 
 	if ($dirHandle === false || is_null($dirHandle)) {
 		return negativeResult(
@@ -190,7 +259,7 @@ function readBundleLists ($directory) {
 
 			$bundleLists[] = $bundleList;
 		} else if (substr($entry, -7) === '_status') {
-			$subdirHandle = dir ($directory . '/' . $entry);
+			$subdirHandle = dir($directory . '/' . $entry);
 
 			if ($subdirHandle === false || is_null($subdirHandle)) {
 				return negativeResult(
@@ -227,15 +296,15 @@ function readBundleLists ($directory) {
  * Read a session dir and look for bundles inside it. A Session object is
  * returned.
  *
- * @param directory The directory to traverse.
- * @returns A HelperResult object.
+ * @param $directory string The directory to traverse.
+ * @returns Result An object with 'data' set to a Session object.
  */
 function readSession ($directory) {
 	$session = new Session();
 	$session->name = substr(basename($directory), 0, -4);
 	$session->bundles = array();
 
-	$dirHandle = dir ($directory);
+	$dirHandle = dir($directory);
 
 	if ($dirHandle === false || is_null($dirHandle)) {
 		return negativeResult(
@@ -246,7 +315,7 @@ function readSession ($directory) {
 
 	while (false !== ($entry = $dirHandle->read())) {
 		if (substr($entry, -5) === '_bndl') {
-			$type = filetype($directory . '/' .$entry);
+			$type = filetype($directory . '/' . $entry);
 			if ($type === 'dir') {
 				$session->bundles[] = substr($entry, 0, -5);
 			}
@@ -255,5 +324,3 @@ function readSession ($directory) {
 
 	return positiveResult($session);
 }
-
-?>

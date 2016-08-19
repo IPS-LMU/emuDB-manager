@@ -6,20 +6,20 @@
 // However, it is no security issue if it is called directly, because it only
 // contains functions (thus, no code is executed).
 
-require_once 'type_definitions.php';
-require_once 'result_helper.php';
+require_once '../helpers/type_definitions.php';
+require_once '../helpers/result_helper.php';
 
 /**
  * Opens a file, decodes the JSON contained in it and returns the decoded
  * object.
  *
- * @params $filename The JSON file to decode.
- * @returns A HelperResult object.
+ * @param $filename string JSON file to decode.
+ * @return Result With 'data' set to the decoded object.
  */
 function load_json_file ($filename) {
-	$length = filesize ($filename);
+	$length = filesize($filename);
 	if ($length === false) {
-		return negativeResult (
+		return negativeResult(
 			'LOAD_JSON_FAILED',
 			'Loading a JSON file failed'
 		);
@@ -27,7 +27,7 @@ function load_json_file ($filename) {
 
 	$fh = fopen($filename, 'r');
 	if ($fh === false) {
-		return negativeResult (
+		return negativeResult(
 			'LOAD_JSON_FAILED',
 			'Loading a JSON file failed'
 		);
@@ -35,18 +35,18 @@ function load_json_file ($filename) {
 
 	$contents = fread($fh, $length);
 	if ($contents === false) {
-		return negativeResult (
+		return negativeResult(
 			'LOAD_JSON_FAILED',
 			'Loading a JSON file failed'
 		);
 	}
 
-	fclose ($fh);
+	fclose($fh);
 	// fclose errors are ignored
 
 	$object = json_decode($contents);
 	if (is_null($object)) {
-		return negativeResult (
+		return negativeResult(
 			'PARSE_JSON_FAILED',
 			'Loading a JSON file failed'
 		);
@@ -58,30 +58,30 @@ function load_json_file ($filename) {
 /**
  * Encodes an object as JSON and writes it to a file.
  *
- * @param $object The object to encode.
- * @param $filename The JSON file to write to.
- * @returns A HelperResult object.
+ * @param $object object The object to encode.
+ * @param $filename string The JSON file to write to.
+ * @returns Result
  */
 function save_json_file ($object, $filename) {
 	$json = json_encode($object);
 
 	if ($json === false) {
-		return negativeResult (
+		return negativeResult(
 			'SAVE_JSON_FAILED',
 			'Saving a JSON file failed'
 		);
 	}
 
-	$fh = fopen ($filename, 'w');
+	$fh = fopen($filename, 'w');
 	if ($fh === false) {
-		return negativeResult (
+		return negativeResult(
 			'SAVE_JSON_FAILED',
 			'Saving a JSON file failed'
 		);
 	}
 
-	if (fwrite ($fh, $json) === false) {
-		return negativeResult (
+	if (fwrite($fh, $json) === false) {
+		return negativeResult(
 			'SAVE_JSON_FAILED',
 			'Saving a JSON file failed'
 		);
@@ -92,5 +92,3 @@ function save_json_file ($object, $filename) {
 
 	return positiveResult(null);
 }
-
-?>

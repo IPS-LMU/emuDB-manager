@@ -41,6 +41,10 @@ var DatabaseDetailComponent = (function () {
         var _this = this;
         this.renameError = '';
         this.renameSuccess = '';
+        if (this.database.name === this.newName) {
+            this.renameSuccess = 'That is already the database’s name.';
+            return;
+        }
         this.projectDataService.renameDatabase(this.database.name, this.newName).subscribe(function (next) {
             _this.renameSuccess = 'Successfully renamed';
             _this.projectDataService.fetchData();
@@ -67,4 +71,4 @@ var DatabaseDetailComponent = (function () {
     return DatabaseDetailComponent;
 }());
 exports.DatabaseDetailComponent = DatabaseDetailComponent;
-//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-7gBrH8uH.tmp/0/src/app/project/database-detail/database-detail.component.js.map
+//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-psDacEO1.tmp/0/src/app/project/database-detail/database-detail.component.js.map

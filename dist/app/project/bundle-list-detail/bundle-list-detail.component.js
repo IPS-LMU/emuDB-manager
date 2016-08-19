@@ -69,6 +69,10 @@ var BundleListDetailComponent = (function () {
         // and .newStatus
         this.infoEditor.messageError = '';
         this.infoEditor.messageSuccess = '';
+        if (this.bundleList.name === newName && this.bundleList.status === newStatus) {
+            this.infoEditor.messageSuccess = 'No changes to be saved.';
+            return;
+        }
         this.projectDataService.editBundle(this.database, this.bundleList.name, this.bundleList.status, newName, newStatus).subscribe(function (next) {
             _this.infoEditor.messageSuccess = 'Successfully edited.';
             _this.projectDataService.fetchData();
@@ -104,4 +108,4 @@ var BundleListDetailComponent = (function () {
     return BundleListDetailComponent;
 }());
 exports.BundleListDetailComponent = BundleListDetailComponent;
-//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-7gBrH8uH.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.js.map
+//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-psDacEO1.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.js.map
