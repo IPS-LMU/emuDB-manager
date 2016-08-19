@@ -14,25 +14,42 @@ var project_data_service_1 = require("../../project-data.service");
 var UploadFormComponent = (function () {
     function UploadFormComponent(projectDataService) {
         this.projectDataService = projectDataService;
+        this.errorMessage = '';
         this.options = {
             url: ''
         };
+        this.successMessage = '';
+        this.transferMessage = '';
         this.uploadProgress = 0;
-        this.uploadResponse = {};
         this.zone = new core_1.NgZone({ enableLongStackTrace: false });
         this.options.url = this.projectDataService.getUploadURL();
-        console.debug(this.options.url);
     }
-    UploadFormComponent.prototype.handleUpload = function (data) {
+    UploadFormComponent.prototype.handleProgress = function (data) {
         var _this = this;
-        this.uploadFile = data;
         this.zone.run(function () {
             _this.uploadProgress = data.progress.percent;
+            if (data.progress.loaded === data.progress.total) {
+                _this.transferMessage = 'Upload complete. Please wait while the' +
+                    ' server extracts the contents of the zip file (no' +
+                    ' progress indicator is available for this) …';
+            }
         });
-        var resp = data.response;
-        if (resp) {
-            resp = JSON.parse(resp);
-            this.uploadResponse = resp;
+        if (data.abort) {
+            this.errorMessage = 'Upload was aborted.';
+        }
+        else if (data.error) {
+            this.errorMessage = 'Unknown error during upload.';
+        }
+        else if (data.done) {
+            this.projectDataService.fetchData();
+            var response = JSON.parse(data.response);
+            if (response.success === true) {
+                this.successMessage = 'The server has finished processing' +
+                    ' the upload. It has been saved under the UUID ' + response.data + '.';
+            }
+            else {
+                this.errorMessage = response.message;
+            }
         }
     };
     UploadFormComponent = __decorate([
@@ -48,4 +65,4 @@ var UploadFormComponent = (function () {
     return UploadFormComponent;
 }());
 exports.UploadFormComponent = UploadFormComponent;
-//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-7gBrH8uH.tmp/0/src/app/project/upload-form/upload-form.component.js.map
+//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-psDacEO1.tmp/0/src/app/project/upload-form/upload-form.component.js.map

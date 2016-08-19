@@ -1,4 +1,4 @@
-<h1 class="page-header">Uploaded database</h1>
+<h1 class="page-header">Uploaded database: {{upload?.name}}</h1>
 
 <p>
 	UUID (Universally Unique Identifier): {{upload?.uuid}}
@@ -17,14 +17,14 @@
 				Sessions <span class="badge">{{upload?.sessions?.length}}</span>
 			</a>
 		</li>
-		<li role="presentation" [ngClass]="{active: state === 'Rename'}">
-			<a (click)="state = 'Rename'">
-				Rename
-			</a>
-		</li>
 		<li role="presentation" [ngClass]="{active: state === 'Merge'}">
 			<a (click)="state = 'Merge'">
 				Merge
+			</a>
+		</li>
+		<li role="presentation" [ngClass]="{active: state === 'Delete'}">
+			<a (click)="state = 'Delete'">
+				Delete
 			</a>
 		</li>
 	</ul>
@@ -47,24 +47,100 @@
 		</table>
 	</div>
 
-	<div *ngIf="state === 'Rename'" class="panel-body">
-		<form>
-			<p>
-				Current name of the uploaded database: {{database?.name}}
-			</p>
+	<div *ngIf="state === 'Merge'" class="panel-body">
+		<p>
+			This upload contains an EMU speech database with
+			<strong>{{upload?.sessions?.length}}</strong>
+			<template [ngIf]="upload?.sessions?.length != 1">sessions</template>
+			<template [ngIf]="upload?.sessions?.length == 1">session</template>
+			that is named <strong>{{upload?.name}}</strong>.
+		</p>
 
-			<p>
-				<input class="form-control" placeholder="New name">
-			</p>
+		<p>
+			It can either be saved as a database of its own, or merged with an existing database.
+		</p>
 
-			<p>
-				<button type="submit" class="btn btn-default">Rename</button>
-			</p>
-		</form>
+		<hr>
+
+		<div [ngSwitch]="duplicateName">
+			<div *ngSwitchCase="true">
+				<p>
+					The project already has a database named <strong>{{upload?.name}}</strong>. If
+					you want to save this upload as a database of its own, you have to rename it
+					first.
+				</p>
+
+				<form (ngSubmit)="saveUpload()">
+					<p>
+						<input class="form-control" placeholder="New name"
+						       [(ngModel)]="mergeNewName" name="mergeNewName">
+					</p>
+
+					<p>
+						<button type="button" class="btn btn-default"
+						        [disabled]="mergeNewName == ''">
+							Save <strong>{{upload?.name}}</strong> as a database named
+
+							<strong *ngIf="mergeNewName">{{mergeNewName}}</strong>
+							<em *ngIf="!mergeNewName">[choose a name first]</em>
+						</button>
+					</p>
+				</form>
+			</div>
+
+			<div *ngSwitchCase="false">
+				<button type="button" class="btn btn-default">
+					Save <strong>{{upload?.name}}</strong> as a database of its own
+				</button>
+			</div>
+		</div>
+
+		<hr>
+
+		<p>
+			If you would rather merge <strong>{{upload?.name}}</strong> with an existing
+			database, pick one. It will then be checked whether the two can be merged.
+		</p>
+
+		<div class="dropdown">
+			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMerge"
+			        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				Merge <strong>{{upload?.name}}</strong> with database
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" aria-labelledby="dropdownMerge">
+				<li *ngIf="databaseList.length === 0">
+					<a><em>No database available</em></a>
+				</li>
+				<li *ngFor="let database of databaseList"><a>{{database.name}}</a></li>
+			</ul>
+		</div>
 	</div>
 
-	<div *ngIf="state === 'Merge'" class="panel-body">
-		Merge into existing or save as new database
+	<div *ngIf="state === 'Delete'" class="panel-body">
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" [(ngModel)]="reallyDelete">
+				Delete this upload? This is irreversible!
+			</label>
+		</div>
+
+		<hr>
+
+		<p *ngIf="deleteError" class="alert alert-danger">
+			<button type="button" class="close" aria-label="Close" (click)="deleteError = ''">
+				<span aria-hidden="true">&times;</span>
+			</button>
+
+			{{deleteError}}
+		</p>
+
+		<p>
+			<button type="button" class="btn btn-danger" [disabled]="!reallyDelete"
+			        (click)="deleteUpload()">
+				Delete
+			</button>
+		</p>
 	</div>
 
 </div>

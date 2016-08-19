@@ -1,7 +1,6 @@
 <h1 class="page-header">Uploads</h1>
 
 <div class="panel panel-default">
-
 	<ul class="panel-body nav nav-pills nav-justified">
 		<li role="presentation" [ngClass]="{active: state === 'Overview'}">
 			<a (click)="state = 'Overview'">
@@ -16,13 +15,8 @@
 	</ul>
 
 	<emudbmanager-uploads-overview *ngIf="state === 'Overview'">
-
 	</emudbmanager-uploads-overview>
 
-
-
 	<emudbmanager-upload-form *ngIf="state === 'New'" class="panel-body">
-		new upload
 	</emudbmanager-upload-form>
-
 </div>

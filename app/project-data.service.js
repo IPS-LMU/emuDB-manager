@@ -200,6 +200,23 @@ var ProjectDataService = (function () {
         params.set('query', 'upload');
         return this.url + '?' + params.toString();
     };
+    ProjectDataService.prototype.deleteUpload = function (identifier) {
+        var _this = this;
+        return Rx_1.Observable.create(function (observer) {
+            var params = new http_1.URLSearchParams();
+            params.set('query', 'delete_upload');
+            params.set('uuid', identifier);
+            _this.serverQuery(params).subscribe(function (next) {
+                if (next.success === true) {
+                    observer.next(null);
+                    observer.complete();
+                }
+                else {
+                    observer.error(next);
+                }
+            });
+        });
+    };
     ProjectDataService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
@@ -207,4 +224,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=../tmp/broccoli_type_script_compiler-input_base_path-7gBrH8uH.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=../tmp/broccoli_type_script_compiler-input_base_path-psDacEO1.tmp/0/src/app/project-data.service.js.map

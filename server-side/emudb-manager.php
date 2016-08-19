@@ -7,6 +7,7 @@
 
 header("Access-Control-Allow-Origin: *");
 $dataDirectory = '/homes/markusjochim/manager-data';
+date_default_timezone_set('Europe/Berlin');
 
 //
 //////////
@@ -16,13 +17,16 @@ $dataDirectory = '/homes/markusjochim/manager-data';
 // Include helper files
 //
 
-require_once 'edit_bundle_list.php';
-require_once 'json_file.php';
-require_once 'project_info.php';
-require_once 'rename_db.php';
-require_once 'result_helper.php';
-require_once 'type_definitions.php';
-require_once 'validate.php';
+require_once 'helpers/json_file.php';
+require_once 'helpers/result_helper.php';
+require_once 'helpers/type_definitions.php';
+require_once 'helpers/validate.php';
+
+require_once 'queryHandlers/delete_upload.php';
+require_once 'queryHandlers/edit_bundle_list.php';
+require_once 'queryHandlers/project_info.php';
+require_once 'queryHandlers/rename_db.php';
+require_once 'queryHandlers/upload.php';
 
 //
 //////////
@@ -53,14 +57,47 @@ die();
 function authorize () {
 	global $dataDirectory;
 
+	/*
+	// Connect to database and look up the project that the client is trying
+	// to authenticate as
+
+	$dbh = new PDO('pgsql:host=postgres;dbname=webexperiment', 'user', 'pass');
+	$stmt = $dbh->prepare(
+		"SELECT
+		  proj.name,
+		  proj.description,
+		  proj.code,
+		  adm.password
+		FROM expproject proj
+		  JOIN expadmin adm ON proj.expadmin_id = adm.id
+		WHERE proj.name = :project
+		LIMIT 1"
+	);
+
+	$stmt->bindParam(':project', $_GET['user']);
+	$stmt->execute();
+
+	while ($row = $stmt->fetch()) {
+		if (password_verify($_GET['password'], $row['adm.password'])) {
+
+		} else {
+
+		}
+
+	}
+	*/
+
 	if ($_GET['user'] === 'dach' && $_GET['password'] === 'dach') {
 		$result = new AuthToken();
 		$result->projectDir = $dataDirectory . '/dach';
 		$result->projectName = 'Typologie der Vokal- und Konsonantenquantitäten (DACH)';
+
+		// date_default_timezone_set ($projectSpecificTimeZone);
+
 		return $result;
 	}
 
-	$result = negativeResult (
+	$result = negativeResult(
 		'BAD_LOGIN',
 		'Bad username or password'
 	);
@@ -74,9 +111,25 @@ function authorize () {
  *
  * The main thing this function does is validate client input and call a
  * sub-routine to handle the query.
+ *
+ * @param $authToken
+ * @return Result
  */
-function executeQuery ($authToken) {
+function executeQuery (AuthToken $authToken) {
 	switch ($_GET['query']) {
+		case 'delete_upload':
+			$result = validateUploadIdentifier($_GET['uuid']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return delete_upload(
+				$authToken->projectDir,
+				$_GET['uuid']
+			);
+
+			break;
+
 		case 'edit_bundle_list':
 			$result = validateDatabaseName($_GET['database']);
 			if ($result->success !== true) {
@@ -111,11 +164,11 @@ function executeQuery ($authToken) {
 				$_GET['new_status'],
 				$_GET['new_name']
 			);
-		break;
+			break;
 
 		case 'login':
 			return positiveResult(null);
-		break;
+			break;
 
 		case 'rename_db':
 			$result = validateDatabaseName($_GET['old_name']);
@@ -128,19 +181,23 @@ function executeQuery ($authToken) {
 				return $result;
 			}
 
-			return rename_db (
+			return rename_db(
 				$authToken->projectDir,
 				$_GET['old_name'],
 				$_GET['new_name']
 			);
-		break;
+			break;
 
 		case 'project_info':
-			return project_info ($authToken);
-		break;
+			return project_info($authToken);
+			break;
+
+		case 'upload':
+			return upload($authToken->projectDir);
+			break;
 
 		default:
-			return negativeResult (
+			return negativeResult(
 				'INVALID_QUERY',
 				'An invalid query has been performed.'
 			);
@@ -149,5 +206,3 @@ function executeQuery ($authToken) {
 
 //
 //////////
-
-?>

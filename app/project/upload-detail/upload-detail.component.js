@@ -12,9 +12,15 @@ var core_1 = require("@angular/core");
 var project_data_service_1 = require("../../project-data.service");
 var router_1 = require("@angular/router");
 var UploadDetailComponent = (function () {
-    function UploadDetailComponent(projectDataService, route) {
+    function UploadDetailComponent(projectDataService, route, router) {
         this.projectDataService = projectDataService;
         this.route = route;
+        this.router = router;
+        this.databaseList = [];
+        this.deleteError = '';
+        this.duplicateName = false;
+        this.mergeNewName = '';
+        this.reallyDelete = false;
         this.state = 'Sessions';
     }
     UploadDetailComponent.prototype.ngOnInit = function () {
@@ -22,16 +28,52 @@ var UploadDetailComponent = (function () {
         this.subParams = this.route.params.subscribe(function (nextParams) {
             _this.subUpload = _this.projectDataService.getUpload(nextParams['uuid']).subscribe(function (nextUpload) {
                 _this.upload = nextUpload;
+                if (_this.subDatabase) {
+                    _this.subDatabase.unsubscribe();
+                }
+                _this.subDatabase = _this.projectDataService.getDatabase(_this.upload.name).subscribe(function (nextDatabase) {
+                    if (nextDatabase === null) {
+                        _this.duplicateName = false;
+                    }
+                    else {
+                        _this.duplicateName = true;
+                    }
+                });
             });
+        });
+        this.subDatabaseList = this.projectDataService.getAllDatabases().subscribe(function (nextList) {
+            _this.databaseList = nextList;
         });
     };
     UploadDetailComponent.prototype.ngOnDestroy = function () {
+        if (this.subDatabase) {
+            this.subDatabase.unsubscribe();
+        }
+        if (this.subDatabaseList) {
+            this.subDatabaseList.unsubscribe();
+        }
         if (this.subParams) {
             this.subParams.unsubscribe();
         }
         if (this.subUpload) {
             this.subUpload.unsubscribe();
         }
+    };
+    UploadDetailComponent.prototype.deleteUpload = function () {
+        var _this = this;
+        this.reallyDelete = false;
+        this.projectDataService.deleteUpload(this.upload.uuid).subscribe(function (next) {
+            _this.projectDataService.fetchData();
+            if (_this.subUpload) {
+                _this.subUpload.unsubscribe();
+            }
+            _this.router.navigate(['/project/uploads']);
+        }, function (error) {
+            _this.deleteError = error.message;
+        });
+    };
+    UploadDetailComponent.prototype.saveUpload = function () {
+        console.debug('yay');
     };
     UploadDetailComponent = __decorate([
         core_1.Component({
@@ -40,9 +82,9 @@ var UploadDetailComponent = (function () {
             templateUrl: 'upload-detail.component.html',
             styleUrls: ['upload-detail.component.css']
         }), 
-        __metadata('design:paramtypes', [project_data_service_1.ProjectDataService, router_1.ActivatedRoute])
+        __metadata('design:paramtypes', [project_data_service_1.ProjectDataService, router_1.ActivatedRoute, router_1.Router])
     ], UploadDetailComponent);
     return UploadDetailComponent;
 }());
 exports.UploadDetailComponent = UploadDetailComponent;
-//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-7gBrH8uH.tmp/0/src/app/project/upload-detail/upload-detail.component.js.map
+//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-psDacEO1.tmp/0/src/app/project/upload-detail/upload-detail.component.js.map
