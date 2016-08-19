@@ -3,6 +3,7 @@ import {UploadInfo} from "../../types/upload-info";
 import {Subscription} from "rxjs/Rx";
 import {ProjectDataService} from "../../project-data.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {DatabaseInfo} from "../../types/database-info";
 
 type State = 'Sessions' | 'Merge' | 'Delete';
 
@@ -13,9 +14,14 @@ type State = 'Sessions' | 'Merge' | 'Delete';
 	styleUrls: ['upload-detail.component.css']
 })
 export class UploadDetailComponent implements OnInit,OnDestroy {
+	private databaseList:DatabaseInfo[] = [];
 	private deleteError:string = '';
+	private duplicateName:boolean = false;
+	private mergeNewName:string = '';
 	private reallyDelete:boolean = false;
 	private state:State = 'Sessions';
+	private subDatabase:Subscription;
+	private subDatabaseList:Subscription;
 	private subParams:Subscription;
 	private subUpload:Subscription;
 	private upload:UploadInfo;
@@ -29,11 +35,33 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 		this.subParams = this.route.params.subscribe(nextParams => {
 			this.subUpload = this.projectDataService.getUpload(nextParams['uuid']).subscribe(nextUpload => {
 				this.upload = nextUpload;
+
+				if (this.subDatabase) {
+					this.subDatabase.unsubscribe();
+				}
+
+				this.subDatabase = this.projectDataService.getDatabase(this.upload.name).subscribe(nextDatabase => {
+					if (nextDatabase === null) {
+						this.duplicateName = false;
+					} else {
+						this.duplicateName = true;
+					}
+				});
 			});
-		})
+		});
+
+		this.subDatabaseList = this.projectDataService.getAllDatabases().subscribe(nextList => {
+			this.databaseList = nextList;
+		});
 	}
 
 	ngOnDestroy() {
+		if (this.subDatabase) {
+			this.subDatabase.unsubscribe();
+		}
+		if (this.subDatabaseList) {
+			this.subDatabaseList.unsubscribe();
+		}
 		if (this.subParams) {
 			this.subParams.unsubscribe();
 		}
@@ -56,5 +84,9 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 		}, error => {
 			this.deleteError = error.message;
 		});
+	}
+
+	private saveUpload () {
+		console.debug('yay');
 	}
 }
