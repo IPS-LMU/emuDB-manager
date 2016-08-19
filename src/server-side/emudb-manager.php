@@ -17,15 +17,16 @@ date_default_timezone_set('Europe/Berlin');
 // Include helper files
 //
 
-require_once 'edit_bundle_list.php';
-require_once 'delete_upload.php';
-require_once 'json_file.php';
-require_once 'project_info.php';
-require_once 'rename_db.php';
-require_once 'result_helper.php';
-require_once 'type_definitions.php';
-require_once 'upload.php';
-require_once 'validate.php';
+require_once 'helpers/json_file.php';
+require_once 'helpers/result_helper.php';
+require_once 'helpers/type_definitions.php';
+require_once 'helpers/validate.php';
+
+require_once 'queryHandlers/delete_upload.php';
+require_once 'queryHandlers/edit_bundle_list.php';
+require_once 'queryHandlers/project_info.php';
+require_once 'queryHandlers/rename_db.php';
+require_once 'queryHandlers/upload.php';
 
 //
 //////////
