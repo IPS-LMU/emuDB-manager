@@ -1,5 +1,4 @@
 import {Component, OnInit, OnDestroy} from "@angular/core";
-import {BundleListsOverviewComponent} from "../bundle-lists-overview/bundle-lists-overview.component";
 import {BundleList} from "../../types/bundle-list";
 import {Subscription} from "rxjs/Rx";
 import {ProjectDataService} from "../../project-data.service";
@@ -11,8 +10,7 @@ type State = 'Overview' | 'Generator';
 	moduleId: module.id,
 	selector: 'emudbmanager-bundle-lists-dashboard',
 	templateUrl: 'bundle-lists-dashboard.component.html',
-	styleUrls: ['bundle-lists-dashboard.component.css'],
-	directives: [BundleListsOverviewComponent]
+	styleUrls: ['bundle-lists-dashboard.component.css']
 })
 export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 	private bundleLists:BundleList[];

@@ -12,7 +12,6 @@ type State = 'Overview' | 'New';
 	selector: 'emudbmanager-uploads-dashboard',
 	templateUrl: 'uploads-dashboard.component.html',
 	styleUrls: ['uploads-dashboard.component.css'],
-	directives: [UploadsOverviewComponent, UploadFormComponent]
 })
 export class UploadsDashboardComponent implements OnInit,OnDestroy {
 	private state:State = 'Overview';

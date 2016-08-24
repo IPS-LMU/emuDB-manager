@@ -8,11 +8,33 @@ import {appRoutes} from "./app.routes";
 import {ProjectDataService} from "./project-data.service";
 import {ProjectComponent} from "./project/project.component";
 import {WelcomeComponent} from "./welcome/welcome.component";
+import {UploadFormComponent} from "./project/upload-form/upload-form.component";
+import {UploadsOverviewComponent} from "./project/uploads-overview/uploads-overview.component";
+import {BundleListsOverviewComponent} from "./project/bundle-lists-overview/bundle-lists-overview.component";
+import {DatabasesOverviewComponent} from "./project/databases-overview/databases-overview.component";
+import {DatabaseDashboardComponent} from "./project/database-dashboard/database-dashboard.component";
+import {DashboardComponent} from "./project/dashboard/dashboard.component";
+import {DatabaseDetailComponent} from "./project/database-detail/database-detail.component";
+import {BundleListsDashboardComponent} from "./project/bundle-lists-dashboard/bundle-lists-dashboard.component";
+import {BundleListDetailComponent} from "./project/bundle-list-detail/bundle-list-detail.component";
+import {UploadDetailComponent} from "./project/upload-detail/upload-detail.component";
+import {UploadsDashboardComponent} from "./project/uploads-dashboard/uploads-dashboard.component";
 
 @NgModule({
 	declarations: [
 		AppComponent,
+		BundleListDetailComponent,
+		BundleListsDashboardComponent,
+		BundleListsOverviewComponent,
+		DashboardComponent,
+		DatabaseDashboardComponent,
+		DatabaseDetailComponent,
+		DatabasesOverviewComponent,
 		ProjectComponent,
+		UploadDetailComponent,
+		UploadFormComponent,
+		UploadsDashboardComponent,
+		UploadsOverviewComponent,
 		WelcomeComponent
 	],
 	imports: [
@@ -21,6 +43,9 @@ import {WelcomeComponent} from "./welcome/welcome.component";
 		FormsModule,
 		HttpModule,
 		RouterModule.forRoot(appRoutes),
+
+		// 3rd party stuff
+		//UPLOAD_DIRECTIVES
 	],
 	bootstrap: [AppComponent],
 	providers: [

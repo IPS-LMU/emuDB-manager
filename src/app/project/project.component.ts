@@ -2,7 +2,7 @@ import {Component, OnInit, OnDestroy} from "@angular/core";
 import {DatabaseInfo} from "../types/database-info";
 import {BundleList} from "../types/bundle-list";
 import {ProjectDataService} from "../project-data.service";
-import {ROUTER_DIRECTIVES, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 import {UploadInfo} from "../types/upload-info";
 
@@ -10,8 +10,7 @@ import {UploadInfo} from "../types/upload-info";
 	moduleId: module.id,
 	selector: 'emudbmanager-project',
 	templateUrl: 'project.component.html',
-	styleUrls: ['project.component.css'],
-	directives: [ROUTER_DIRECTIVES]
+	styleUrls: ['project.component.css']
 })
 export class ProjectComponent implements OnInit,OnDestroy {
 	private bundleLists:BundleList[] = [];

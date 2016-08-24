@@ -1,7 +1,4 @@
 import {Component, OnInit, OnDestroy} from "@angular/core";
-import {DatabasesOverviewComponent} from "../databases-overview/databases-overview.component";
-import {BundleListsOverviewComponent} from "../bundle-lists-overview/bundle-lists-overview.component";
-import {UploadsOverviewComponent} from "../uploads-overview/uploads-overview.component";
 import {DatabaseInfo} from "../../types/database-info";
 import {ProjectDataService} from "../../project-data.service";
 import {BundleList} from "../../types/bundle-list";
@@ -12,8 +9,7 @@ import {UploadInfo} from "../../types/upload-info";
 	moduleId: module.id,
 	selector: 'emudbmanager-dashboard',
 	templateUrl: 'dashboard.component.html',
-	styleUrls: ['dashboard.component.css'],
-	directives: [DatabasesOverviewComponent, BundleListsOverviewComponent, UploadsOverviewComponent]
+	styleUrls: ['dashboard.component.css']
 })
 export class DashboardComponent implements OnInit,OnDestroy {
 	private bundleLists:BundleList[] = [];

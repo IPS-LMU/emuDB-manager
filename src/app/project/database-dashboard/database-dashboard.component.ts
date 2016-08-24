@@ -1,5 +1,4 @@
 import {Component, OnInit, OnDestroy} from "@angular/core";
-import {DatabasesOverviewComponent} from "../databases-overview/databases-overview.component";
 import {DatabaseInfo} from "../../types/database-info";
 import {ProjectDataService} from "../../project-data.service";
 import {Subscription} from "rxjs/Rx";
@@ -8,8 +7,7 @@ import {Subscription} from "rxjs/Rx";
 	moduleId: module.id,
 	selector: 'emudbmanager-database-dashboard',
 	templateUrl: 'database-dashboard.component.html',
-	styleUrls: ['database-dashboard.component.css'],
-	directives: [DatabasesOverviewComponent]
+	styleUrls: ['database-dashboard.component.css']
 })
 export class DatabaseDashboardComponent implements OnInit,OnDestroy {
 	private databases:DatabaseInfo[] = [];

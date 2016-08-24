@@ -8,8 +8,7 @@ import {Subscription} from "rxjs/Rx";
 	moduleId: module.id,
 	selector: 'emudbmanager-databases-overview',
 	templateUrl: 'databases-overview.component.html',
-	styleUrls: ['databases-overview.component.css'],
-	directives: [ROUTER_DIRECTIVES]
+	styleUrls: ['databases-overview.component.css']
 })
 export class DatabasesOverviewComponent implements OnInit,OnDestroy {
 	private databases:DatabaseInfo[];

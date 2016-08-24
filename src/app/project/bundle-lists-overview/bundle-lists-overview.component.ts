@@ -2,15 +2,13 @@ import {Component, Input, OnDestroy} from "@angular/core";
 import {BundleList} from "../../types/bundle-list";
 import {ProjectDataService} from "../../project-data.service";
 import {DatabaseInfo} from "../../types/database-info";
-import {ROUTER_DIRECTIVES} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 
 @Component({
 	moduleId: module.id,
 	selector: 'emudbmanager-bundle-lists-overview',
 	templateUrl: 'bundle-lists-overview.component.html',
-	styleUrls: ['bundle-lists-overview.component.css'],
-	directives: [ROUTER_DIRECTIVES]
+	styleUrls: ['bundle-lists-overview.component.css']
 })
 export class BundleListsOverviewComponent implements OnDestroy {
 	private _database:string;
