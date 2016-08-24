@@ -1,8 +1,5 @@
-import {Component, OnInit} from "@angular/core";
-import {ROUTER_DIRECTIVES} from "@angular/router";
+import {Component} from "@angular/core";
 import {ProjectDataService} from "./project-data.service";
-import {ProjectComponent} from "./project/project.component";
-import {HTTP_PROVIDERS} from "@angular/http";
 import "./rxjs-operators";
 
 
@@ -10,14 +7,9 @@ import "./rxjs-operators";
 	moduleId: module.id,
 	selector: 'emudbmanager-root',
 	templateUrl: 'app.component.html',
-	styleUrls: ['app.component.css'],
-	directives: [ROUTER_DIRECTIVES, ProjectComponent],
-	providers: [ProjectDataService, HTTP_PROVIDERS]
+	styleUrls: ['app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 	constructor(private projectDataService:ProjectDataService) {
-	}
-
-	ngOnInit():any {
 	}
 }

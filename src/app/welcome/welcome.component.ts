@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {ROUTER_DIRECTIVES, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {ProjectDataService} from "../project-data.service";
 import {Subscription} from "rxjs/Rx";
 
@@ -7,8 +7,7 @@ import {Subscription} from "rxjs/Rx";
 	moduleId: module.id,
 	selector: 'emudbmanager-welcome',
 	templateUrl: 'welcome.component.html',
-	styleUrls: ['welcome.component.css'],
-	directives: [ROUTER_DIRECTIVES]
+	styleUrls: ['welcome.component.css']
 })
 export class WelcomeComponent implements OnInit {
 	private loginFailed:boolean = false;

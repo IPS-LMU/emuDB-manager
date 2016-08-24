@@ -1,4 +1,4 @@
-import {RouterConfig} from "@angular/router";
+import {Routes} from "@angular/router";
 import {DatabaseDashboardComponent} from "./database-dashboard/database-dashboard.component";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {ProjectComponent} from "./project.component";
@@ -8,7 +8,7 @@ import {UploadsDashboardComponent} from "./uploads-dashboard/uploads-dashboard.c
 import {BundleListDetailComponent} from "./bundle-list-detail/bundle-list-detail.component";
 import {UploadDetailComponent} from "./upload-detail/upload-detail.component";
 
-export const projectRoutes:RouterConfig = [{
+export const projectRoutes:Routes = [{
 	path: 'project',
 	component: ProjectComponent,
 	children: [
