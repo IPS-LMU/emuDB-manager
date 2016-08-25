@@ -11,9 +11,9 @@ require_once '../helpers/result_helper.php';
 require_once '../helpers/json_file.php';
 
 /**
- * Move an EMU speech database. Like the shell command `mv`, this can be
+ * Move an EMU speech database. Like the shell command `mv`, this can mean
  * moving it to a new location and/or renaming it. If both are desired, they
- * are done in one step with no intermediate step.
+ * are done at the same time, with no intermediate step.
  *
  * Moving to a new location is necessary e.g. for dragging a database from
  * the upload section to the main database section.
@@ -31,7 +31,7 @@ require_once '../helpers/json_file.php';
  *        location will not be changed.
  * @return Result
  */
-function moveDatabase ($databaseDir, $newName, $newParentDir='') {
+function moveDatabase ($databaseDir, $newName, $newParentDir = '') {
 	if (
 		!is_string($databaseDir) ||
 		!is_string($newName) ||
@@ -83,7 +83,7 @@ function moveDatabase ($databaseDir, $newName, $newParentDir='') {
 	if ($newParentDir !== '') {
 		$newDatabaseDir = $newParentDir . '/' . $newName . '_emuDB';
 	} else {
-		$newDatabaseDir = dirname ($databaseDir) . '/' . $newName . '_emuDB';
+		$newDatabaseDir = dirname($databaseDir) . '/' . $newName . '_emuDB';
 	}
 
 	// Make sure no database with $newName exists already
@@ -94,6 +94,13 @@ function moveDatabase ($databaseDir, $newName, $newParentDir='') {
 		);
 	}
 
+	//
+	//////////
+
+	//////////
+	// All our checks have passed - do the actual thing
+	//
+
 	// Rename database directory
 	if (!rename($databaseDir, $newDatabaseDir)) {
 		return negativeResult(
@@ -102,46 +109,26 @@ function moveDatabase ($databaseDir, $newName, $newParentDir='') {
 		);
 	}
 
-	// Rename database configuration file
-	$dbConfig = $newDatabaseDir . '/' . $db . '_DBconfig.json';
+	// Save new name to database configuration
+	$config->data->name = $newName;
 	$newDbConfig = $newDatabaseDir . '/' . $newName . '_DBconfig.json';
+	$result = save_json_file($config->data, $newDbConfig);
 
-	if (!rename($dbConfig, $newDbConfig)) {
+	if ($result->success !== true) {
 		return negativeResult(
-			'FILESYSTEM_RENAME_DBCONFIG_FAILED',
-			'The database configuration file failed to be renamed.'
+			'WRITE_DBCONFIG_FAILED',
+			'Database has been moved, but writing the new database '
+			. 'configuration file failed. The database may be invalid.'
 		);
 	}
 
-	// Change database configuration file
-	$configObject = load_json_file($newDbConfig);
+	// Delete the old database configuration
+	$oldDbConfig = $newDatabaseDir . '/' . $databaseName . '_DBconfig.json';
 
-	if ($configObject->success !== true) {
-		return negativeResult(
-			'LOAD_DBCONFIG_FAILED',
-			'Opening the database configuration file failed.'
-		);
-	}
-
-	// Make sure the DBconfig.json has had the correct name
-	if ($configObject->data->name !== $db) {
-		return negativeResult(
-			'DBCONFIG_INCORRECT',
-			'The name contained in the database configuration file does not'
-			. ' match the database’s name. This is an undefined state, please'
-			. ' check manually what has happened.'
-		);
-	}
-
-	$configObject->data->name = $newName;
-	$status = save_json_file($configObject->data, $newDbConfig);
-	if ($status->success !== true) {
-		return negativeResult(
-			'DBCONFIG_CHANGE_FAILED',
-			'The database configuration file could not be changed.'
-		);
+	if (!unlink($oldDbConfig)) {
+		// This is non-fatal
+		// Too bad we do not have a way to issue a warning to the user
 	}
 
 	return positiveResult(null);
-
 }
