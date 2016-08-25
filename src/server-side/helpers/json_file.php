@@ -6,8 +6,8 @@
 // However, it is no security issue if it is called directly, because it only
 // contains functions (thus, no code is executed).
 
-require_once '../helpers/type_definitions.php';
-require_once '../helpers/result_helper.php';
+require_once 'type_definitions.php';
+require_once 'result_helper.php';
 
 /**
  * Opens a file, decodes the JSON contained in it and returns the decoded

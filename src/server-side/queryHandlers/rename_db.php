@@ -6,10 +6,10 @@
 // However, it is no security issue if it is called directly, because it only
 // contains functions (thus, no code is executed).
 
-require_once '../helpers/json_file.php';
-require_once '../helpers/moveDatabase.php';
-require_once '../helpers/result_helper.php';
-require_once '../helpers/type_definitions.php';
+require_once 'helpers/json_file.php';
+require_once 'helpers/moveDatabase.php';
+require_once 'helpers/result_helper.php';
+require_once 'helpers/type_definitions.php';
 
 /**
  * Rename a database. This includes renaming the folder, renaming the
