@@ -16,8 +16,12 @@ type State = 'Sessions' | 'Merge' | 'Delete';
 export class UploadDetailComponent implements OnInit,OnDestroy {
 	private databaseList:DatabaseInfo[] = [];
 	private deleteError:string = '';
-	private duplicateName:boolean = false;
-	private mergeNewName:string = '';
+	private mergeForm = {
+		duplicateName: false,
+		newName: '',
+		messageError: '',
+		messageSuccess: '',
+	};
 	private reallyDelete:boolean = false;
 	private state:State = 'Sessions';
 	private subDatabase:Subscription;
@@ -42,9 +46,9 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 
 				this.subDatabase = this.projectDataService.getDatabase(this.upload.name).subscribe(nextDatabase => {
 					if (nextDatabase === null) {
-						this.duplicateName = false;
+						this.mergeForm.duplicateName = false;
 					} else {
-						this.duplicateName = true;
+						this.mergeForm.duplicateName = true;
 					}
 				});
 			});
@@ -87,6 +91,22 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 	}
 
 	private saveUpload () {
-		console.debug('yay');
+		this.mergeForm.messageSuccess = '';
+		this.mergeForm.messageError = '';
+
+		let name:string;
+		if (this.mergeForm.duplicateName) {
+			name = this.mergeForm.newName;
+		} else {
+			name = this.upload.name;
+		}
+
+		this.projectDataService.saveUpload(this.upload.uuid, name).subscribe(next => {
+			this.projectDataService.fetchData();
+			this.mergeForm.messageSuccess = 'The database has been saved.';
+		}, error => {
+			this.mergeForm.messageError = error.message;
+			console.log(error);
+		});
 	}
 }

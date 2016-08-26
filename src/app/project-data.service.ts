@@ -240,4 +240,22 @@ export class ProjectDataService {
 			});
 		});
 	}
+
+	public saveUpload (identifier: string, name: string):Observable<ServerResponse> {
+		return Observable.create(observer => {
+			let params = new URLSearchParams();
+			params.set('query', 'save_upload');
+			params.set('uuid', identifier);
+			params.set('name', name);
+
+			this.serverQuery(params).subscribe((next:any) => {
+				if (next.success === true) {
+					observer.next(null);
+					observer.complete();
+				} else {
+					observer.error(next);
+				}
+			});
+		});
+	}
 }
