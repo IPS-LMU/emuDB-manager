@@ -26,7 +26,7 @@ function save_upload ($projectDir, $uuid, $name) {
 	if (file_exists($targetDir . '/' . $name . '_emuDB')) {
 		return negativeResult(
 			'DATABASE_NAME_TAKEN',
-			'There is already a database wit the chosen name'
+			'There is already a database with the chosen name'
 		);
 	}
 
