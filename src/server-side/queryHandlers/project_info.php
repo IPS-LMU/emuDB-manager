@@ -97,10 +97,11 @@ function readDirOfUploads ($directory) {
 			// Read the sessions contained in the upload
 			$db = readDatabase($databaseDir);
 			if ($db->success !== true) {
-				return $db;
+				$upload->name = 'INVALID_UPLOAD';
+				$upload->sessions = array();
+			} else {
+				$upload->sessions = $db->data->sessions;
 			}
-
-			$upload->sessions = $db->data->sessions;
 		}
 
 		$result[] = $upload;
@@ -199,6 +200,13 @@ function readDatabase ($directory) {
 				return $configStat;
 			}
 		}
+	}
+
+	if (is_null($db->dbConfig)) {
+		return negativeResult(
+			'NO_DATABASE_CONFIG',
+			'No database configuration found'
+		);
 	}
 
 	return positiveResult($db);
