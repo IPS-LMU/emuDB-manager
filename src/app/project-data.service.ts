@@ -49,7 +49,7 @@ export class ProjectDataService {
 	}
 
 	private serverQuery(params:URLSearchParams):Observable<ServerResponse> {
-		console.log ('Querying server', params);
+		console.log('Querying server', params);
 		params.set('user', this.username);
 		params.set('password', this.password);
 
@@ -173,7 +173,7 @@ export class ProjectDataService {
 		return result;
 	}
 
-	public renameDatabase (oldName:string, newName:string):Observable<void> {
+	public renameDatabase(oldName:string, newName:string):Observable<void> {
 		return Observable.create(observer => {
 			let params = new URLSearchParams();
 			params.set('query', 'rename_db');
@@ -191,11 +191,11 @@ export class ProjectDataService {
 		});
 	}
 
-	public editBundle (database:string,
-	                   name:string,
-	                   status:string,
-	                   newName:string,
-	                   newStatus:string):Observable<void> {
+	public editBundle(database:string,
+	                  name:string,
+	                  status:string,
+	                  newName:string,
+	                  newStatus:string):Observable<void> {
 		return Observable.create(observer => {
 			let params = new URLSearchParams();
 			params.set('query', 'edit_bundle_list');
@@ -216,7 +216,7 @@ export class ProjectDataService {
 		});
 	}
 
-	public getUploadURL (): string {
+	public getUploadURL():string {
 		let params = new URLSearchParams();
 		params.set('user', this.username);
 		params.set('password', this.password);
@@ -225,7 +225,7 @@ export class ProjectDataService {
 		return this.url + '?' + params.toString();
 	}
 
-	public deleteUpload (identifier:string) {
+	public deleteUpload(identifier:string) {
 		return Observable.create(observer => {
 			let params = new URLSearchParams();
 			params.set('query', 'delete_upload');
@@ -242,7 +242,7 @@ export class ProjectDataService {
 		});
 	}
 
-	public saveUpload (identifier: string, name: string):Observable<ServerResponse> {
+	public saveUpload(identifier:string, name:string):Observable<ServerResponse> {
 		return Observable.create(observer => {
 			let params = new URLSearchParams();
 			params.set('query', 'save_upload');
