@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {ProjectInfo} from "./types/project-info";
 import {DatabaseInfo} from "./types/database-info";
 import {BundleList} from "./types/bundle-list";
-import {Http, URLSearchParams} from "@angular/http";
+import {Http, Headers, RequestOptions} from "@angular/http";
 import {Observable, Observer, ConnectableObservable} from "rxjs/Rx";
 import {SessionInfo} from "./types/session-info";
 import {UploadInfo} from "./types/upload-info";
@@ -33,8 +33,9 @@ export class ProjectDataService {
 	}
 
 	public fetchData():void {
-		let params = new URLSearchParams();
-		params.set('query', 'project_info');
+		let params = {
+			query: 'project_info'
+		};
 
 		this.serverQuery(params).subscribe((next:any) => {
 			if (next.success === true) {
@@ -51,13 +52,25 @@ export class ProjectDataService {
 		});
 	}
 
-	private serverQuery(params:URLSearchParams):Observable<ServerResponse> {
+	private serverQuery(params:any):Observable<ServerResponse> {
 		console.log('Querying server', params);
-		params.set('user', this.username);
-		params.set('password', this.password);
+
+		let headers = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
+		let options = new RequestOptions({headers: headers});
+
+		params.user = this.username;
+		params.password = this.password;
+
+		let body = '';
+		for (let i in params) {
+			if (body != '') {
+				body += '&';
+			}
+			body += encodeURIComponent(i) + '=' + encodeURIComponent(params[i]);
+		}
 
 		return this.http
-			.get(this.url, {search: params})
+			.post(this.url, body, options)
 			.map(response => {
 				let json = response.json();
 				console.log('Received JSON data', json);
@@ -73,8 +86,9 @@ export class ProjectDataService {
 			this.username = username;
 			this.password = password;
 
-			let params = new URLSearchParams();
-			params.set('query', 'login');
+			let params = {
+				query: 'login'
+			};
 
 			this.serverQuery(params).subscribe((next:any) => {
 				if (next.success === true) {
@@ -178,10 +192,11 @@ export class ProjectDataService {
 
 	public renameDatabase(oldName:string, newName:string):Observable<void> {
 		return Observable.create(observer => {
-			let params = new URLSearchParams();
-			params.set('query', 'rename_db');
-			params.set('old_name', oldName);
-			params.set('new_name', newName);
+			let params = {
+				query: 'rename_db',
+				old_name: oldName,
+				new_name: newName
+			};
 
 			this.serverQuery(params).subscribe((next:any) => {
 				if (next.success === true) {
@@ -200,13 +215,14 @@ export class ProjectDataService {
 	                  newName:string,
 	                  newStatus:string):Observable<void> {
 		return Observable.create(observer => {
-			let params = new URLSearchParams();
-			params.set('query', 'edit_bundle_list');
-			params.set('database', database);
-			params.set('old_name', name);
-			params.set('old_status', status);
-			params.set('new_name', newName);
-			params.set('new_status', newStatus);
+			let params = {
+				'query': 'edit_bundle_list',
+				'database': database,
+				'old_name': name,
+				'old_status': status,
+				'new_name': newName,
+				'new_status': newStatus
+			};
 
 			this.serverQuery(params).subscribe((next:any) => {
 				if (next.success === true) {
@@ -220,19 +236,21 @@ export class ProjectDataService {
 	}
 
 	public getUploadURL():string {
-		let params = new URLSearchParams();
-		params.set('user', this.username);
-		params.set('password', this.password);
-		params.set('query', 'upload');
+		let params = {
+			'user': this.username,
+			'password': this.password,
+			'query': 'upload'
+		};
 
 		return this.url + '?' + params.toString();
 	}
 
 	public deleteUpload(identifier:string) {
 		return Observable.create(observer => {
-			let params = new URLSearchParams();
-			params.set('query', 'delete_upload');
-			params.set('uuid', identifier);
+			let params = {
+				'query': 'delete_upload',
+				'uuid': identifier
+			};
 
 			this.serverQuery(params).subscribe((next:any) => {
 				if (next.success === true) {
@@ -247,10 +265,11 @@ export class ProjectDataService {
 
 	public saveUpload(identifier:string, name:string):Observable<ServerResponse> {
 		return Observable.create(observer => {
-			let params = new URLSearchParams();
-			params.set('query', 'save_upload');
-			params.set('uuid', identifier);
-			params.set('name', name);
+			let params = {
+				'query': 'save_upload',
+				'uuid': identifier,
+				'name': name
+			};
 
 			this.serverQuery(params).subscribe((next:any) => {
 				if (next.success === true) {
