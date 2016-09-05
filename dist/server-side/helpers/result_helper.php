@@ -6,19 +6,21 @@
 // However, it is no security issue if it is called directly, because it only
 // contains functions (thus, no code is executed).
 
-require_once '../helpers/type_definitions.php';
+require_once 'type_definitions.php';
 
 /**
  * Returns a Result object with success set to false.
  *
- * @param $machineReadable string A machine-readable string describing the error.
+ * @param $data {string|Result} A machine-readable string describing the
+ *        error, or a reference to another Result object (which describes why
+ *        the error happened; this can be chained)
  * @param $humanReadable string A human-readable error message.
  * @return Result
  */
-function negativeResult ($machineReadable, $humanReadable) {
+function negativeResult ($data, $humanReadable) {
 	$result = new Result();
 	$result->success = false;
-	$result->data = $machineReadable;
+	$result->data = $data;
 	$result->message = $humanReadable;
 	return $result;
 }
@@ -26,13 +28,13 @@ function negativeResult ($machineReadable, $humanReadable) {
 /**
  * Returns a Result object with success set to true.
  *
- * @param $data {} Whatever shall be in the 'data' field of the Result object.
+ * @param $data mixed Whatever shall be in the 'data' field of the Result object.
  * @return Result
  */
 function positiveResult ($data) {
 	$result = new Result();
 	$result->success = true;
 	$result->data = $data;
-	$result->message = "";
+	$result->message = '';
 	return $result;
 }

@@ -217,6 +217,93 @@ var ProjectDataService = (function () {
             });
         });
     };
+    ProjectDataService.prototype.saveUpload = function (identifier, name) {
+        var _this = this;
+        return Rx_1.Observable.create(function (observer) {
+            var params = new http_1.URLSearchParams();
+            params.set('query', 'save_upload');
+            params.set('uuid', identifier);
+            params.set('name', name);
+            _this.serverQuery(params).subscribe(function (next) {
+                if (next.success === true) {
+                    observer.next(null);
+                    observer.complete();
+                }
+                else {
+                    observer.error(next);
+                }
+            });
+        });
+    };
+    ProjectDataService.prototype.generateBundleList = function (database, sessionPattern, bundlePattern, editors, personsPerBundle, shuffled) {
+        //////////
+        // Check parameter constraints
+        //
+        if (editors.length < personsPerBundle) {
+        }
+        //
+        //////////
+        return this.getDatabase(database).map(function (dbInfo) {
+            if (dbInfo === null) {
+            }
+            var sessionRegex = new RegExp(sessionPattern);
+            var bundleRegex = new RegExp(bundlePattern);
+            //////////
+            // Select the bundles to add to the newly generated bunldle list(s)
+            //
+            var bundleListSource = [];
+            for (var i = 0; i < dbInfo.sessions.length; ++i) {
+                if (sessionRegex.test(dbInfo.sessions[i].name)) {
+                    for (var j = 0; j < dbInfo.sessions[i].bundles.length; ++j) {
+                        if (bundleRegex.test(dbInfo.sessions[i].bundles[j])) {
+                            bundleListSource.push({
+                                session: dbInfo.sessions[i].name,
+                                name: dbInfo.sessions[i].bundles[j],
+                                comment: '',
+                                finishedEditing: false
+                            });
+                        }
+                    }
+                }
+            }
+            //
+            //////////
+            //////////
+            // Shuffle bundle list source if so requested
+            //
+            if (shuffled) {
+            }
+            //
+            //////////
+            //////////
+            // Distribute bundles to editors
+            //
+            // Prepare a bundle list for each editor
+            var resultBundleLists = [];
+            for (var i = 0; i < editors.length; ++i) {
+                resultBundleLists.push({
+                    name: editors[i],
+                    status: '',
+                    items: []
+                });
+            }
+            // The next editor who will receive a bundle
+            var nextEditor = -1;
+            for (var i = 0; i < bundleListSource.length; ++i) {
+                for (var j = 0; j < personsPerBundle; ++j) {
+                    nextEditor += 1;
+                    if (nextEditor >= editors.length) {
+                        nextEditor = 0;
+                    }
+                    resultBundleLists[nextEditor].items.push(bundleListSource[i]);
+                }
+            }
+            //
+            //////////
+            // @todo actually return
+            return resultBundleLists;
+        });
+    };
     ProjectDataService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
@@ -224,4 +311,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=../tmp/broccoli_type_script_compiler-input_base_path-psDacEO1.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-zxB5nwPa.tmp/0/src/app/project-data.service.js.map

@@ -48,12 +48,11 @@ var WelcomeComponent = (function () {
             moduleId: module.id,
             selector: 'emudbmanager-welcome',
             templateUrl: 'welcome.component.html',
-            styleUrls: ['welcome.component.css'],
-            directives: [router_1.ROUTER_DIRECTIVES]
+            styleUrls: ['welcome.component.css']
         }), 
         __metadata('design:paramtypes', [project_data_service_1.ProjectDataService, router_1.Router])
     ], WelcomeComponent);
     return WelcomeComponent;
 }());
 exports.WelcomeComponent = WelcomeComponent;
-//# sourceMappingURL=../../tmp/broccoli_type_script_compiler-input_base_path-psDacEO1.tmp/0/src/app/welcome/welcome.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-zxB5nwPa.tmp/0/src/app/welcome/welcome.component.js.map

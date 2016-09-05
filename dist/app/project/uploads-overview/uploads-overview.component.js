@@ -9,12 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var router_1 = require("@angular/router");
 var project_data_service_1 = require("../../project-data.service");
 var UploadsOverviewComponent = (function () {
-    function UploadsOverviewComponent(projectDataService, router) {
+    function UploadsOverviewComponent(projectDataService) {
         this.projectDataService = projectDataService;
-        this.router = router;
     }
     UploadsOverviewComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -32,12 +30,11 @@ var UploadsOverviewComponent = (function () {
             moduleId: module.id,
             selector: 'emudbmanager-uploads-overview',
             templateUrl: 'uploads-overview.component.html',
-            styleUrls: ['uploads-overview.component.css'],
-            directives: [router_1.ROUTER_DIRECTIVES]
+            styleUrls: ['uploads-overview.component.css']
         }), 
-        __metadata('design:paramtypes', [project_data_service_1.ProjectDataService, router_1.Router])
+        __metadata('design:paramtypes', [project_data_service_1.ProjectDataService])
     ], UploadsOverviewComponent);
     return UploadsOverviewComponent;
 }());
 exports.UploadsOverviewComponent = UploadsOverviewComponent;
-//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-psDacEO1.tmp/0/src/app/project/uploads-overview/uploads-overview.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-zxB5nwPa.tmp/0/src/app/project/uploads-overview/uploads-overview.component.js.map

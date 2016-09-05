@@ -62,37 +62,56 @@
 
 		<hr>
 
-		<div [ngSwitch]="duplicateName">
-			<div *ngSwitchCase="true">
-				<p>
-					The project already has a database named <strong>{{upload?.name}}</strong>. If
-					you want to save this upload as a database of its own, you have to rename it
-					first.
-				</p>
+		<div [ngSwitch]="mergeForm.duplicateName">
+			<form (ngSubmit)="saveUpload()">
+				<div *ngSwitchCase="true">
+					<p>
+						The project already has a database named <strong>{{upload?.name}}</strong>.
+						If you want to save this upload as a database of its own, you have to
+						rename it first.
+					</p>
 
-				<form (ngSubmit)="saveUpload()">
+
 					<p>
 						<input class="form-control" placeholder="New name"
-						       [(ngModel)]="mergeNewName" name="mergeNewName">
+						       [(ngModel)]="mergeForm.newName" name="mergeNewName">
 					</p>
 
 					<p>
-						<button type="button" class="btn btn-default"
-						        [disabled]="mergeNewName == ''">
+						<button type="submit" class="btn btn-default"
+						        [disabled]="mergeForm.newName == ''">
 							Save <strong>{{upload?.name}}</strong> as a database named
 
-							<strong *ngIf="mergeNewName">{{mergeNewName}}</strong>
-							<em *ngIf="!mergeNewName">[choose a name first]</em>
+							<strong *ngIf="mergeForm.newName">{{mergeForm.newName}}</strong>
+							<em *ngIf="!mergeForm.newName">[choose a name first]</em>
 						</button>
 					</p>
-				</form>
-			</div>
+				</div>
 
-			<div *ngSwitchCase="false">
-				<button type="button" class="btn btn-default">
-					Save <strong>{{upload?.name}}</strong> as a database of its own
-				</button>
-			</div>
+				<div *ngSwitchCase="false">
+					<button type="submit" class="btn btn-default">
+						Save <strong>{{upload?.name}}</strong> as a database of its own
+					</button>
+				</div>
+
+				<p *ngIf="mergeForm.messageSuccess" class="alert alert-success">
+					<button type="button" class="close" aria-label="Close"
+					        (click)="mergeForm.messageSuccess = ''">
+						<span aria-hidden="true">&times;</span>
+					</button>
+
+					{{mergeForm.messageSuccess}}
+				</p>
+
+				<p *ngIf="mergeForm.messageError" class="alert alert-danger">
+					<button type="button" class="close" aria-label="Close"
+					        (click)="mergeForm.messageError = ''">
+						<span aria-hidden="true">&times;</span>
+					</button>
+
+					{{mergeForm.messageError}}
+				</p>
+			</form>
 		</div>
 
 		<hr>

@@ -18,8 +18,12 @@ var UploadDetailComponent = (function () {
         this.router = router;
         this.databaseList = [];
         this.deleteError = '';
-        this.duplicateName = false;
-        this.mergeNewName = '';
+        this.mergeForm = {
+            duplicateName: false,
+            newName: '',
+            messageError: '',
+            messageSuccess: '',
+        };
         this.reallyDelete = false;
         this.state = 'Sessions';
     }
@@ -33,10 +37,10 @@ var UploadDetailComponent = (function () {
                 }
                 _this.subDatabase = _this.projectDataService.getDatabase(_this.upload.name).subscribe(function (nextDatabase) {
                     if (nextDatabase === null) {
-                        _this.duplicateName = false;
+                        _this.mergeForm.duplicateName = false;
                     }
                     else {
-                        _this.duplicateName = true;
+                        _this.mergeForm.duplicateName = true;
                     }
                 });
             });
@@ -73,7 +77,23 @@ var UploadDetailComponent = (function () {
         });
     };
     UploadDetailComponent.prototype.saveUpload = function () {
-        console.debug('yay');
+        var _this = this;
+        this.mergeForm.messageSuccess = '';
+        this.mergeForm.messageError = '';
+        var name;
+        if (this.mergeForm.duplicateName) {
+            name = this.mergeForm.newName;
+        }
+        else {
+            name = this.upload.name;
+        }
+        this.projectDataService.saveUpload(this.upload.uuid, name).subscribe(function (next) {
+            _this.projectDataService.fetchData();
+            _this.mergeForm.messageSuccess = 'The database has been saved.';
+        }, function (error) {
+            _this.mergeForm.messageError = error.message;
+            console.log(error);
+        });
     };
     UploadDetailComponent = __decorate([
         core_1.Component({
@@ -87,4 +107,4 @@ var UploadDetailComponent = (function () {
     return UploadDetailComponent;
 }());
 exports.UploadDetailComponent = UploadDetailComponent;
-//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-psDacEO1.tmp/0/src/app/project/upload-detail/upload-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-zxB5nwPa.tmp/0/src/app/project/upload-detail/upload-detail.component.js.map

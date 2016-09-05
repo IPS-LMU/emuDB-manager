@@ -6,8 +6,8 @@
 // However, it is no security issue if it is called directly, because it only
 // contains functions (thus, no code is executed).
 
-require_once '../helpers/type_definitions.php';
-require_once '../helpers/result_helper.php';
+require_once 'type_definitions.php';
+require_once 'result_helper.php';
 
 /**
  * Opens a file, decodes the JSON contained in it and returns the decoded
@@ -60,10 +60,11 @@ function load_json_file ($filename) {
  *
  * @param $object object The object to encode.
  * @param $filename string The JSON file to write to.
+ * @param $options int Options to pass to json_encode()
  * @returns Result
  */
-function save_json_file ($object, $filename) {
-	$json = json_encode($object);
+function save_json_file ($object, $filename, $options = JSON_PRETTY_PRINT) {
+	$json = json_encode($object, $options);
 
 	if ($json === false) {
 		return negativeResult(

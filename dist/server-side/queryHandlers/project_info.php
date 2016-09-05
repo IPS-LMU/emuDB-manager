@@ -6,9 +6,10 @@
 // However, it is no security issue if it is called directly, because it only
 // contains functions (thus, no code is executed)
 
-require_once '../helpers/json_file.php';
-require_once '../helpers/result_helper.php';
-require_once '../helpers/type_definitions.php';
+require_once 'helpers/findDatabaseInUpload.php';
+require_once 'helpers/json_file.php';
+require_once 'helpers/result_helper.php';
+require_once 'helpers/type_definitions.php';
 
 
 /**
@@ -83,45 +84,24 @@ function readDirOfUploads ($directory) {
 
 		$upload->date = date("M d, Y H:i T", $stat['mtime']);
 
-		// Find a directory in the data/ subdir that is called *_emuDB. This is
-		// regarded the database.
+		$databaseName = findDatabaseInUpload($directory . '/' . $entry);
 
-		$uploadDataDir = $directory . '/' . $entry . '/data';
-
-		try {
-			$iter = new FilesystemIterator(
-				$uploadDataDir,
-				FilesystemIterator::SKIP_DOTS |
-				FilesystemIterator::CURRENT_AS_PATHNAME
-			);
-		} catch (Exception $e) {
-			return negativeResult(
-				'LIST_DIR_FAILED',
-				'Failed to read data directory of an upload.'
-			);
-		}
-
-		$databaseDir = '';
-
-		foreach ($iter as $filePath) {
-			if (substr($filePath, -6) === '_emuDB') {
-				$databaseDir = $filePath;
-			}
-		}
-
-		if ($databaseDir === '') {
-			$upload->name = 'INVALID_UPLOAD';
+		if ($databaseName->success !== true) {
+			$upload->name = 'INVALID_UPLOAD_' . $databaseName->data;
 			$upload->sessions = array();
 		} else {
-			$upload->name = basename($databaseDir, '_emuDB');
+			$upload->name = $databaseName->data;
+			$databaseDir = $directory . '/' . $entry . '/data/' .
+				$upload->name . '_emuDB';
 
 			// Read the sessions contained in the upload
 			$db = readDatabase($databaseDir);
 			if ($db->success !== true) {
-				return $db;
+				$upload->name = 'INVALID_UPLOAD';
+				$upload->sessions = array();
+			} else {
+				$upload->sessions = $db->data->sessions;
 			}
-
-			$upload->sessions = $db->data->sessions;
 		}
 
 		$result[] = $upload;
@@ -220,6 +200,13 @@ function readDatabase ($directory) {
 				return $configStat;
 			}
 		}
+	}
+
+	if (is_null($db->dbConfig)) {
+		return negativeResult(
+			'NO_DATABASE_CONFIG',
+			'No database configuration found'
+		);
 	}
 
 	return positiveResult($db);
