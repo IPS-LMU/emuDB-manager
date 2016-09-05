@@ -6,6 +6,7 @@
 // Configuration
 
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: content-type");
 $dataDirectory = '/homes/markusjochim/manager-data';
 date_default_timezone_set('Europe/Berlin');
 
@@ -75,11 +76,11 @@ function authorize () {
 		LIMIT 1"
 	);
 
-	$stmt->bindParam(':project', $_GET['user']);
+	$stmt->bindParam(':project', $_POST['user']);
 	$stmt->execute();
 
 	while ($row = $stmt->fetch()) {
-		if (password_verify($_GET['password'], $row['adm.password'])) {
+		if (password_verify($_POST['password'], $row['adm.password'])) {
 
 		} else {
 
@@ -88,7 +89,7 @@ function authorize () {
 	}
 	*/
 
-	if ($_GET['user'] === 'dach' && $_GET['password'] === 'dach') {
+	if ($_POST['user'] === 'dach' && $_POST['password'] === 'dach') {
 		$result = new AuthToken();
 		$result->projectDir = $dataDirectory . '/dach';
 		$result->projectName = 'Typologie der Vokal- und Konsonantenquantitäten (DACH)';
@@ -117,53 +118,53 @@ function authorize () {
  * @return Result
  */
 function executeQuery (AuthToken $authToken) {
-	switch ($_GET['query']) {
+	switch ($_POST['query']) {
 		case 'delete_upload':
-			$result = validateUploadIdentifier($_GET['uuid']);
+			$result = validateUploadIdentifier($_POST['uuid']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
 			return delete_upload(
 				$authToken->projectDir,
-				$_GET['uuid']
+				$_POST['uuid']
 			);
 
 			break;
 
 		case 'edit_bundle_list':
-			$result = validateDatabaseName($_GET['database']);
+			$result = validateDatabaseName($_POST['database']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateStatus($_GET['old_status']);
+			$result = validateStatus($_POST['old_status']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateStatus($_GET['new_status']);
+			$result = validateStatus($_POST['new_status']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateBundleListName($_GET['old_name']);
+			$result = validateBundleListName($_POST['old_name']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateBundleListName($_GET['new_name']);
+			$result = validateBundleListName($_POST['new_name']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
 			return edit_bundle_list(
 				$authToken->projectDir,
-				$_GET['database'],
-				$_GET['old_status'],
-				$_GET['old_name'],
-				$_GET['new_status'],
-				$_GET['new_name']
+				$_POST['database'],
+				$_POST['old_status'],
+				$_POST['old_name'],
+				$_POST['new_status'],
+				$_POST['new_name']
 			);
 			break;
 
@@ -172,36 +173,36 @@ function executeQuery (AuthToken $authToken) {
 			break;
 
 		case 'rename_db':
-			$result = validateDatabaseName($_GET['old_name']);
+			$result = validateDatabaseName($_POST['old_name']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateDatabaseName($_GET['new_name']);
+			$result = validateDatabaseName($_POST['new_name']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
 			return rename_db(
 				$authToken->projectDir,
-				$_GET['old_name'],
-				$_GET['new_name']
+				$_POST['old_name'],
+				$_POST['new_name']
 			);
 			break;
 
 		case 'save_upload':
-			$result = validateDatabaseName($_GET['name']);
+			$result = validateDatabaseName($_POST['name']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateUploadIdentifier($_GET['uuid']);
+			$result = validateUploadIdentifier($_POST['uuid']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			return save_upload($authToken->projectDir, $_GET['uuid'],
-				$_GET['name']);
+			return save_upload($authToken->projectDir, $_POST['uuid'],
+				$_POST['name']);
 
 			break;
 
