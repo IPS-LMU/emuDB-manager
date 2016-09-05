@@ -122,12 +122,14 @@ function moveDatabase ($databaseDir, $newName, $newParentDir = '') {
 		);
 	}
 
-	// Delete the old database configuration
-	$oldDbConfig = $newDatabaseDir . '/' . $databaseName . '_DBconfig.json';
+	if ($newName !== $databaseName) {
+		// Delete the old database configuration
+		$oldDbConfig = $newDatabaseDir . '/' . $databaseName . '_DBconfig.json';
 
-	if (!unlink($oldDbConfig)) {
-		// This is non-fatal
-		// Too bad we do not have a way to issue a warning to the user
+		if (!unlink($oldDbConfig)) {
+			// This is non-fatal
+			// Too bad we do not have a way to issue a warning to the user
+		}
 	}
 
 	return positiveResult(null);
