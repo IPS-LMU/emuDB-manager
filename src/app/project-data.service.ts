@@ -42,7 +42,8 @@ export class ProjectDataService {
 					this.infoObserver.error('BAD_LOGIN');
 					this.createHotObservable();
 				} else {
-					this.infoObserver.error('UNKNOWN ERROR');
+					console.log('Unknown error in server response');
+					//this.infoObserver.error('UNKNOWN ERROR');
 				}
 			}
 		});
