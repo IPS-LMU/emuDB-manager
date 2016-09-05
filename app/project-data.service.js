@@ -14,7 +14,7 @@ var Rx_1 = require("rxjs/Rx");
 var ProjectDataService = (function () {
     function ProjectDataService(http) {
         this.http = http;
-        this.url = 'https://www.phonetik.uni-muenchen.de/devel/emuDB-manager/emudb-manager.php';
+        this.url = 'https://www.phonetik.uni-muenchen.de/devel/emuDB-manager/server-side/emudb-manager.php';
         this.username = 'dach';
         this.password = 'dach';
         this.createHotObservable();
@@ -311,4 +311,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-zxB5nwPa.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-J2RFjThZ.tmp/0/src/app/project-data.service.js.map
