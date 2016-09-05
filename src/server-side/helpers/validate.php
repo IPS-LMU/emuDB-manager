@@ -91,6 +91,10 @@ function validateBundleListName ($name) {
 		);
 	}
 
+	// Remove all dots from $name. Dots are allowed but the name cannot
+	// consist of dots only.
+	$name = str_replace(".", "", $name);
+
 	$result = validatePlainString($name);
 
 	if ($result === false) {
