@@ -17,9 +17,11 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private newName:string = '';
 	private renameError:string = '';
 	private renameSuccess:string = '';
-	private subParams:Subscription;
 	private subDatabase:Subscription;
+	private subParams:Subscription;
+	private subWebAppLink:Subscription;
 	private state:State = 'BundleLists';
+	private webAppLink:string = '';
 
 	constructor(private projectDataService:ProjectDataService, private route:ActivatedRoute) {
 	}
@@ -28,6 +30,9 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 		this.subParams = this.route.params.subscribe(params => {
 			this.subDatabase = this.projectDataService.getDatabase(params['name']).subscribe(nextDatabase => {
 				this.database = nextDatabase;
+			});
+			this.subWebAppLink = this.projectDataService.getEmuWebAppURL(params['name']).subscribe(nextLink => {
+				this.webAppLink = nextLink;
 			});
 		})
 	}
@@ -38,6 +43,9 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 		}
 		if (this.subDatabase) {
 			this.subDatabase.unsubscribe();
+		}
+		if (this.subWebAppLink) {
+			this.subWebAppLink.unsubscribe();
 		}
 	}
 
@@ -57,8 +65,14 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 			if (this.subDatabase) {
 				this.subDatabase.unsubscribe();
 			}
+			if (this.subWebAppLink) {
+				this.subWebAppLink.unsubscribe();
+			}
 			this.subDatabase = this.projectDataService.getDatabase(this.newName).subscribe(nextDatabase => {
 				this.database = nextDatabase;
+			});
+			this.subWebAppLink = this.projectDataService.getEmuWebAppURL(this.newName).subscribe(nextLink => {
+				this.webAppLink = nextLink;
 			});
 		}, error => {
 			this.renameError = error.message;

@@ -11,8 +11,10 @@ import {BundleListItem} from "./types/bundle-list-item";
 
 @Injectable()
 export class ProjectDataService {
+	private emuWebAppURL = 'https://ips-lmu.github.io/EMU-webApp/';
 	private infoObservable:ConnectableObservable<ProjectInfo>;
 	private infoObserver:Observer<ProjectInfo>;
+	private nodeJSServerURL = 'wss://webapp2.phonetik.uni-muenchen.de:17890/manager';
 	private password:string;
 	private url = 'https://www.phonetik.uni-muenchen.de/devel/emuDB-manager/server-side/emudb-manager.php';
 	private username:string;
@@ -362,6 +364,25 @@ export class ProjectDataService {
 			// @todo actually return
 
 			return resultBundleLists;
+		});
+	}
+
+	public getEmuWebAppURL(database:string):Observable<string> {
+		return this.getName().map(projectName => {
+			let url = this.emuWebAppURL;
+			url += '?autoConnect=true&serverUrl=';
+
+			let nodeJS = this.nodeJSServerURL;
+
+			// we should not use this.username here but rather something
+			// retrieved from the server (which doesnt exist yet;
+			// this.getName() isn't right either but it's used so the
+			// function is async already)
+			nodeJS += '/' + this.username + '/databases/' + database;
+
+			url += encodeURIComponent(nodeJS);
+
+			return url;
 		});
 	}
 }
