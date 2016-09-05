@@ -9,9 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var uploads_overview_component_1 = require("../uploads-overview/uploads-overview.component");
 var project_data_service_1 = require("../../project-data.service");
-var upload_form_component_1 = require("../upload-form/upload-form.component");
 var UploadsDashboardComponent = (function () {
     function UploadsDashboardComponent(projectDataService) {
         this.projectDataService = projectDataService;
@@ -35,11 +33,10 @@ var UploadsDashboardComponent = (function () {
             selector: 'emudbmanager-uploads-dashboard',
             templateUrl: 'uploads-dashboard.component.html',
             styleUrls: ['uploads-dashboard.component.css'],
-            directives: [uploads_overview_component_1.UploadsOverviewComponent, upload_form_component_1.UploadFormComponent]
         }), 
         __metadata('design:paramtypes', [project_data_service_1.ProjectDataService])
     ], UploadsDashboardComponent);
     return UploadsDashboardComponent;
 }());
 exports.UploadsDashboardComponent = UploadsDashboardComponent;
-//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-psDacEO1.tmp/0/src/app/project/uploads-dashboard/uploads-dashboard.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-zxB5nwPa.tmp/0/src/app/project/uploads-dashboard/uploads-dashboard.component.js.map

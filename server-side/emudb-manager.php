@@ -26,6 +26,7 @@ require_once 'queryHandlers/delete_upload.php';
 require_once 'queryHandlers/edit_bundle_list.php';
 require_once 'queryHandlers/project_info.php';
 require_once 'queryHandlers/rename_db.php';
+require_once 'queryHandlers/save_upload.php';
 require_once 'queryHandlers/upload.php';
 
 //
@@ -186,6 +187,22 @@ function executeQuery (AuthToken $authToken) {
 				$_GET['old_name'],
 				$_GET['new_name']
 			);
+			break;
+
+		case 'save_upload':
+			$result = validateDatabaseName($_GET['name']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateUploadIdentifier($_GET['uuid']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return save_upload($authToken->projectDir, $_GET['uuid'],
+				$_GET['name']);
+
 			break;
 
 		case 'project_info':

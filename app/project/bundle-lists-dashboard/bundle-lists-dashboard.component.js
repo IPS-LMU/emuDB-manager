@@ -9,7 +9,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var bundle_lists_overview_component_1 = require("../bundle-lists-overview/bundle-lists-overview.component");
 var project_data_service_1 = require("../../project-data.service");
 var BundleListsDashboardComponent = (function () {
     function BundleListsDashboardComponent(projectDataService) {
@@ -38,12 +37,11 @@ var BundleListsDashboardComponent = (function () {
             moduleId: module.id,
             selector: 'emudbmanager-bundle-lists-dashboard',
             templateUrl: 'bundle-lists-dashboard.component.html',
-            styleUrls: ['bundle-lists-dashboard.component.css'],
-            directives: [bundle_lists_overview_component_1.BundleListsOverviewComponent]
+            styleUrls: ['bundle-lists-dashboard.component.css']
         }), 
         __metadata('design:paramtypes', [project_data_service_1.ProjectDataService])
     ], BundleListsDashboardComponent);
     return BundleListsDashboardComponent;
 }());
 exports.BundleListsDashboardComponent = BundleListsDashboardComponent;
-//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-psDacEO1.tmp/0/src/app/project/bundle-lists-dashboard/bundle-lists-dashboard.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-zxB5nwPa.tmp/0/src/app/project/bundle-lists-dashboard/bundle-lists-dashboard.component.js.map

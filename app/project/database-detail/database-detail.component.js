@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var project_data_service_1 = require("../../project-data.service");
 var router_1 = require("@angular/router");
-var bundle_lists_overview_component_1 = require("../bundle-lists-overview/bundle-lists-overview.component");
 var DatabaseDetailComponent = (function () {
     function DatabaseDetailComponent(projectDataService, route) {
         this.projectDataService = projectDataService;
@@ -63,12 +62,11 @@ var DatabaseDetailComponent = (function () {
             moduleId: module.id,
             selector: 'emudbmanager-database-detail',
             templateUrl: 'database-detail.component.html',
-            styleUrls: ['database-detail.component.css'],
-            directives: [bundle_lists_overview_component_1.BundleListsOverviewComponent]
+            styleUrls: ['database-detail.component.css']
         }), 
         __metadata('design:paramtypes', [project_data_service_1.ProjectDataService, router_1.ActivatedRoute])
     ], DatabaseDetailComponent);
     return DatabaseDetailComponent;
 }());
 exports.DatabaseDetailComponent = DatabaseDetailComponent;
-//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-psDacEO1.tmp/0/src/app/project/database-detail/database-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-zxB5nwPa.tmp/0/src/app/project/database-detail/database-detail.component.js.map

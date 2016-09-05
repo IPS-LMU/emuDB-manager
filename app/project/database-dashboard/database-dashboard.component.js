@@ -9,7 +9,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var databases_overview_component_1 = require("../databases-overview/databases-overview.component");
 var project_data_service_1 = require("../../project-data.service");
 var DatabaseDashboardComponent = (function () {
     function DatabaseDashboardComponent(projectDataService) {
@@ -32,12 +31,11 @@ var DatabaseDashboardComponent = (function () {
             moduleId: module.id,
             selector: 'emudbmanager-database-dashboard',
             templateUrl: 'database-dashboard.component.html',
-            styleUrls: ['database-dashboard.component.css'],
-            directives: [databases_overview_component_1.DatabasesOverviewComponent]
+            styleUrls: ['database-dashboard.component.css']
         }), 
         __metadata('design:paramtypes', [project_data_service_1.ProjectDataService])
     ], DatabaseDashboardComponent);
     return DatabaseDashboardComponent;
 }());
 exports.DatabaseDashboardComponent = DatabaseDashboardComponent;
-//# sourceMappingURL=../../../tmp/broccoli_type_script_compiler-input_base_path-psDacEO1.tmp/0/src/app/project/database-dashboard/database-dashboard.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-zxB5nwPa.tmp/0/src/app/project/database-dashboard/database-dashboard.component.js.map

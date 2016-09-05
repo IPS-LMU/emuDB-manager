@@ -1,16 +1,10 @@
 "use strict";
-var platform_browser_dynamic_1 = require("@angular/platform-browser-dynamic");
 var core_1 = require("@angular/core");
+var platform_browser_dynamic_1 = require("@angular/platform-browser-dynamic");
+var app_module_1 = require("./app/app.module");
 var _1 = require("./app/");
-var app_routes_1 = require("./app/app.routes");
-var forms_1 = require("@angular/forms");
 if (_1.environment.production) {
     core_1.enableProdMode();
 }
-platform_browser_dynamic_1.bootstrap(_1.AppComponent, [
-    app_routes_1.appRouterProviders,
-    forms_1.disableDeprecatedForms(),
-    forms_1.provideForms()
-])
-    .catch(function (err) { return console.error(err); });
-//# sourceMappingURL=tmp/broccoli_type_script_compiler-input_base_path-psDacEO1.tmp/0/src/main.js.map
+platform_browser_dynamic_1.platformBrowserDynamic().bootstrapModule(app_module_1.AppModule);
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-zxB5nwPa.tmp/0/src/main.js.map
