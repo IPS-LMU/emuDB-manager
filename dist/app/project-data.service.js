@@ -14,6 +14,8 @@ var Rx_1 = require("rxjs/Rx");
 var ProjectDataService = (function () {
     function ProjectDataService(http) {
         this.http = http;
+        this.emuWebAppURL = 'https://ips-lmu.github.io/EMU-webApp/';
+        this.nodeJSServerURL = 'wss://webapp2.phonetik.uni-muenchen.de:17890/manager';
         this.url = 'https://www.phonetik.uni-muenchen.de/devel/emuDB-manager/server-side/emudb-manager.php';
         this.username = 'dach';
         this.password = 'dach';
@@ -28,8 +30,9 @@ var ProjectDataService = (function () {
     };
     ProjectDataService.prototype.fetchData = function () {
         var _this = this;
-        var params = new http_1.URLSearchParams();
-        params.set('query', 'project_info');
+        var params = {
+            query: 'project_info'
+        };
         this.serverQuery(params).subscribe(function (next) {
             if (next.success === true) {
                 _this.infoObserver.next(next.data);
@@ -40,17 +43,26 @@ var ProjectDataService = (function () {
                     _this.createHotObservable();
                 }
                 else {
-                    _this.infoObserver.error('UNKNOWN ERROR');
+                    console.log('Unknown error in server response');
                 }
             }
         });
     };
     ProjectDataService.prototype.serverQuery = function (params) {
         console.log('Querying server', params);
-        params.set('user', this.username);
-        params.set('password', this.password);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        params.user = this.username;
+        params.password = this.password;
+        var body = '';
+        for (var i in params) {
+            if (body != '') {
+                body += '&';
+            }
+            body += encodeURIComponent(i) + '=' + encodeURIComponent(params[i]);
+        }
         return this.http
-            .get(this.url, { search: params })
+            .post(this.url, body, options)
             .map(function (response) {
             var json = response.json();
             console.log('Received JSON data', json);
@@ -65,8 +77,9 @@ var ProjectDataService = (function () {
         return Rx_1.Observable.create(function (observer) {
             _this.username = username;
             _this.password = password;
-            var params = new http_1.URLSearchParams();
-            params.set('query', 'login');
+            var params = {
+                query: 'login'
+            };
             _this.serverQuery(params).subscribe(function (next) {
                 if (next.success === true) {
                     observer.next(null);
@@ -157,10 +170,11 @@ var ProjectDataService = (function () {
     ProjectDataService.prototype.renameDatabase = function (oldName, newName) {
         var _this = this;
         return Rx_1.Observable.create(function (observer) {
-            var params = new http_1.URLSearchParams();
-            params.set('query', 'rename_db');
-            params.set('old_name', oldName);
-            params.set('new_name', newName);
+            var params = {
+                query: 'rename_db',
+                old_name: oldName,
+                new_name: newName
+            };
             _this.serverQuery(params).subscribe(function (next) {
                 if (next.success === true) {
                     observer.next(null);
@@ -175,13 +189,14 @@ var ProjectDataService = (function () {
     ProjectDataService.prototype.editBundle = function (database, name, status, newName, newStatus) {
         var _this = this;
         return Rx_1.Observable.create(function (observer) {
-            var params = new http_1.URLSearchParams();
-            params.set('query', 'edit_bundle_list');
-            params.set('database', database);
-            params.set('old_name', name);
-            params.set('old_status', status);
-            params.set('new_name', newName);
-            params.set('new_status', newStatus);
+            var params = {
+                'query': 'edit_bundle_list',
+                'database': database,
+                'old_name': name,
+                'old_status': status,
+                'new_name': newName,
+                'new_status': newStatus
+            };
             _this.serverQuery(params).subscribe(function (next) {
                 if (next.success === true) {
                     observer.next(null);
@@ -194,18 +209,20 @@ var ProjectDataService = (function () {
         });
     };
     ProjectDataService.prototype.getUploadURL = function () {
-        var params = new http_1.URLSearchParams();
-        params.set('user', this.username);
-        params.set('password', this.password);
-        params.set('query', 'upload');
+        var params = {
+            'user': this.username,
+            'password': this.password,
+            'query': 'upload'
+        };
         return this.url + '?' + params.toString();
     };
     ProjectDataService.prototype.deleteUpload = function (identifier) {
         var _this = this;
         return Rx_1.Observable.create(function (observer) {
-            var params = new http_1.URLSearchParams();
-            params.set('query', 'delete_upload');
-            params.set('uuid', identifier);
+            var params = {
+                'query': 'delete_upload',
+                'uuid': identifier
+            };
             _this.serverQuery(params).subscribe(function (next) {
                 if (next.success === true) {
                     observer.next(null);
@@ -220,10 +237,11 @@ var ProjectDataService = (function () {
     ProjectDataService.prototype.saveUpload = function (identifier, name) {
         var _this = this;
         return Rx_1.Observable.create(function (observer) {
-            var params = new http_1.URLSearchParams();
-            params.set('query', 'save_upload');
-            params.set('uuid', identifier);
-            params.set('name', name);
+            var params = {
+                'query': 'save_upload',
+                'uuid': identifier,
+                'name': name
+            };
             _this.serverQuery(params).subscribe(function (next) {
                 if (next.success === true) {
                     observer.next(null);
@@ -304,6 +322,21 @@ var ProjectDataService = (function () {
             return resultBundleLists;
         });
     };
+    ProjectDataService.prototype.getEmuWebAppURL = function (database) {
+        var _this = this;
+        return this.getName().map(function (projectName) {
+            var url = _this.emuWebAppURL;
+            url += '?autoConnect=true&serverUrl=';
+            var nodeJS = _this.nodeJSServerURL;
+            // we should not use this.username here but rather something
+            // retrieved from the server (which doesnt exist yet;
+            // this.getName() isn't right either but it's used so the
+            // function is async already)
+            nodeJS += '/' + _this.username + '/databases/' + database;
+            url += encodeURIComponent(nodeJS);
+            return url;
+        });
+    };
     ProjectDataService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
@@ -311,4 +344,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-J2RFjThZ.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-aH4x1Wtk.tmp/0/src/app/project-data.service.js.map

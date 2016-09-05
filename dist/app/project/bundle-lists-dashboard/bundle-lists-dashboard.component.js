@@ -44,4 +44,4 @@ var BundleListsDashboardComponent = (function () {
     return BundleListsDashboardComponent;
 }());
 exports.BundleListsDashboardComponent = BundleListsDashboardComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-J2RFjThZ.tmp/0/src/app/project/bundle-lists-dashboard/bundle-lists-dashboard.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-aH4x1Wtk.tmp/0/src/app/project/bundle-lists-dashboard/bundle-lists-dashboard.component.js.map

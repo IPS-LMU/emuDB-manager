@@ -19,12 +19,16 @@ var DatabaseDetailComponent = (function () {
         this.renameError = '';
         this.renameSuccess = '';
         this.state = 'BundleLists';
+        this.webAppLink = '';
     }
     DatabaseDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.subParams = this.route.params.subscribe(function (params) {
             _this.subDatabase = _this.projectDataService.getDatabase(params['name']).subscribe(function (nextDatabase) {
                 _this.database = nextDatabase;
+            });
+            _this.subWebAppLink = _this.projectDataService.getEmuWebAppURL(params['name']).subscribe(function (nextLink) {
+                _this.webAppLink = nextLink;
             });
         });
     };
@@ -34,6 +38,9 @@ var DatabaseDetailComponent = (function () {
         }
         if (this.subDatabase) {
             this.subDatabase.unsubscribe();
+        }
+        if (this.subWebAppLink) {
+            this.subWebAppLink.unsubscribe();
         }
     };
     DatabaseDetailComponent.prototype.renameDatabase = function () {
@@ -50,8 +57,14 @@ var DatabaseDetailComponent = (function () {
             if (_this.subDatabase) {
                 _this.subDatabase.unsubscribe();
             }
+            if (_this.subWebAppLink) {
+                _this.subWebAppLink.unsubscribe();
+            }
             _this.subDatabase = _this.projectDataService.getDatabase(_this.newName).subscribe(function (nextDatabase) {
                 _this.database = nextDatabase;
+            });
+            _this.subWebAppLink = _this.projectDataService.getEmuWebAppURL(_this.newName).subscribe(function (nextLink) {
+                _this.webAppLink = nextLink;
             });
         }, function (error) {
             _this.renameError = error.message;
@@ -69,4 +82,4 @@ var DatabaseDetailComponent = (function () {
     return DatabaseDetailComponent;
 }());
 exports.DatabaseDetailComponent = DatabaseDetailComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-J2RFjThZ.tmp/0/src/app/project/database-detail/database-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-aH4x1Wtk.tmp/0/src/app/project/database-detail/database-detail.component.js.map
