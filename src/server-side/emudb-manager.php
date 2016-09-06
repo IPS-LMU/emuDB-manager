@@ -202,11 +202,19 @@ function executeQuery (AuthToken $authToken) {
 				return $result;
 			}
 
+			$bundleList = json_decode($_POST['list']);
+			if (is_null($bundleList)) {
+				return negativeResult(
+					'INVALID_BUNDLE_LIST',
+					'The provided bundle list is invalid.'
+				);
+			}
+
 			return save_bundle_list(
 				$authToken->projectDir,
 				$_POST['database'],
 				$_POST['name'],
-				$_POST['list']
+				$bundleList
 			);
 
 			break;

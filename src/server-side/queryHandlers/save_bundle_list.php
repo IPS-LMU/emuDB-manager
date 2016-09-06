@@ -9,12 +9,27 @@
 require_once 'helpers/result_helper.php';
 
 /**
- * @param $projectDir
- * @param $database
- * @param $name
- * @param $list
+ * Save a new bundle list.
+ *
+ * @param $projectDir string The project directory for which the client has
+ *        been authorized.
+ * @param $database string The database for which to save the bundle list.
+ * @param $name string The editor for whom to save the bundle list.
+ * @param $list object The bundle list in object form.
  * @return Result
  */
 function save_bundle_list ($projectDir, $database, $name, $list) {
-	return positiveResult(null);
+	// Check whether $name already exists
+
+	$fileName = $projectDir . '/databases/' . $database . '/bundleLists' .
+		$name . '_bundleList.json';
+
+	if (file_exists($fileName)) {
+		return negativeResult(
+			'NAME_ALREADY_TAKEN',
+			'The chosen editor already has a non-archived bundle list.'
+		);
+	}
+
+	return save_json_file($list, $fileName);
 }
