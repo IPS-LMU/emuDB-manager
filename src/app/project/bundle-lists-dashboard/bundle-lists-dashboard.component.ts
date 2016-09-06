@@ -80,6 +80,7 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 
 			}, () => {
 				this.generatorSuccess += 'Successfully generated all bundle lists';
+				this.projectDataService.fetchData();
 			});
 	}
 
