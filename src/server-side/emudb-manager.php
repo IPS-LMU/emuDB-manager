@@ -173,7 +173,25 @@ function executeQuery (AuthToken $authToken) {
 			return positiveResult(null);
 			break;
 
-		case 'new_bundle_list':
+		case 'rename_db':
+			$result = validateDatabaseName($_POST['old_name']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateDatabaseName($_POST['new_name']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return rename_db(
+				$authToken->projectDir,
+				$_POST['old_name'],
+				$_POST['new_name']
+			);
+			break;
+
+		case 'save_bundle_list':
 			$result = validateBundleListName($_POST['name']);
 			if ($result->success !== true) {
 				return $result;
@@ -191,24 +209,6 @@ function executeQuery (AuthToken $authToken) {
 				$_POST['list']
 			);
 
-			break;
-
-		case 'rename_db':
-			$result = validateDatabaseName($_POST['old_name']);
-			if ($result->success !== true) {
-				return $result;
-			}
-
-			$result = validateDatabaseName($_POST['new_name']);
-			if ($result->success !== true) {
-				return $result;
-			}
-
-			return rename_db(
-				$authToken->projectDir,
-				$_POST['old_name'],
-				$_POST['new_name']
-			);
 			break;
 
 		case 'save_upload':
