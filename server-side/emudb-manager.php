@@ -27,6 +27,7 @@ require_once 'queryHandlers/delete_upload.php';
 require_once 'queryHandlers/edit_bundle_list.php';
 require_once 'queryHandlers/project_info.php';
 require_once 'queryHandlers/rename_db.php';
+require_once 'queryHandlers/save_bundle_list.php';
 require_once 'queryHandlers/save_upload.php';
 require_once 'queryHandlers/upload.php';
 
@@ -188,6 +189,34 @@ function executeQuery (AuthToken $authToken) {
 				$_POST['old_name'],
 				$_POST['new_name']
 			);
+			break;
+
+		case 'save_bundle_list':
+			$result = validateBundleListName($_POST['name']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$bundleList = json_decode($_POST['list']);
+			if (is_null($bundleList)) {
+				return negativeResult(
+					'INVALID_BUNDLE_LIST',
+					'The provided bundle list is invalid.'
+				);
+			}
+
+			return save_bundle_list(
+				$authToken->projectDir,
+				$_POST['database'],
+				$_POST['name'],
+				$bundleList
+			);
+
 			break;
 
 		case 'save_upload':
