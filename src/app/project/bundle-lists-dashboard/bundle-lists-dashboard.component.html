@@ -115,8 +115,6 @@
 							Shuffle
 						</label>
 					</p>
-
-
 				</div>
 			</div>
 
@@ -124,12 +122,32 @@
 			<hr>
 
 			<div class="row">
-				<p class="col-md-12">
-					<button type="button" class="btn btn-default"
-					        (click)="generateLists()">
-						Generate
-					</button>
-				</p>
+				<div class="col-md-12">
+					<p>
+						<button type="button" class="btn btn-default"
+						        (click)="generateLists()">
+							Generate
+						</button>
+					</p>
+
+					<p *ngIf="generatorSuccess" class="alert alert-success">
+						<button type="button" class="close" aria-label="Close"
+						        (click)="generatorSuccess = ''">
+							<span aria-hidden="true">&times;</span>
+						</button>
+
+						{{generatorSuccess}}
+					</p>
+
+					<p *ngIf="generatorError" class="alert alert-danger">
+						<button type="button" class="close" aria-label="Close"
+						        (click)="generatorError = ''">
+							<span aria-hidden="true">&times;</span>
+						</button>
+
+						{{generatorError}}
+					</p>
+				</div>
 			</div>
 		</form>
 	</div>

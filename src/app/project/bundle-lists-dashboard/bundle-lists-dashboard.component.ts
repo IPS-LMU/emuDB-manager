@@ -21,6 +21,8 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 
 	private bundlePattern:string = '.*';
 	private editors:{name:string}[] = [];
+	private generatorError:string = '';
+	private generatorSuccess:string = '';
 	private newEditor:string = '';
 	private personsPerBundle:number = 1;
 	private selectedDatabase:string = '';
@@ -54,7 +56,13 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 	private generateLists() {
 		this.checkNumber();
 
-		console.log(this.selectedDatabase);
+		this.generatorError = '';
+		this.generatorSuccess = '';
+
+		if (this.editors.length === 0) {
+			this.generatorError = 'No editors specified';
+			return;
+		}
 
 		this.projectDataService.generateBundleList(
 			this.selectedDatabase,
@@ -65,9 +73,14 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 			}),
 			this.personsPerBundle,
 			this.shuffle
-		 ).subscribe(next => {
-		    console.log(next);
-		 });
+		)
+			.subscribe(next => {
+			}, error => {
+				this.generatorError = error.message;
+
+			}, () => {
+				this.generatorSuccess += 'Successfully generated all bundle lists';
+			});
 	}
 
 	private addEditor() {

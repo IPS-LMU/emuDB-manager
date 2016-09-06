@@ -288,101 +288,133 @@ export class ProjectDataService {
 	                          editors:string[],
 	                          personsPerBundle:number,
 	                          shuffled:boolean) {
-
-
-		//////////
-		// Check parameter constraints
-		//
-
-		if (editors.length < personsPerBundle) {
+		return Observable.create(observer => {
+			//////////
+			// Check parameter constraints
 			//
-			// @todo wahaha failure
-		}
 
-		//
-		//////////
-
-
-		return this.getDatabase(database).map(dbInfo => {
-			if (dbInfo === null) {
-
+			if (editors.length < personsPerBundle) {
+				observer.error({
+					message: 'Invalid parameters.'
+				});
+				return;
 			}
 
-			let sessionRegex = new RegExp(sessionPattern);
-			let bundleRegex = new RegExp(bundlePattern);
-
-
-			//////////
-			// Select the bundles to add to the newly generated bunldle list(s)
 			//
+			//////////
 
-			let bundleListSource:BundleListItem[] = [];
+			this.getDatabase(database).map(dbInfo => {
+				if (dbInfo === null) {
+					observer.error('Invalid database specified');
+					return;
+				}
 
-			for (let i = 0; i < dbInfo.sessions.length; ++i) {
-				if (sessionRegex.test(dbInfo.sessions[i].name)) {
-					for (let j = 0; j < dbInfo.sessions[i].bundles.length; ++j) {
-						if (bundleRegex.test(dbInfo.sessions[i].bundles[j])) {
-							bundleListSource.push({
-								session: dbInfo.sessions[i].name,
-								name: dbInfo.sessions[i].bundles[j],
-								comment: '',
-								finishedEditing: false
+				for (let i = 0; i < editors.length; ++i) {
+					for (let j = 0; j < dbInfo.bundleLists.length; ++j) {
+						if (editors[i] === dbInfo.bundleLists[j].name && dbInfo.bundleLists[j].status === '') {
+							observer.error({
+								message: 'Editor already has a' + ' non-archived bundle list: ' + editors[i]
 							});
+							return;
 						}
 					}
 				}
-			}
 
-			//
-			//////////
+				let sessionRegex = new RegExp(sessionPattern);
+				let bundleRegex = new RegExp(bundlePattern);
 
-			//////////
-			// Shuffle bundle list source if so requested
-			//
+				//////////
+				// Select the bundles to add to the newly generated bundle list(s)
+				//
 
-			if (shuffled) {
-				// @todo shuffle
-			}
+				let bundleListSource:BundleListItem[] = [];
 
-			//
-			//////////
-
-			//////////
-			// Distribute bundles to editors
-			//
-
-			// Prepare a bundle list for each editor
-
-			let resultBundleLists:BundleList[] = [];
-
-			for (let i = 0; i < editors.length; ++i) {
-				resultBundleLists.push({
-					name: editors[i],
-					status: '',
-					items: []
-				});
-			}
-
-			// The next editor who will receive a bundle
-			let nextEditor:number = -1;
-
-			for (let i = 0; i < bundleListSource.length; ++i) {
-				for (let j = 0; j < personsPerBundle; ++j) {
-					nextEditor += 1;
-					if (nextEditor >= editors.length) {
-						nextEditor = 0;
+				for (let i = 0; i < dbInfo.sessions.length; ++i) {
+					if (sessionRegex.test(dbInfo.sessions[i].name)) {
+						for (let j = 0; j < dbInfo.sessions[i].bundles.length; ++j) {
+							if (bundleRegex.test(dbInfo.sessions[i].bundles[j])) {
+								bundleListSource.push({
+									session: dbInfo.sessions[i].name,
+									name: dbInfo.sessions[i].bundles[j],
+									comment: '',
+									finishedEditing: false
+								});
+							}
+						}
 					}
-
-					resultBundleLists[nextEditor].items.push(bundleListSource[i]);
 				}
-			}
 
-			//
-			//////////
+				//
+				//////////
 
-			// @todo actually return
+				//////////
+				// Shuffle bundle list source if so requested
+				//
 
-			return resultBundleLists;
+				if (shuffled) {
+					// @todo shuffle
+				}
+
+				//
+				//////////
+
+				//////////
+				// Distribute bundles among editors
+				//
+
+				// Prepare a bundle list for each editor
+
+				let resultBundleLists:BundleList[] = [];
+
+				for (let i = 0; i < editors.length; ++i) {
+					resultBundleLists.push({
+						name: editors[i],
+						status: '',
+						items: []
+					});
+				}
+
+				// The next editor who will receive a bundle
+				let nextEditor:number = -1;
+
+				for (let i = 0; i < bundleListSource.length; ++i) {
+					for (let j = 0; j < personsPerBundle; ++j) {
+						nextEditor += 1;
+						if (nextEditor >= editors.length) {
+							nextEditor = 0;
+						}
+
+						resultBundleLists[nextEditor].items.push(bundleListSource[i]);
+					}
+				}
+
+				//
+				//////////
+
+				let successCount:number = 0;
+
+				for (let i = 0; i < resultBundleLists.length; ++i) {
+					let params = {
+						query: 'save_bundle_list',
+						database: database,
+						name: resultBundleLists[i].name,
+						list: JSON.stringify(resultBundleLists[i].items)
+					};
+
+					this.serverQuery(params).subscribe((next:any) => {
+						if (next.success === true) {
+							++successCount;
+							observer.next(null);
+							if (successCount === resultBundleLists.length) {
+								observer.complete();
+							}
+						} else {
+							observer.error(next);
+							return;
+						}
+					});
+				}
+			}).subscribe();
 		});
 	}
 
