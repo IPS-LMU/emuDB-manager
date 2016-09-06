@@ -19,11 +19,20 @@ require_once 'helpers/result_helper.php';
  * @return Result
  */
 function save_bundle_list ($projectDir, $database, $name, $list) {
+	$dirName = $projectDir . '/databases/' . $database . '_emuDB/bundleLists/';
+
+	if (!file_exists($dirName)) {
+		if (!mkdir($dirName)) {
+			return negativeResult(
+				'MKDIR_FAILED',
+				'Failed to create bundleLists/ directory.'
+			);
+		}
+	}
+
+	$fileName = $dirName . '/' . $name . '_bundleList.json';
+
 	// Check whether $name already exists
-
-	$fileName = $projectDir . '/databases/' . $database . '/bundleLists' .
-		$name . '_bundleList.json';
-
 	if (file_exists($fileName)) {
 		return negativeResult(
 			'NAME_ALREADY_TAKEN',
