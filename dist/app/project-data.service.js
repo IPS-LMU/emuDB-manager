@@ -254,72 +254,111 @@ var ProjectDataService = (function () {
         });
     };
     ProjectDataService.prototype.generateBundleList = function (database, sessionPattern, bundlePattern, editors, personsPerBundle, shuffled) {
-        //////////
-        // Check parameter constraints
-        //
-        if (editors.length < personsPerBundle) {
-        }
-        //
-        //////////
-        return this.getDatabase(database).map(function (dbInfo) {
-            if (dbInfo === null) {
-            }
-            var sessionRegex = new RegExp(sessionPattern);
-            var bundleRegex = new RegExp(bundlePattern);
+        var _this = this;
+        return Rx_1.Observable.create(function (observer) {
             //////////
-            // Select the bundles to add to the newly generated bunldle list(s)
+            // Check parameter constraints
             //
-            var bundleListSource = [];
-            for (var i = 0; i < dbInfo.sessions.length; ++i) {
-                if (sessionRegex.test(dbInfo.sessions[i].name)) {
-                    for (var j = 0; j < dbInfo.sessions[i].bundles.length; ++j) {
-                        if (bundleRegex.test(dbInfo.sessions[i].bundles[j])) {
-                            bundleListSource.push({
-                                session: dbInfo.sessions[i].name,
-                                name: dbInfo.sessions[i].bundles[j],
-                                comment: '',
-                                finishedEditing: false
+            if (editors.length < personsPerBundle) {
+                observer.error({
+                    message: 'Invalid parameters.'
+                });
+                return;
+            }
+            //
+            //////////
+            _this.getDatabase(database).map(function (dbInfo) {
+                if (dbInfo === null) {
+                    observer.error('Invalid database specified');
+                    return;
+                }
+                for (var i = 0; i < editors.length; ++i) {
+                    for (var j = 0; j < dbInfo.bundleLists.length; ++j) {
+                        if (editors[i] === dbInfo.bundleLists[j].name && dbInfo.bundleLists[j].status === '') {
+                            observer.error({
+                                message: 'Editor already has a' + ' non-archived bundle list: ' + editors[i]
                             });
+                            return;
                         }
                     }
                 }
-            }
-            //
-            //////////
-            //////////
-            // Shuffle bundle list source if so requested
-            //
-            if (shuffled) {
-            }
-            //
-            //////////
-            //////////
-            // Distribute bundles to editors
-            //
-            // Prepare a bundle list for each editor
-            var resultBundleLists = [];
-            for (var i = 0; i < editors.length; ++i) {
-                resultBundleLists.push({
-                    name: editors[i],
-                    status: '',
-                    items: []
-                });
-            }
-            // The next editor who will receive a bundle
-            var nextEditor = -1;
-            for (var i = 0; i < bundleListSource.length; ++i) {
-                for (var j = 0; j < personsPerBundle; ++j) {
-                    nextEditor += 1;
-                    if (nextEditor >= editors.length) {
-                        nextEditor = 0;
+                var sessionRegex = new RegExp(sessionPattern);
+                var bundleRegex = new RegExp(bundlePattern);
+                //////////
+                // Select the bundles to add to the newly generated bundle list(s)
+                //
+                var bundleListSource = [];
+                for (var i = 0; i < dbInfo.sessions.length; ++i) {
+                    if (sessionRegex.test(dbInfo.sessions[i].name)) {
+                        for (var j = 0; j < dbInfo.sessions[i].bundles.length; ++j) {
+                            if (bundleRegex.test(dbInfo.sessions[i].bundles[j])) {
+                                bundleListSource.push({
+                                    session: dbInfo.sessions[i].name,
+                                    name: dbInfo.sessions[i].bundles[j],
+                                    comment: '',
+                                    finishedEditing: false
+                                });
+                            }
+                        }
                     }
-                    resultBundleLists[nextEditor].items.push(bundleListSource[i]);
                 }
-            }
-            //
-            //////////
-            // @todo actually return
-            return resultBundleLists;
+                //
+                //////////
+                //////////
+                // Shuffle bundle list source if so requested
+                //
+                if (shuffled) {
+                }
+                //
+                //////////
+                //////////
+                // Distribute bundles among editors
+                //
+                // Prepare a bundle list for each editor
+                var resultBundleLists = [];
+                for (var i = 0; i < editors.length; ++i) {
+                    resultBundleLists.push({
+                        name: editors[i],
+                        status: '',
+                        items: []
+                    });
+                }
+                // The next editor who will receive a bundle
+                var nextEditor = -1;
+                for (var i = 0; i < bundleListSource.length; ++i) {
+                    for (var j = 0; j < personsPerBundle; ++j) {
+                        nextEditor += 1;
+                        if (nextEditor >= editors.length) {
+                            nextEditor = 0;
+                        }
+                        resultBundleLists[nextEditor].items.push(bundleListSource[i]);
+                    }
+                }
+                //
+                //////////
+                var successCount = 0;
+                for (var i = 0; i < resultBundleLists.length; ++i) {
+                    var params = {
+                        query: 'save_bundle_list',
+                        database: database,
+                        name: resultBundleLists[i].name,
+                        list: JSON.stringify(resultBundleLists[i].items)
+                    };
+                    _this.serverQuery(params).subscribe(function (next) {
+                        if (next.success === true) {
+                            ++successCount;
+                            observer.next(null);
+                            if (successCount === resultBundleLists.length) {
+                                observer.complete();
+                            }
+                        }
+                        else {
+                            observer.error(next);
+                            return;
+                        }
+                    });
+                }
+            }).subscribe();
         });
     };
     ProjectDataService.prototype.getEmuWebAppURL = function (database) {
@@ -344,4 +383,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-aH4x1Wtk.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-xLBa65yh.tmp/0/src/app/project-data.service.js.map

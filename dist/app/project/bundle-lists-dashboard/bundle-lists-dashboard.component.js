@@ -14,6 +14,15 @@ var BundleListsDashboardComponent = (function () {
     function BundleListsDashboardComponent(projectDataService) {
         this.projectDataService = projectDataService;
         this.state = 'Overview';
+        this.bundlePattern = '.*';
+        this.editors = [];
+        this.generatorError = '';
+        this.generatorSuccess = '';
+        this.newEditor = '';
+        this.personsPerBundle = 1;
+        this.selectedDatabase = '';
+        this.sessionPattern = '.*';
+        this.shuffle = false;
     }
     BundleListsDashboardComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -22,6 +31,9 @@ var BundleListsDashboardComponent = (function () {
         });
         this.subDatabases = this.projectDataService.getAllDatabases().subscribe(function (next) {
             _this.databases = next;
+            if (_this.databases.length >= 1) {
+                _this.selectedDatabase = _this.databases[0].name;
+            }
         });
     };
     BundleListsDashboardComponent.prototype.ngOnDestroy = function () {
@@ -30,6 +42,41 @@ var BundleListsDashboardComponent = (function () {
         }
         if (this.subDatabases) {
             this.subDatabases.unsubscribe();
+        }
+    };
+    BundleListsDashboardComponent.prototype.generateLists = function () {
+        var _this = this;
+        this.checkNumber();
+        this.generatorError = '';
+        this.generatorSuccess = '';
+        if (this.editors.length === 0) {
+            this.generatorError = 'No editors specified';
+            return;
+        }
+        this.projectDataService.generateBundleList(this.selectedDatabase, this.sessionPattern, this.bundlePattern, this.editors.map(function (value) {
+            return value.name;
+        }), this.personsPerBundle, this.shuffle)
+            .subscribe(function (next) {
+        }, function (error) {
+            _this.generatorError = error.message;
+        }, function () {
+            _this.generatorSuccess += 'Successfully generated all bundle lists';
+            _this.projectDataService.fetchData();
+        });
+    };
+    BundleListsDashboardComponent.prototype.addEditor = function () {
+        this.editors.push({ name: this.newEditor });
+        this.newEditor = '';
+    };
+    BundleListsDashboardComponent.prototype.checkEditor = function (index) {
+        if (this.editors[index].name === '') {
+            this.editors.splice(index, 1);
+            this.checkNumber();
+        }
+    };
+    BundleListsDashboardComponent.prototype.checkNumber = function () {
+        if (this.personsPerBundle > this.editors.length) {
+            this.personsPerBundle = this.editors.length;
         }
     };
     BundleListsDashboardComponent = __decorate([
@@ -44,4 +91,4 @@ var BundleListsDashboardComponent = (function () {
     return BundleListsDashboardComponent;
 }());
 exports.BundleListsDashboardComponent = BundleListsDashboardComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-aH4x1Wtk.tmp/0/src/app/project/bundle-lists-dashboard/bundle-lists-dashboard.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-xLBa65yh.tmp/0/src/app/project/bundle-lists-dashboard/bundle-lists-dashboard.component.js.map
