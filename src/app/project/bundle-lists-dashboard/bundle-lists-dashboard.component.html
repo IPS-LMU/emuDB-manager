@@ -27,7 +27,8 @@
 				</p>
 
 				<p class="col-md-8">
-					<select class="form-control">
+					<select class="form-control" [(ngModel)]="selectedDatabase"
+					        [ngModelOptions]="{standalone: true}">
 						<option *ngFor="let database of databases">{{database.name}}</option>
 					</select>
 				</p>
@@ -40,31 +41,27 @@
 					What bundles from what sessions shall be included?
 				</p>
 
-				<ul class="col-md-4">
-					<div class="radio">
-						<label>
-							<input name="bundles" type="radio"> All bundles from all sessions
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input name="bundles" type="radio"> All bundles from a particular session
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input name="bundles" type="radio"> A particular bundle from all sessions
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input name="bundles" type="radio"> All bundles matching a particular
-							pattern, from all sessions matching a particular pattern
-						</label>
-					</div>
-				</ul>
+				<p class="col-md-2">
+					Bundle pattern:
+				</p>
 
+				<p class="col-md-6">
+					<input [ngModelOptions]="{standalone: true}" [(ngModel)]="bundlePattern"
+					       class="form-control">
+				</p>
+			</div>
+
+			<div class="row">
 				<p class="col-md-4">
+				</p>
+
+				<p class="col-md-2">
+					Session pattern:
+				</p>
+
+				<p class="col-md-6">
+					<input [ngModelOptions]="{standalone: true}" [(ngModel)]="sessionPattern"
+					       class="form-control">
 				</p>
 			</div>
 
@@ -72,53 +69,66 @@
 
 			<div class="row">
 				<p class="col-md-4">
-					How many bundle lists shall be generated?
+					Who are the editors? (one name per line)
+				</p>
+
+				<div class="col-md-8">
+					<p *ngFor="let editor of editors let i=index">
+						<input [(ngModel)]="editor.name" class="form-control"
+						       [ngModelOptions]="{standalone: true}" (change)="checkEditor(i)">
+					</p>
+					<p>
+						<input [ngModelOptions]="{standalone: true}" [(ngModel)]="newEditor"
+						       (change)="addEditor()" class="form-control">
+					</p>
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="row">
+				<p class="col-md-4">
+					In case you have multiple editors:
 				</p>
 
 				<div class="col-md-4">
-					<div class="radio">
-						<label>
-							<input name="persons" type="radio"> For a single person
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input name="persons" type="radio"> For multiple persons (1 person per bundle)
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input name="persons" type="radio"> For multiple persons (multiple persons per bundle)
-						</label>
-					</div>
+
+					<p>How many persons shall be assigned to each bundle?</p>
+
+					<p>
+						<input [ngModelOptions]="{standalone: true}" [(ngModel)]="personsPerBundle"
+						       type="number" class="form-control" min="1" [max]="editors.length">
+					</p>
+
+
 				</div>
 
-				<p class="col-md-4">
-				</p>
+				<div class="col-md-4">
+					<p>
+						Shall the bundles be shuffled before distributing them among the editors?
+					</p>
+
+					<p>
+						<label>
+							<input type="checkbox" [(ngModel)]="shuffle"
+							       [ngModelOptions]="{standalone: true}">
+							Shuffle
+						</label>
+					</p>
+
+
+				</div>
 			</div>
+
 
 			<hr>
 
 			<div class="row">
-				<p class="col-md-4">
-					In case of multiple persons, the bundles will be distributed evenly among the
-					persons. How shall they be distributed?
-				</p>
-
-				<ul class="col-md-4">
-					<div class="radio">
-						<label>
-							<input name="order" type="radio"> Randomly
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input name="order" type="radio"> In a sorted manner
-						</label>
-					</div>
-				</ul>
-
-				<p class="col-md-4">
+				<p class="col-md-12">
+					<button type="button" class="btn btn-default"
+					        (click)="generateLists()">
+						Generate
+					</button>
 				</p>
 			</div>
 		</form>

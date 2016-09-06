@@ -19,6 +19,14 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 	private subBundleLists:Subscription;
 	private subDatabases:Subscription;
 
+	private bundlePattern:string = '.*';
+	private editors:{name:string}[] = [];
+	private newEditor:string = '';
+	private personsPerBundle:number = 1;
+	private selectedDatabase:string = '';
+	private sessionPattern:string = '.*';
+	private shuffle:boolean = false;
+
 	constructor(private projectDataService:ProjectDataService) {
 	}
 
@@ -28,6 +36,9 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 		});
 		this.subDatabases = this.projectDataService.getAllDatabases().subscribe(next => {
 			this.databases = next;
+			if (this.databases.length >= 1) {
+				this.selectedDatabase = this.databases[0].name;
+			}
 		});
 	}
 
@@ -37,6 +48,43 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 		}
 		if (this.subDatabases) {
 			this.subDatabases.unsubscribe();
+		}
+	}
+
+	private generateLists() {
+		this.checkNumber();
+
+		console.log(this.selectedDatabase);
+
+		this.projectDataService.generateBundleList(
+			this.selectedDatabase,
+			this.sessionPattern,
+			this.bundlePattern,
+			this.editors.map(value => {
+				return value.name;
+			}),
+			this.personsPerBundle,
+			this.shuffle
+		 ).subscribe(next => {
+		    console.log(next);
+		 });
+	}
+
+	private addEditor() {
+		this.editors.push({name: this.newEditor});
+		this.newEditor = '';
+	}
+
+	private checkEditor(index:number) {
+		if (this.editors[index].name === '') {
+			this.editors.splice(index, 1);
+			this.checkNumber();
+		}
+	}
+
+	private checkNumber() {
+		if (this.personsPerBundle > this.editors.length) {
+			this.personsPerBundle = this.editors.length;
 		}
 	}
 
