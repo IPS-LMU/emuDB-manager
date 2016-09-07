@@ -39,4 +39,4 @@ var UploadsDashboardComponent = (function () {
     return UploadsDashboardComponent;
 }());
 exports.UploadsDashboardComponent = UploadsDashboardComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-xLBa65yh.tmp/0/src/app/project/uploads-dashboard/uploads-dashboard.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-8BsARNCj.tmp/0/src/app/project/uploads-dashboard/uploads-dashboard.component.js.map

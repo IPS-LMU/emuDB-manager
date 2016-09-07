@@ -29,7 +29,9 @@
 				<p class="col-md-8">
 					<select class="form-control" [(ngModel)]="selectedDatabase"
 					        [ngModelOptions]="{standalone: true}">
-						<option *ngFor="let database of databases">{{database.name}}</option>
+						<option *ngFor="let database of databases" [ngValue]="database">
+							{{database.name}}
+						</option>
 					</select>
 				</p>
 			</div>
