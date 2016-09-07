@@ -2,7 +2,6 @@
 
 <p>
 	<a class="btn btn-primary" [href]="webAppLink" target="_blank">EMU-webApp</a>
-	<button class="btn btn-default">Download</button>
 </p>
 
 <hr>
@@ -25,9 +24,6 @@
 			<a (click)="state = 'Sessions'">
 				Sessions <span class="badge">{{database?.sessions?.length}}</span>
 			</a>
-		</li>
-		<li role="presentation" [ngClass]="{disabled: true, active: state === 'EWAConfig'}">
-			<a>EMU-webApp config</a>
 		</li>
 		<li role="presentation" [ngClass]="{active: state === 'Rename'}">
 			<a (click)="state = 'Rename'">
