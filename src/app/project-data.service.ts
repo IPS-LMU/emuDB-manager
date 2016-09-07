@@ -20,8 +20,8 @@ export class ProjectDataService {
 	private username:string;
 
 	constructor(private http:Http) {
-		this.username = 'dach';
-		this.password = 'dach';
+		this.username = '';
+		this.password = '';
 		this.createHotObservable();
 	}
 
