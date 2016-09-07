@@ -6,6 +6,7 @@
 // However, it is no security issue if it is called directly, because it only
 // contains functions (thus, no code is executed).
 
+require_once 'helpers/git.php';
 require_once 'helpers/result_helper.php';
 
 /**
@@ -19,7 +20,8 @@ require_once 'helpers/result_helper.php';
  * @return Result
  */
 function save_bundle_list ($projectDir, $database, $name, $list) {
-	$dirName = $projectDir . '/databases/' . $database . '_emuDB/bundleLists/';
+	$dbDir = $projectDir . '/databases/' . $database . '_emuDB';
+	$dirName = $dbDir . '/bundleLists';
 
 	if (!file_exists($dirName)) {
 		if (!mkdir($dirName)) {
@@ -40,5 +42,10 @@ function save_bundle_list ($projectDir, $database, $name, $list) {
 		);
 	}
 
-	return save_json_file($list, $fileName);
+	$result = save_json_file($list, $fileName);
+	if ($result->success !== true) {
+		return $result;
+	}
+
+	return gitCommitEverything($dbDir, 'New bundle list for ' . $name);
 }
