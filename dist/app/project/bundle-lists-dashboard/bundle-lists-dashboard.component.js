@@ -20,7 +20,7 @@ var BundleListsDashboardComponent = (function () {
         this.generatorSuccess = '';
         this.newEditor = '';
         this.personsPerBundle = 1;
-        this.selectedDatabase = '';
+        this.selectedDatabase = null;
         this.sessionPattern = '.*';
         this.shuffle = false;
     }
@@ -31,9 +31,7 @@ var BundleListsDashboardComponent = (function () {
         });
         this.subDatabases = this.projectDataService.getAllDatabases().subscribe(function (next) {
             _this.databases = next;
-            if (_this.databases.length >= 1) {
-                _this.selectedDatabase = _this.databases[0].name;
-            }
+            _this.selectedDatabase = null;
         });
     };
     BundleListsDashboardComponent.prototype.ngOnDestroy = function () {
@@ -49,11 +47,15 @@ var BundleListsDashboardComponent = (function () {
         this.checkNumber();
         this.generatorError = '';
         this.generatorSuccess = '';
+        if (!this.selectedDatabase) {
+            this.generatorError = 'Select a database first';
+            return;
+        }
         if (this.editors.length === 0) {
             this.generatorError = 'No editors specified';
             return;
         }
-        this.projectDataService.generateBundleList(this.selectedDatabase, this.sessionPattern, this.bundlePattern, this.editors.map(function (value) {
+        this.projectDataService.generateBundleList(this.selectedDatabase.name, this.sessionPattern, this.bundlePattern, this.editors.map(function (value) {
             return value.name;
         }), this.personsPerBundle, this.shuffle)
             .subscribe(function (next) {
@@ -91,4 +93,4 @@ var BundleListsDashboardComponent = (function () {
     return BundleListsDashboardComponent;
 }());
 exports.BundleListsDashboardComponent = BundleListsDashboardComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-xLBa65yh.tmp/0/src/app/project/bundle-lists-dashboard/bundle-lists-dashboard.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-8BsARNCj.tmp/0/src/app/project/bundle-lists-dashboard/bundle-lists-dashboard.component.js.map

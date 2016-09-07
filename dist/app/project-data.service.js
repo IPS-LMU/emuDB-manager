@@ -358,7 +358,7 @@ var ProjectDataService = (function () {
                         }
                     });
                 }
-            }).subscribe();
+            }).subscribe().unsubscribe();
         });
     };
     ProjectDataService.prototype.getEmuWebAppURL = function (database) {
@@ -383,4 +383,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-xLBa65yh.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-8BsARNCj.tmp/0/src/app/project-data.service.js.map
