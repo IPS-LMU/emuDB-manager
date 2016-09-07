@@ -60,10 +60,8 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 	}
 
 	private setBundleList (bundleList:BundleList) {
-		console.debug('New bundle list arrived', bundleList);
-
 		if (bundleList === null) {
-
+			// @todo what to do here?
 		} else {
 			this.bundleList = bundleList;
 			this.infoEditor.newName = bundleList.name;

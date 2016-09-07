@@ -4,7 +4,7 @@ import {ProjectDataService} from "../../project-data.service";
 import {ActivatedRoute} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 
-type State = 'BundleLists' | 'Session' | 'EWAConfig' | 'Rename';
+type State = 'BundleLists' | 'Session' | 'Rename';
 
 @Component({
 	moduleId: module.id,
