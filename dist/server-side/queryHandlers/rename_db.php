@@ -24,5 +24,15 @@ require_once 'helpers/type_definitions.php';
  */
 function rename_db ($projectDir, $db, $newName) {
 	$dbDir = $projectDir . '/databases/' . $db . '_emuDB';
-	return moveDatabase($dbDir, $newName);
+	$newDbDir = $projectDir . '/databases/' . $newName . '_emuDB';
+
+	$result = moveDatabase($dbDir, $newName);
+	if ($result->success !== true) {
+		return $result;
+	}
+
+	return gitCommitEverything(
+		$newDbDir,
+		'Renamed database from ' . $db . ' to ' . $newName
+	);
 }

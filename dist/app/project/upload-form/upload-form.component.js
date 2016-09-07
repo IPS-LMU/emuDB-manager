@@ -9,20 +9,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var ng2_uploader_1 = require("ng2-uploader/ng2-uploader");
 var project_data_service_1 = require("../../project-data.service");
 var UploadFormComponent = (function () {
     function UploadFormComponent(projectDataService) {
         this.projectDataService = projectDataService;
         this.errorMessage = '';
         this.options = {
+            data: {
+                user: '',
+                password: '',
+                query: ''
+            },
             url: ''
         };
         this.successMessage = '';
         this.transferMessage = '';
         this.uploadProgress = 0;
         this.zone = new core_1.NgZone({ enableLongStackTrace: false });
-        this.options.url = this.projectDataService.getUploadURL();
+        var uploadTarget = this.projectDataService.getUploadTarget();
+        this.options.url = uploadTarget.url;
+        this.options.data = uploadTarget.params;
     }
     UploadFormComponent.prototype.handleProgress = function (data) {
         var _this = this;
@@ -57,12 +63,11 @@ var UploadFormComponent = (function () {
             moduleId: module.id,
             selector: 'emudbmanager-upload-form',
             templateUrl: 'upload-form.component.html',
-            styleUrls: ['upload-form.component.css'],
-            directives: [ng2_uploader_1.UPLOAD_DIRECTIVES]
+            styleUrls: ['upload-form.component.css']
         }), 
         __metadata('design:paramtypes', [project_data_service_1.ProjectDataService])
     ], UploadFormComponent);
     return UploadFormComponent;
 }());
 exports.UploadFormComponent = UploadFormComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-N2KXHKmE.tmp/0/src/app/project/upload-form/upload-form.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-DPzWUHIL.tmp/0/src/app/project/upload-form/upload-form.component.js.map

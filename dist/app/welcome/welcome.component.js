@@ -55,4 +55,4 @@ var WelcomeComponent = (function () {
     return WelcomeComponent;
 }());
 exports.WelcomeComponent = WelcomeComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-N2KXHKmE.tmp/0/src/app/welcome/welcome.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-DPzWUHIL.tmp/0/src/app/welcome/welcome.component.js.map
