@@ -414,7 +414,7 @@ export class ProjectDataService {
 						}
 					});
 				}
-			}).subscribe();
+			}).subscribe().unsubscribe();
 		});
 	}
 
