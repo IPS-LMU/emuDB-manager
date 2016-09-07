@@ -16,10 +16,6 @@
 					<span class="badge pull-right">{{uploads?.length}}</span></a></li>
 			</ul>
 			<ul class="nav nav-sidebar">
-				<li routerLinkActive="active" class="disabled"><a>Progress</a></li>
-			</ul>
-			<ul class="nav nav-sidebar">
-				<li class="disabled"><a>Help</a></li>
 				<li><a (click)="projectDataService.fetchData()">Refresh</a></li>
 				<li><a (click)="logout()">Logout</a></li>
 			</ul>
