@@ -32,18 +32,19 @@ function edit_bundle_list (
 	$oldName,
 	$newStatus,
 	$newName) {
-	$dbDir = $projectDir . '/databases/' . $db . '_emuDB/bundleLists';
+	$dbDir = $projectDir . '/databases/' . $db . '_emuDB';
+	$bundleListsDir = $dbDir . '/bundleLists';
 
 	if ($oldStatus === '') {
-		$oldDirectory = $dbDir;
+		$oldDirectory = $bundleListsDir;
 	} else {
-		$oldDirectory = $dbDir . '/' . $oldStatus . '_status';
+		$oldDirectory = $bundleListsDir . '/' . $oldStatus . '_status';
 	}
 
 	if ($newStatus === '') {
-		$newDirectory = $dbDir;
+		$newDirectory = $bundleListsDir;
 	} else {
-		$newDirectory = $dbDir . '/' . $newStatus . '_status';
+		$newDirectory = $bundleListsDir . '/' . $newStatus . '_status';
 	}
 
 	$oldName = $oldName . '_bundleList.json';
@@ -83,5 +84,9 @@ function edit_bundle_list (
 		);
 	}
 
-	return positiveResult(null);
+	return gitCommitEverything(
+		$dbDir,
+		'Moved bundle list from ' . $oldStatus . '/' . $oldName . ' to ' .
+		$newStatus . '/' . $newName
+	);
 }

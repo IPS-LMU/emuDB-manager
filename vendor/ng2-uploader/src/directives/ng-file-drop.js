@@ -10,29 +10,36 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var ng2_uploader_1 = require('../services/ng2-uploader');
-var NgFileDrop = (function () {
-    function NgFileDrop(el) {
+var NgFileDropDirective = (function () {
+    function NgFileDropDirective(el) {
         var _this = this;
         this.el = el;
         this.onUpload = new core_1.EventEmitter();
+        this.onPreviewData = new core_1.EventEmitter();
+        this.files = [];
         this.uploader = new ng2_uploader_1.Ng2Uploader();
         setTimeout(function () {
             _this.uploader.setOptions(_this.options);
         });
         this.uploader._emitter.subscribe(function (data) {
             _this.onUpload.emit(data);
+            if (data.done) {
+                _this.files = _this.files.filter(function (f) { return f.name !== data.originalName; });
+            }
+        });
+        this.uploader._previewEmitter.subscribe(function (data) {
+            _this.onPreviewData.emit(data);
         });
         this.initEvents();
     }
-    NgFileDrop.prototype.initEvents = function () {
+    NgFileDropDirective.prototype.initEvents = function () {
         var _this = this;
         this.el.nativeElement.addEventListener('drop', function (e) {
             e.stopPropagation();
             e.preventDefault();
-            var dt = e.dataTransfer;
-            var files = dt.files;
-            if (files.length) {
-                _this.uploader.addFilesToQueue(files);
+            _this.files = Array.from(e.dataTransfer.files);
+            if (_this.files.length) {
+                _this.uploader.addFilesToQueue(_this.files);
             }
         }, false);
         this.el.nativeElement.addEventListener('dragenter', function (e) {
@@ -44,15 +51,53 @@ var NgFileDrop = (function () {
             e.preventDefault();
         }, false);
     };
-    NgFileDrop = __decorate([
+    NgFileDropDirective.prototype.filterFilesByExtension = function () {
+        var _this = this;
+        this.files = this.files.filter(function (f) {
+            if (_this.options.allowedExtensions.indexOf(f.type) !== -1) {
+                return true;
+            }
+            var ext = f.name.split('.').pop();
+            if (_this.options.allowedExtensions.indexOf(ext) !== -1) {
+                return true;
+            }
+            return false;
+        });
+    };
+    NgFileDropDirective.prototype.onChange = function () {
+        this.files = Array.from(this.el.nativeElement.files);
+        if (this.options.filterExtensions && this.options.allowedExtensions) {
+            this.filterFilesByExtension();
+        }
+        if (this.files.length) {
+            this.uploader.addFilesToQueue(this.files);
+        }
+    };
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], NgFileDropDirective.prototype, "options", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], NgFileDropDirective.prototype, "onUpload", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], NgFileDropDirective.prototype, "onPreviewData", void 0);
+    __decorate([
+        core_1.HostListener('change'), 
+        __metadata('design:type', Function), 
+        __metadata('design:paramtypes', []), 
+        __metadata('design:returntype', void 0)
+    ], NgFileDropDirective.prototype, "onChange", null);
+    NgFileDropDirective = __decorate([
         core_1.Directive({
-            selector: '[ng-file-drop]',
-            inputs: ['options: ng-file-drop'],
-            outputs: ['onUpload']
+            selector: '[ngFileDrop]'
         }), 
         __metadata('design:paramtypes', [core_1.ElementRef])
-    ], NgFileDrop);
-    return NgFileDrop;
+    ], NgFileDropDirective);
+    return NgFileDropDirective;
 }());
-exports.NgFileDrop = NgFileDrop;
+exports.NgFileDropDirective = NgFileDropDirective;
 //# sourceMappingURL=ng-file-drop.js.map

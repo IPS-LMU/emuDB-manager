@@ -29,6 +29,7 @@ var bundle_lists_dashboard_component_1 = require("./project/bundle-lists-dashboa
 var bundle_list_detail_component_1 = require("./project/bundle-list-detail/bundle-list-detail.component");
 var upload_detail_component_1 = require("./project/upload-detail/upload-detail.component");
 var uploads_dashboard_component_1 = require("./project/uploads-dashboard/uploads-dashboard.component");
+var ng2_uploader_1 = require("ng2-uploader/ng2-uploader");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -48,14 +49,16 @@ var AppModule = (function () {
                 upload_form_component_1.UploadFormComponent,
                 uploads_dashboard_component_1.UploadsDashboardComponent,
                 uploads_overview_component_1.UploadsOverviewComponent,
-                welcome_component_1.WelcomeComponent
+                welcome_component_1.WelcomeComponent,
+                // 3rd party
+                ng2_uploader_1.NgFileSelectDirective
             ],
             imports: [
                 // Angular stuff
                 platform_browser_1.BrowserModule,
                 forms_1.FormsModule,
                 http_1.HttpModule,
-                router_1.RouterModule.forRoot(app_routes_1.appRoutes),
+                router_1.RouterModule.forRoot(app_routes_1.appRoutes)
             ],
             bootstrap: [app_component_1.AppComponent],
             providers: [
@@ -67,4 +70,4 @@ var AppModule = (function () {
     return AppModule;
 }());
 exports.AppModule = AppModule;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-N2KXHKmE.tmp/0/src/app/app.module.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-DPzWUHIL.tmp/0/src/app/app.module.js.map
