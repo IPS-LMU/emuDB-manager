@@ -9,6 +9,15 @@ import {UploadInfo} from "./types/upload-info";
 import {ServerResponse} from "./types/server-response";
 import {BundleListItem} from "./types/bundle-list-item";
 
+interface UploadTarget {
+	url:string,
+	params:{
+		user:string,
+		password:string,
+		query:string
+	}
+}
+
 @Injectable()
 export class ProjectDataService {
 	private emuWebAppURL = 'https://ips-lmu.github.io/EMU-webApp/';
@@ -235,14 +244,15 @@ export class ProjectDataService {
 		});
 	}
 
-	public getUploadURL():string {
-		let params = {
-			'user': this.username,
-			'password': this.password,
-			'query': 'upload'
+	public getUploadTarget():UploadTarget {
+		return {
+			url: this.url,
+			params: {
+				'user': this.username,
+				'password': this.password,
+				'query': 'upload'
+			}
 		};
-
-		return this.url + '?' + params.toString();
 	}
 
 	public deleteUpload(identifier:string) {

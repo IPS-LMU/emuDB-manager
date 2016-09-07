@@ -19,6 +19,7 @@ import {BundleListsDashboardComponent} from "./project/bundle-lists-dashboard/bu
 import {BundleListDetailComponent} from "./project/bundle-list-detail/bundle-list-detail.component";
 import {UploadDetailComponent} from "./project/upload-detail/upload-detail.component";
 import {UploadsDashboardComponent} from "./project/uploads-dashboard/uploads-dashboard.component";
+import {NgFileSelectDirective} from "ng2-uploader/ng2-uploader";
 
 @NgModule({
 	declarations: [
@@ -35,17 +36,17 @@ import {UploadsDashboardComponent} from "./project/uploads-dashboard/uploads-das
 		UploadFormComponent,
 		UploadsDashboardComponent,
 		UploadsOverviewComponent,
-		WelcomeComponent
+		WelcomeComponent,
+
+		// 3rd party
+		NgFileSelectDirective
 	],
 	imports: [
 		// Angular stuff
 		BrowserModule,
 		FormsModule,
 		HttpModule,
-		RouterModule.forRoot(appRoutes),
-
-		// 3rd party stuff
-		//UPLOAD_DIRECTIVES
+		RouterModule.forRoot(appRoutes)
 	],
 	bootstrap: [AppComponent],
 	providers: [

@@ -1,17 +1,20 @@
 import {Component, NgZone} from "@angular/core";
-import {UPLOAD_DIRECTIVES} from "ng2-uploader/ng2-uploader";
 import {ProjectDataService} from "../../project-data.service";
 
 @Component({
 	moduleId: module.id,
 	selector: 'emudbmanager-upload-form',
 	templateUrl: 'upload-form.component.html',
-	styleUrls: ['upload-form.component.css'],
-	directives: [UPLOAD_DIRECTIVES]
+	styleUrls: ['upload-form.component.css']
 })
 export class UploadFormComponent {
 	private errorMessage:string = '';
-	private options: {url:string} = {
+	private options = {
+		data: {
+			user: '',
+			password: '',
+			query: ''
+		},
 		url: ''
 	};
 	private successMessage: string = '';
@@ -22,7 +25,10 @@ export class UploadFormComponent {
 	constructor(private projectDataService: ProjectDataService) {
 		this.uploadProgress = 0;
 		this.zone = new NgZone({ enableLongStackTrace: false });
-		this.options.url = this.projectDataService.getUploadURL();
+
+		let uploadTarget = this.projectDataService.getUploadTarget();
+		this.options.url = uploadTarget.url;
+		this.options.data = uploadTarget.params;
 	}
 
 	handleProgress(data): void {
