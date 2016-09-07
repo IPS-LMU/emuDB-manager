@@ -25,7 +25,7 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 	private generatorSuccess:string = '';
 	private newEditor:string = '';
 	private personsPerBundle:number = 1;
-	private selectedDatabase:string = '';
+	private selectedDatabase:DatabaseInfo = null;
 	private sessionPattern:string = '.*';
 	private shuffle:boolean = false;
 
@@ -38,9 +38,8 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 		});
 		this.subDatabases = this.projectDataService.getAllDatabases().subscribe(next => {
 			this.databases = next;
-			if (this.databases.length >= 1) {
-				this.selectedDatabase = this.databases[0].name;
-			}
+
+			this.selectedDatabase = null;
 		});
 	}
 
@@ -59,13 +58,17 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 		this.generatorError = '';
 		this.generatorSuccess = '';
 
+		if (!this.selectedDatabase) {
+			this.generatorError = 'Select a database first';
+			return;
+		}
 		if (this.editors.length === 0) {
 			this.generatorError = 'No editors specified';
 			return;
 		}
 
 		this.projectDataService.generateBundleList(
-			this.selectedDatabase,
+			this.selectedDatabase.name,
 			this.sessionPattern,
 			this.bundlePattern,
 			this.editors.map(value => {
