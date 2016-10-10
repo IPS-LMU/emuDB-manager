@@ -51,7 +51,7 @@ function save_upload ($projectDir, $uuid, $name) {
 
 	$result = gitCommitEverything(
 		$newDatabaseDir,
-		"Save uploaded database under the name '" . $name . "'"
+		"Saved uploaded database under the name '" . $name . "'"
 	);
 
 	if ($result->success !== true) {
