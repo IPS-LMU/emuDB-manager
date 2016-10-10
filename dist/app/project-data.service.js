@@ -16,7 +16,7 @@ var ProjectDataService = (function () {
         this.http = http;
         this.emuWebAppURL = 'https://ips-lmu.github.io/EMU-webApp/';
         this.nodeJSServerURL = 'wss://webapp2.phonetik.uni-muenchen.de:17890/manager';
-        this.url = 'https://www.phonetik.uni-muenchen.de/devel/emuDB-manager/server-side/emudb-manager.php';
+        this.url = 'https://www.phonetik.uni-muenchen.de/apps/emuDB-manager/server-side/emudb-manager.php';
         this.username = '';
         this.password = '';
         this.createHotObservable();
@@ -385,4 +385,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-ba87JmsU.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-8XrX6CWF.tmp/0/src/app/project-data.service.js.map

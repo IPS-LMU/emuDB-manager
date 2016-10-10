@@ -107,4 +107,4 @@ var UploadDetailComponent = (function () {
     return UploadDetailComponent;
 }());
 exports.UploadDetailComponent = UploadDetailComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-ba87JmsU.tmp/0/src/app/project/upload-detail/upload-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-8XrX6CWF.tmp/0/src/app/project/upload-detail/upload-detail.component.js.map
