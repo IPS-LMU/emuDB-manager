@@ -2,14 +2,13 @@
 
 // (c) 2016 Markus Jochim <markusjochim@phonetik.uni-muenchen.de>
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: content-type");
+
 //////////
 // Configuration
 
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: content-type");
-$dataDirectory = '/homes/markusjochim/manager-data';
-date_default_timezone_set('Europe/Berlin');
-
+require_once 'emudb-manager.config.php';
 //
 //////////
 
@@ -60,11 +59,20 @@ die();
 function authorize () {
 	global $dataDirectory;
 
-	/*
+	global $dbHost;
+	global $dbDatabaseName;
+	global $dbUser;
+	global $dbPassword;
+
 	// Connect to database and look up the project that the client is trying
 	// to authenticate as
 
-	$dbh = new PDO('pgsql:host=postgres;dbname=webexperiment', 'user', 'pass');
+	$dbh = new PDO(
+		'pgsql:host='.$dbHost.';dbname='.$dbDatabaseName,
+		$dbUser,
+		$dbPassword
+	);
+
 	$stmt = $dbh->prepare(
 		"SELECT
 		  proj.name,
@@ -82,22 +90,14 @@ function authorize () {
 
 	while ($row = $stmt->fetch()) {
 		if (password_verify($_POST['password'], $row['adm.password'])) {
+			$result = new AuthToken();
+			$result->projectDir = $dataDirectory . '/' . $row['proj.code'];
+			$result->projectName = $row['proj.description'];
 
-		} else {
+			// date_default_timezone_set ($projectSpecificTimeZone);
 
+			return $result;
 		}
-
-	}
-	*/
-
-	if ($_POST['user'] === 'dach' && $_POST['password'] === 'dach') {
-		$result = new AuthToken();
-		$result->projectDir = $dataDirectory . '/dach';
-		$result->projectName = 'Typologie der Vokal- und Konsonantenquantitäten (DACH)';
-
-		// date_default_timezone_set ($projectSpecificTimeZone);
-
-		return $result;
 	}
 
 	$result = negativeResult(
