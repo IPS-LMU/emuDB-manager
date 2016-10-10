@@ -25,7 +25,7 @@ export class ProjectDataService {
 	private infoObserver:Observer<ProjectInfo>;
 	private nodeJSServerURL = 'wss://webapp2.phonetik.uni-muenchen.de:17890/manager';
 	private password:string;
-	private url = 'https://www.phonetik.uni-muenchen.de/devel/emuDB-manager/server-side/emudb-manager.php';
+	private url = 'https://www.phonetik.uni-muenchen.de/apps/emuDB-manager/server-side/emudb-manager.php';
 	private username:string;
 
 	constructor(private http:Http) {
