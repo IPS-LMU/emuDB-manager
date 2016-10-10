@@ -89,10 +89,10 @@ function authorize () {
 	$stmt->execute();
 
 	while ($row = $stmt->fetch()) {
-		if (password_verify($_POST['password'], $row['adm.password'])) {
+		if (password_verify($_POST['password'], $row['password'])) {
 			$result = new AuthToken();
-			$result->projectDir = $dataDirectory . '/' . $row['proj.code'];
-			$result->projectName = $row['proj.description'];
+			$result->projectDir = $dataDirectory . '/' . $row['code'];
+			$result->projectName = $row['description'];
 
 			// date_default_timezone_set ($projectSpecificTimeZone);
 
