@@ -3,33 +3,33 @@
 
 	<ul>
 		<li>
-			You can either upload speech databases here or new data to add them to an existing
-			database.
+			Upload a ZIP file here.
 		</li>
 
 		<li>
-			If you have a complete EMU speech database, simply “zip it up” and upload the zip file
-			here.
-			<ul>
-				<li>You’re done :-)</li>
-			</ul>
+			The ZIP file must contain a valid EMU speech database: a directory called
+			<i>name</i>_emuDB, which in turn contains <i>name</i>_DBconfig.json and a number of
+			session directories.
 		</li>
 
 		<li>
-			If you have new sessions that you want to add to an EMU speech database you have already
-			uploaded here, you have to make sure the new data and the old data fit together.
+			The EMU speech database can then either be saved as a new database or merged with an
+			existing database.
+		</li>
+
+		<li>
+			If you want to merge two databases, you have to make sure the new data and the old
+			data fit together.
 
 			<ul>
 				<li>
-					Your new data will most likely be an EMU speech database already, that is, you
-					have a number of folders called *_ses along with a file called &lt;databasename&gt;_DBconfig.json
-					in a folder called &lt;databasename&gt;_emuDB. It does not matter whether the
-					old and the new speech database have the same name.
+					The new database must not contain sessions that are already there in the old
+					database.
 				</li>
 
 				<li>
-					It is important, however, that the <em>annotation structure is the same</em>.
-					The bundles in both old and new data must contain the same levels and the same types of links.
+					It is important, that the <em>annotation structure of both databases is the
+					same</em>. They must contain the same levels and the same types of links.
 				</li>
 			</ul>
 		</li>

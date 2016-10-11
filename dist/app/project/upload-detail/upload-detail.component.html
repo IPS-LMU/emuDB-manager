@@ -17,9 +17,9 @@
 				Sessions <span class="badge">{{upload?.sessions?.length}}</span>
 			</a>
 		</li>
-		<li role="presentation" [ngClass]="{active: state === 'Merge'}">
-			<a (click)="state = 'Merge'">
-				Merge
+		<li role="presentation" [ngClass]="{active: state === 'Save'}">
+			<a (click)="state = 'Save'">
+				Save
 			</a>
 		</li>
 		<li role="presentation" [ngClass]="{active: state === 'Delete'}">
@@ -47,7 +47,7 @@
 		</table>
 	</div>
 
-	<div *ngIf="state === 'Merge'" class="panel-body">
+	<div *ngIf="state === 'Save'" class="panel-body">
 		<p>
 			This upload contains an EMU speech database with
 			<strong>{{upload?.sessions?.length}}</strong>
