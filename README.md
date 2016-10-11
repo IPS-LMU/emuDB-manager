@@ -1,31 +1,27 @@
 # EmuDBManager
 
+The emuDB manager is a part of the [EMU Speech Database Management System](https://ips-lmu.github.io/EMU.html).
+
+The EMU-SDMS is a collection of software tools for the creation, manipulation and analysis of speech databases. At the core of the EMU-SDMS is a database search engine which allows the researcher to find various speech segments based on the sequential and hierarchical structure of the utterances in which they occur.
+
+The emuDB Manager is a web front-end for research groups to manage a 
+collection of EMU speech databases. It allows:
+
+* Uploading, merging and renaming databases
+* Creating and archiving bundle lists (bundle lists make a part of the 
+database visible online to a certain editor and allows the editor to make 
+changes and comments)
+* Evaluating the online comments from editors
+
+
+## Development notes
+
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.10.
 
-## Development server
+### Development server
+
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/route/class`.
-
-## Build
+### Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/). 
-Before running the tests make sure you are serving the app via `ng serve`.
-
-## Deploying to Github Pages
-
-Run `ng github-pages:deploy` to deploy to Github Pages.
-
-## Further help
-
-To get more help on the `angular-cli` use `ng --help` or go check out the [Angular-CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
