@@ -5,7 +5,7 @@ import {ProjectDataService} from "../../project-data.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DatabaseInfo} from "../../types/database-info";
 
-type State = 'Sessions' | 'Merge' | 'Delete';
+type State = 'Sessions' | 'Save' | 'Delete';
 
 @Component({
 	moduleId: module.id,
