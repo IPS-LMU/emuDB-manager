@@ -1,4 +1,4 @@
-# EmuDBManager
+# emuDB Manager
 
 The emuDB manager is a part of the [EMU Speech Database Management System](https://ips-lmu.github.io/EMU.html).
 
@@ -12,6 +12,12 @@ collection of EMU speech databases. It allows:
 database visible online to a certain editor and allows the editor to make 
 changes and comments)
 * Evaluating the online comments from editors
+
+## Authors
+
+The main author of the emuDB Manager is Markus Jochim (<markusjochim@phonetik.uni-muenchen.de>).
+
+The main author of the EMU SDMS is Raphael Winkelmann (<raphael@phonetik.uni-muenchen.de>).
 
 
 ## Development notes
