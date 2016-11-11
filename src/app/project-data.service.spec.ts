@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-variable */
-
+/*
 import {addProviders, inject} from "@angular/core/testing";
 import {ProjectDataService} from "./project-data.service";
 
@@ -14,3 +14,4 @@ describe('Service: ProjectData', () => {
 				expect(service).toBeTruthy();
 			}));
 });
+*/
