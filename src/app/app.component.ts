@@ -29,10 +29,7 @@ import "./rxjs-operators";
 			state('idle', style({
 				height: 0
 			})),
-			state('active', style({
-				'font-weight': 'bold'
-			})),
-			transition('idle <=> active', animate('300ms'))
+			transition('* <=> idle', animate('300ms'))
 		])
 	]
 })
