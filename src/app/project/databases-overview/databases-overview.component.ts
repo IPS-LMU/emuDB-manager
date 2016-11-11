@@ -1,7 +1,6 @@
 import {Component, OnInit, OnDestroy} from "@angular/core";
 import {ProjectDataService} from "../../project-data.service";
 import {DatabaseInfo} from "../../types/database-info";
-import {ROUTER_DIRECTIVES} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 
 @Component({
