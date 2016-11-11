@@ -5,7 +5,8 @@ import {
 	transition,
 	trigger,
 	keyframes,
-	state
+	state,
+	AfterViewChecked, AfterViewInit
 } from "@angular/core";
 import {ProjectDataService} from "./project-data.service";
 import "./rxjs-operators";
@@ -19,7 +20,23 @@ import "./rxjs-operators";
 	animations: [
 		trigger('progressBar', [
 			transition('* => *', [
-				animate(500, keyframes([
+				animate(8000, keyframes([
+					style({'background-position': '40px 0'}),
+					style({'background-position': '0 0'}),
+					style({'background-position': '40px 0'}),
+					style({'background-position': '0 0'}),
+					style({'background-position': '40px 0'}),
+					style({'background-position': '0 0'}),
+					style({'background-position': '40px 0'}),
+					style({'background-position': '0 0'}),
+					style({'background-position': '40px 0'}),
+					style({'background-position': '0 0'}),
+					style({'background-position': '40px 0'}),
+					style({'background-position': '0 0'}),
+					style({'background-position': '40px 0'}),
+					style({'background-position': '0 0'}),
+					style({'background-position': '40px 0'}),
+					style({'background-position': '0 0'}),
 					style({'background-position': '40px 0'}),
 					style({'background-position': '0 0'})
 				]))
@@ -33,19 +50,29 @@ import "./rxjs-operators";
 		])
 	]
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
 	constructor(private projectDataService: ProjectDataService) {
 	}
 
-	private  logSth(la) {
-		console.log(la);
+	private activeAppendix: string = '';
+	private nextActiveAppendix: string = '';
+
+	private changeState(event) {
+		console.log(event);
+		this.nextActiveAppendix += '.';
+	}
+
+	ngAfterViewInit(): void {
+		this.activeAppendix = this.nextActiveAppendix;
 	}
 
 	private progressBarState() {
 		if (this.projectDataService.connectionCount === 0) {
+			this.activeAppendix = '';
+			this.nextActiveAppendix = '';
 			return 'idle';
 		} else {
-			return 'active';
+			return 'active' + this.activeAppendix;
 		}
 	}
 }

@@ -27,7 +27,7 @@
 				<div class="progress" [@progressBarContainer]="progressBarState()">
 					<div class="progress-bar progress-bar-striped" role="progressbar"
 					     style="width:100%" [@progressBar]="progressBarState()"
-					     (@progressBar.done)="logSth($event)"
+					     (@progressBar.start)="changeState($event)"
 					>
 						Communicating with server
 					</div>
