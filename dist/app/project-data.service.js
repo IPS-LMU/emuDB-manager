@@ -14,6 +14,7 @@ var Rx_1 = require("rxjs/Rx");
 var ProjectDataService = (function () {
     function ProjectDataService(http) {
         this.http = http;
+        this._connectionCount = 0;
         this.emuWebAppURL = 'https://ips-lmu.github.io/EMU-webApp/';
         this.nodeJSServerURL = 'wss://webapp2.phonetik.uni-muenchen.de:17890/manager';
         this.url = 'https://www.phonetik.uni-muenchen.de/apps/emuDB-manager/server-side/emudb-manager.php';
@@ -49,6 +50,7 @@ var ProjectDataService = (function () {
         });
     };
     ProjectDataService.prototype.serverQuery = function (params) {
+        var _this = this;
         console.log('Querying server', params);
         var headers = new http_1.Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
         var options = new http_1.RequestOptions({ headers: headers });
@@ -61,14 +63,17 @@ var ProjectDataService = (function () {
             }
             body += encodeURIComponent(i) + '=' + encodeURIComponent(params[i]);
         }
+        ++this._connectionCount;
         return this.http
             .post(this.url, body, options)
             .map(function (response) {
+            --_this._connectionCount;
             var json = response.json();
             console.log('Received JSON data', json);
             return json;
         })
             .catch(function (error) {
+            --_this._connectionCount;
             return Rx_1.Observable.throw('Error during download', error);
         });
     };
@@ -378,6 +383,16 @@ var ProjectDataService = (function () {
             return url;
         });
     };
+    Object.defineProperty(ProjectDataService.prototype, "connectionCount", {
+        get: function () {
+            return this._connectionCount;
+        },
+        set: function (value) {
+            this._connectionCount = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     ProjectDataService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
@@ -385,4 +400,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-26TnX6n0.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-IMPk92KA.tmp/0/src/app/project-data.service.js.map

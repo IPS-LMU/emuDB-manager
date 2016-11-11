@@ -1,9 +1,15 @@
 /* tslint:disable:no-unused-variable */
-"use strict";
-describe('Component: UploadsDashboard', function () {
-    it('should create an instance', function () {
-        // let component = new UploadsDashboardComponent();
-        // expect(component).toBeTruthy();
-    });
+/*
+import { By }           from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
+import { addProviders, async, inject } from '@angular/core/testing';
+import { UploadsDashboardComponent } from './uploads-dashboard.component';
+
+describe('Component: UploadsDashboard', () => {
+  it('should create an instance', () => {
+    // let component = new UploadsDashboardComponent();
+    // expect(component).toBeTruthy();
+  });
 });
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-26TnX6n0.tmp/0/src/app/project/uploads-dashboard/uploads-dashboard.component.spec.js.map
+*/ 
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-IMPk92KA.tmp/0/src/app/project/uploads-dashboard/uploads-dashboard.component.spec.js.map

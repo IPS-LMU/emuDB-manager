@@ -5,10 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-"use strict";
-var collection_1 = require('../src/facade/collection');
-var exceptions_1 = require('../src/facade/exceptions');
-var lang_1 = require('../src/facade/lang');
+import { MapWrapper } from '../src/facade/collection';
 /**
  * Polyfill for [Headers](https://developer.mozilla.org/en-US/docs/Web/API/Headers/Headers), as
  * specified in the [Fetch Spec](https://fetch.spec.whatwg.org/#headers-class).
@@ -16,7 +13,7 @@ var lang_1 = require('../src/facade/lang');
  * The only known difference between this `Headers` implementation and the spec is the
  * lack of an `entries` method.
  *
- * ### Example ([live demo](http://plnkr.co/edit/MTdwT6?p=preview))
+ * ### Example
  *
  * ```
  * import {Headers} from '@angular/http';
@@ -37,20 +34,27 @@ var lang_1 = require('../src/facade/lang');
  *
  * @experimental
  */
-var Headers = (function () {
+export var Headers = (function () {
+    // TODO(vicb): any -> string|string[]
     function Headers(headers) {
         var _this = this;
+        /** @internal header names are lower case */
+        this._headers = new Map();
+        /** @internal map lower case names to actual names */
+        this._normalizedNames = new Map();
+        if (!headers) {
+            return;
+        }
         if (headers instanceof Headers) {
-            this._headersMap = headers._headersMap;
+            headers._headers.forEach(function (values, name) {
+                values.forEach(function (value) { return _this.append(name, value); });
+            });
             return;
         }
-        this._headersMap = new collection_1.Map();
-        if (lang_1.isBlank(headers)) {
-            return;
-        }
-        // headers instanceof StringMap
-        collection_1.StringMapWrapper.forEach(headers, function (v, k) {
-            _this._headersMap.set(normalize(k), collection_1.isListLikeIterable(v) ? v : [v]);
+        Object.keys(headers).forEach(function (name) {
+            var values = Array.isArray(headers[name]) ? headers[name] : [headers[name]];
+            _this.delete(name);
+            values.forEach(function (value) { return _this.append(name, value); });
         });
     }
     /**
@@ -61,9 +65,9 @@ var Headers = (function () {
         headersString.split('\n').forEach(function (line) {
             var index = line.indexOf(':');
             if (index > 0) {
-                var key = line.substring(0, index);
-                var value = line.substring(index + 1).trim();
-                headers.set(key, value);
+                var name_1 = line.slice(0, index);
+                var value = line.slice(index + 1).trim();
+                headers.set(name_1, value);
             }
         });
         return headers;
@@ -72,80 +76,92 @@ var Headers = (function () {
      * Appends a header to existing list of header values for a given header name.
      */
     Headers.prototype.append = function (name, value) {
-        name = normalize(name);
-        var mapName = this._headersMap.get(name);
-        var list = collection_1.isListLikeIterable(mapName) ? mapName : [];
-        list.push(value);
-        this._headersMap.set(name, list);
+        var values = this.getAll(name);
+        if (values === null) {
+            this.set(name, value);
+        }
+        else {
+            values.push(value);
+        }
     };
     /**
      * Deletes all header values for the given name.
      */
-    Headers.prototype.delete = function (name) { this._headersMap.delete(normalize(name)); };
+    Headers.prototype.delete = function (name) {
+        var lcName = name.toLowerCase();
+        this._normalizedNames.delete(lcName);
+        this._headers.delete(lcName);
+    };
     Headers.prototype.forEach = function (fn) {
-        this._headersMap.forEach(fn);
+        var _this = this;
+        this._headers.forEach(function (values, lcName) { return fn(values, _this._normalizedNames.get(lcName), _this._headers); });
     };
     /**
      * Returns first header that matches given name.
      */
-    Headers.prototype.get = function (header) { return collection_1.ListWrapper.first(this._headersMap.get(normalize(header))); };
+    Headers.prototype.get = function (name) {
+        var values = this.getAll(name);
+        if (values === null) {
+            return null;
+        }
+        return values.length > 0 ? values[0] : null;
+    };
     /**
-     * Check for existence of header by given name.
+     * Checks for existence of header by given name.
      */
-    Headers.prototype.has = function (header) { return this._headersMap.has(normalize(header)); };
+    Headers.prototype.has = function (name) { return this._headers.has(name.toLowerCase()); };
     /**
-     * Provides names of set headers
+     * Returns the names of the headers
      */
-    Headers.prototype.keys = function () { return collection_1.MapWrapper.keys(this._headersMap); };
+    Headers.prototype.keys = function () { return MapWrapper.values(this._normalizedNames); };
     /**
      * Sets or overrides header value for given name.
      */
-    Headers.prototype.set = function (header, value) {
-        var list = [];
-        if (collection_1.isListLikeIterable(value)) {
-            var pushValue = value.join(',');
-            list.push(pushValue);
+    Headers.prototype.set = function (name, value) {
+        if (Array.isArray(value)) {
+            if (value.length) {
+                this._headers.set(name.toLowerCase(), [value.join(',')]);
+            }
         }
         else {
-            list.push(value);
+            this._headers.set(name.toLowerCase(), [value]);
         }
-        this._headersMap.set(normalize(header), list);
+        this.mayBeSetNormalizedName(name);
     };
     /**
      * Returns values of all headers.
      */
-    Headers.prototype.values = function () { return collection_1.MapWrapper.values(this._headersMap); };
+    Headers.prototype.values = function () { return MapWrapper.values(this._headers); };
     /**
      * Returns string of all headers.
      */
+    // TODO(vicb): returns {[name: string]: string[]}
     Headers.prototype.toJSON = function () {
-        var serializableHeaders = {};
-        this._headersMap.forEach(function (values, name) {
-            var list = [];
-            collection_1.iterateListLike(values, function (val /** TODO #9100 */) { return list = collection_1.ListWrapper.concat(list, val.split(',')); });
-            serializableHeaders[normalize(name)] = list;
+        var _this = this;
+        var serialized = {};
+        this._headers.forEach(function (values, name) {
+            var split = [];
+            values.forEach(function (v) { return split.push.apply(split, v.split(',')); });
+            serialized[_this._normalizedNames.get(name)] = split;
         });
-        return serializableHeaders;
+        return serialized;
     };
     /**
      * Returns list of header values for a given name.
      */
-    Headers.prototype.getAll = function (header) {
-        var headers = this._headersMap.get(normalize(header));
-        return collection_1.isListLikeIterable(headers) ? headers : [];
+    Headers.prototype.getAll = function (name) {
+        return this.has(name) ? this._headers.get(name.toLowerCase()) : null;
     };
     /**
      * This method is not implemented.
      */
-    Headers.prototype.entries = function () { throw new exceptions_1.BaseException('"entries" method is not implemented on Headers class'); };
+    Headers.prototype.entries = function () { throw new Error('"entries" method is not implemented on Headers class'); };
+    Headers.prototype.mayBeSetNormalizedName = function (name) {
+        var lcName = name.toLowerCase();
+        if (!this._normalizedNames.has(lcName)) {
+            this._normalizedNames.set(lcName, name);
+        }
+    };
     return Headers;
 }());
-exports.Headers = Headers;
-// "HTTP character sets are identified by case-insensitive tokens"
-// Spec at https://tools.ietf.org/html/rfc2616
-// This implementation is same as NodeJS.
-// see https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_message_headers
-function normalize(name) {
-    return name.toLowerCase();
-}
 //# sourceMappingURL=headers.js.map

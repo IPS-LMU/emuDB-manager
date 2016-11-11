@@ -8,12 +8,51 @@
 /** Map relative paths to URLs. */
 var map = {
     'ng2-uploader': 'vendor/ng2-uploader',
+    '@angular': 'vendor/@angular',
+    'rxjs': 'vendor/rxjs',
+    'typescript': 'node_modules/typescript/lib/typescript.js',
+    'materialize': 'vendor/materialize-css',
+    'angular2-materialize': 'vendor/angular2-materialize',
+    'jquery': 'vendor/jquery'
 };
 /** User packages configuration. */
 var packages = {
     'ng2-uploader': {
         main: 'index'
-    }
+    },
+    'materialize': {
+        'format': 'global',
+        'main': 'dist/js/materialize',
+        'defaultExtension': 'js'
+    },
+    'angular2-materialize': {
+        'main': 'dist/index',
+        'defaultExtension': 'js'
+    },
+    '@angular/core': {
+        main: 'bundles/core.umd.js' //use the ESM entry point for bundling tools
+    },
+    '@angular/common': {
+        main: 'bundles/common.umd.js' //use the ESM entry point for bundling tools
+    },
+    '@angular/compiler': {
+        main: 'bundles/compiler.umd.js' //use the ESM entry point for bundling tools
+    },
+    '@angular/forms': {
+        main: 'bundles/forms.umd.js'
+    },
+    '@angular/http': {
+        main: 'bundles/http.umd.js'
+    },
+    '@angular/platform-browser': {
+        main: 'bundles/platform-browser.umd.js' //use the ESM entry point for bundling tools
+    },
+    '@angular/platform-browser-dynamic': {
+        main: 'bundles/platform-browser-dynamic.umd.js' //use the ESM entry point for bundling tools
+    },
+    '@angular/router': {
+        main: 'bundles/router.umd.js' //use the ESM entry point for bundling tools
+    },
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /***********************************************************************************************
@@ -52,10 +91,13 @@ System.config({
     map: {
         '@angular': 'vendor/@angular',
         'rxjs': 'vendor/rxjs',
+        'jquery': 'node-modules/jquery',
+        'materialize-css': 'node-modules/materialize-css',
+        'angular2-materialize': 'node_modules/angular2-materialize',
         'main': 'main.js'
     },
     packages: cliSystemConfigPackages
 });
 // Apply the user's configuration.
 System.config({ map: map, packages: packages });
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-26TnX6n0.tmp/0/src/system-config.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-IMPk92KA.tmp/0/src/system-config.js.map

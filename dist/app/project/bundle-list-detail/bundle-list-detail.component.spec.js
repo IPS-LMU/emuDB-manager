@@ -1,9 +1,15 @@
 /* tslint:disable:no-unused-variable */
-"use strict";
-describe('Component: BundleListDetail', function () {
-    it('should create an instance', function () {
-        // let component = new BundleListDetailComponent();
-        // expect(component).toBeTruthy();
-    });
+/*
+import { By }           from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
+import { addProviders, async, inject } from '@angular/core/testing';
+import { BundleListDetailComponent } from './bundle-list-detail.component';
+
+describe('Component: BundleListDetail', () => {
+  it('should create an instance', () => {
+    // let component = new BundleListDetailComponent();
+    // expect(component).toBeTruthy();
+  });
 });
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-26TnX6n0.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.spec.js.map
+*/ 
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-IMPk92KA.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.spec.js.map

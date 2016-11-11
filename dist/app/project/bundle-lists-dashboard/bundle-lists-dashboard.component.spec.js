@@ -1,9 +1,15 @@
 /* tslint:disable:no-unused-variable */
-"use strict";
-describe('Component: BundleListsDashboard', function () {
-    it('should create an instance', function () {
-        // let component = new BundleListsDashboardComponent();
-        // expect(component).toBeTruthy();
-    });
+/*
+import { By }           from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
+import { addProviders, async, inject } from '@angular/core/testing';
+import { BundleListsDashboardComponent } from './bundle-lists-dashboard.component';
+
+describe('Component: BundleListsDashboard', () => {
+  it('should create an instance', () => {
+    // let component = new BundleListsDashboardComponent();
+    // expect(component).toBeTruthy();
+  });
 });
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-26TnX6n0.tmp/0/src/app/project/bundle-lists-dashboard/bundle-lists-dashboard.component.spec.js.map
+*/ 
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-IMPk92KA.tmp/0/src/app/project/bundle-lists-dashboard/bundle-lists-dashboard.component.spec.js.map

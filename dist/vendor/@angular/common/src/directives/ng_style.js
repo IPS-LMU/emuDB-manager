@@ -5,10 +5,30 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-"use strict";
-var core_1 = require('@angular/core');
-var lang_1 = require('../facade/lang');
-var NgStyle = (function () {
+import { Directive, ElementRef, Input, KeyValueDiffers, Renderer } from '@angular/core';
+/**
+ * @ngModule CommonModule
+ *
+ * @whatItDoes Update an HTML element styles.
+ *
+ * @howToUse
+ * ```
+ * <some-element [ngStyle]="{'font-style': styleExp}">...</some-element>
+ *
+ * <some-element [ngStyle]="{'max-width.px': widthExp}">...</some-element>
+ *
+ * <some-element [ngStyle]="objExp">...</some-element>
+ * ```
+ *
+ * @description
+ *
+ * The styles are updated according to the value of the expression evaluation:
+ * - keys are style names with an option `.<unit>` suffix (ie 'top.px', 'font-style.em'),
+ * - values are the values assigned to those properties (expressed in the given unit).
+ *
+ * @stable
+ */
+export var NgStyle = (function () {
     function NgStyle(_differs, _ngEl, _renderer) {
         this._differs = _differs;
         this._ngEl = _ngEl;
@@ -17,48 +37,44 @@ var NgStyle = (function () {
     Object.defineProperty(NgStyle.prototype, "ngStyle", {
         set: function (v) {
             this._ngStyle = v;
-            if (lang_1.isBlank(this._differ) && lang_1.isPresent(v)) {
-                this._differ = this._differs.find(this._ngStyle).create(null);
+            if (!this._differ && v) {
+                this._differ = this._differs.find(v).create(null);
             }
         },
         enumerable: true,
         configurable: true
     });
     NgStyle.prototype.ngDoCheck = function () {
-        if (lang_1.isPresent(this._differ)) {
+        if (this._differ) {
             var changes = this._differ.diff(this._ngStyle);
-            if (lang_1.isPresent(changes)) {
+            if (changes) {
                 this._applyChanges(changes);
             }
         }
     };
     NgStyle.prototype._applyChanges = function (changes) {
         var _this = this;
-        changes.forEachRemovedItem(function (record) { _this._setStyle(record.key, null); });
-        changes.forEachAddedItem(function (record) { _this._setStyle(record.key, record.currentValue); });
-        changes.forEachChangedItem(function (record) { _this._setStyle(record.key, record.currentValue); });
+        changes.forEachRemovedItem(function (record) { return _this._setStyle(record.key, null); });
+        changes.forEachAddedItem(function (record) { return _this._setStyle(record.key, record.currentValue); });
+        changes.forEachChangedItem(function (record) { return _this._setStyle(record.key, record.currentValue); });
     };
-    NgStyle.prototype._setStyle = function (name, val) {
-        var nameParts = name.split('.');
-        var nameToSet = nameParts[0];
-        var valToSet = lang_1.isPresent(val) && nameParts.length === 2 ? "" + val + nameParts[1] : val;
-        this._renderer.setElementStyle(this._ngEl.nativeElement, nameToSet, valToSet);
+    NgStyle.prototype._setStyle = function (nameAndUnit, value) {
+        var _a = nameAndUnit.split('.'), name = _a[0], unit = _a[1];
+        value = value && unit ? "" + value + unit : value;
+        this._renderer.setElementStyle(this._ngEl.nativeElement, name, value);
     };
-    /** @nocollapse */
     NgStyle.decorators = [
-        { type: core_1.Directive, args: [{ selector: '[ngStyle]' },] },
+        { type: Directive, args: [{ selector: '[ngStyle]' },] },
     ];
     /** @nocollapse */
     NgStyle.ctorParameters = [
-        { type: core_1.KeyValueDiffers, },
-        { type: core_1.ElementRef, },
-        { type: core_1.Renderer, },
+        { type: KeyValueDiffers, },
+        { type: ElementRef, },
+        { type: Renderer, },
     ];
-    /** @nocollapse */
     NgStyle.propDecorators = {
-        'ngStyle': [{ type: core_1.Input },],
+        'ngStyle': [{ type: Input },],
     };
     return NgStyle;
 }());
-exports.NgStyle = NgStyle;
 //# sourceMappingURL=ng_style.js.map
