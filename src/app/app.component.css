@@ -4,7 +4,7 @@
 
 /* Move down content because we have a fixed navbar that is 50px tall */
 .head-container {
-	padding-top: 50px;
+    padding-top: 50px;
 }
 
 /*
@@ -12,8 +12,8 @@
  */
 
 .sub-header {
-	padding-bottom: 10px;
-	border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
 }
 
 /*
@@ -21,11 +21,9 @@
  * Hide default border to remove 1px line.
  */
 .navbar-fixed-top {
-	border: 0;
+    border: 0;
 }
 
 .navbar-brand-image {
-	padding: 9px 15px;
-
-/* 9px is to (vertically) center a 32x32px image in a 50px bar
+    padding: 9px 15px; /* 9px is to (vertically) center a 32x32px image in a 50px bar */
 }
