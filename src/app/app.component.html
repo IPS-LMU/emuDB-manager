@@ -10,8 +10,9 @@
 					<span class="icon-bar"></span>
 				</button>
 
-				<span class="navbar-brand navbar-brand-image"><img
-					src="assets/emu-icon-32.png"></span>
+				<span class="navbar-brand navbar-brand-image">
+					<img src="assets/emu-icon-32.png">
+				</span>
 				<span class="navbar-brand">emuDB Manager</span>
 			</div>
 			<div id="" class="navbar-collapse collapse">
@@ -19,6 +20,21 @@
 			</div>
 		</div>
 	</nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-offset-3 col-md-offset-2">
+				<div class="progress" [@progressBarContainer]="progressBarState()">
+					<div class="progress-bar progress-bar-striped" role="progressbar"
+					     style="width:100%" [@progressBar]="progressBarState()"
+					     (@progressBar.done)="logSth($event)"
+					>
+						Communicating with server
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<router-outlet></router-outlet>
 </div>

@@ -20,6 +20,7 @@ interface UploadTarget {
 
 @Injectable()
 export class ProjectDataService {
+	private _connectionCount:number = 0;
 	private emuWebAppURL = 'https://ips-lmu.github.io/EMU-webApp/';
 	private infoObservable:ConnectableObservable<ProjectInfo>;
 	private infoObserver:Observer<ProjectInfo>;
@@ -78,14 +79,17 @@ export class ProjectDataService {
 			body += encodeURIComponent(i) + '=' + encodeURIComponent(params[i]);
 		}
 
+		++this._connectionCount;
 		return this.http
 			.post(this.url, body, options)
 			.map(response => {
+				--this._connectionCount;
 				let json = response.json();
 				console.log('Received JSON data', json);
 				return json;
 			})
 			.catch(error => {
+				--this._connectionCount;
 				return Observable.throw('Error during download', error);
 			});
 	}
@@ -445,5 +449,13 @@ export class ProjectDataService {
 
 			return url;
 		});
+	}
+
+	get connectionCount(): number {
+		return this._connectionCount;
+	}
+
+	set connectionCount(value: number) {
+		this._connectionCount = value;
 	}
 }
