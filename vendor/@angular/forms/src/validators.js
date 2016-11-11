@@ -5,11 +5,14 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-"use strict";
-var core_1 = require('@angular/core');
-var toPromise_1 = require('rxjs/operator/toPromise');
-var collection_1 = require('./facade/collection');
-var lang_1 = require('./facade/lang');
+import { OpaqueToken } from '@angular/core';
+import { toPromise } from 'rxjs/operator/toPromise';
+import { StringMapWrapper } from './facade/collection';
+import { isPresent } from './facade/lang';
+import { isPromise } from './private_import_core';
+function isEmptyInputValue(value) {
+    return value == null || typeof value === 'string' && value.length === 0;
+}
 /**
  * Providers for validators to be used for {@link FormControl}s in a form.
  *
@@ -18,9 +21,9 @@ var lang_1 = require('./facade/lang');
  * ### Example
  *
  * {@example core/forms/ts/ng_validators/ng_validators.ts region='ng_validators'}
- * @experimental
+ * @stable
  */
-exports.NG_VALIDATORS = new core_1.OpaqueToken('NgValidators');
+export var NG_VALIDATORS = new OpaqueToken('NgValidators');
 /**
  * Providers for asynchronous validators to be used for {@link FormControl}s
  * in a form.
@@ -29,9 +32,9 @@ exports.NG_VALIDATORS = new core_1.OpaqueToken('NgValidators');
  *
  * See {@link NG_VALIDATORS} for more details.
  *
- * @experimental
+ * @stable
  */
-exports.NG_ASYNC_VALIDATORS = new core_1.OpaqueToken('NgAsyncValidators');
+export var NG_ASYNC_VALIDATORS = new OpaqueToken('NgAsyncValidators');
 /**
  * Provides a set of validators used by form controls.
  *
@@ -44,29 +47,28 @@ exports.NG_ASYNC_VALIDATORS = new core_1.OpaqueToken('NgAsyncValidators');
  * var loginControl = new FormControl("", Validators.required)
  * ```
  *
- * @experimental
+ * @stable
  */
-var Validators = (function () {
+export var Validators = (function () {
     function Validators() {
     }
     /**
      * Validator that requires controls to have a non-empty value.
      */
     Validators.required = function (control) {
-        return lang_1.isBlank(control.value) || (lang_1.isString(control.value) && control.value == '') ?
-            { 'required': true } :
-            null;
+        return isEmptyInputValue(control.value) ? { 'required': true } : null;
     };
     /**
      * Validator that requires controls to have a value of a minimum length.
      */
     Validators.minLength = function (minLength) {
         return function (control) {
-            if (lang_1.isPresent(Validators.required(control)))
-                return null;
-            var v = control.value;
-            return v.length < minLength ?
-                { 'minlength': { 'requiredLength': minLength, 'actualLength': v.length } } :
+            if (isEmptyInputValue(control.value)) {
+                return null; // don't validate empty values to allow optional controls
+            }
+            var length = typeof control.value === 'string' ? control.value.length : 0;
+            return length < minLength ?
+                { 'minlength': { 'requiredLength': minLength, 'actualLength': length } } :
                 null;
         };
     };
@@ -75,11 +77,9 @@ var Validators = (function () {
      */
     Validators.maxLength = function (maxLength) {
         return function (control) {
-            if (lang_1.isPresent(Validators.required(control)))
-                return null;
-            var v = control.value;
-            return v.length > maxLength ?
-                { 'maxlength': { 'requiredLength': maxLength, 'actualLength': v.length } } :
+            var length = typeof control.value === 'string' ? control.value.length : 0;
+            return length > maxLength ?
+                { 'maxlength': { 'requiredLength': maxLength, 'actualLength': length } } :
                 null;
         };
     };
@@ -88,12 +88,14 @@ var Validators = (function () {
      */
     Validators.pattern = function (pattern) {
         return function (control) {
-            if (lang_1.isPresent(Validators.required(control)))
-                return null;
+            if (isEmptyInputValue(control.value)) {
+                return null; // don't validate empty values to allow optional controls
+            }
             var regex = new RegExp("^" + pattern + "$");
-            var v = control.value;
-            return regex.test(v) ? null :
-                { 'pattern': { 'requiredPattern': "^" + pattern + "$", 'actualValue': v } };
+            var value = control.value;
+            return regex.test(value) ?
+                null :
+                { 'pattern': { 'requiredPattern': "^" + pattern + "$", 'actualValue': value } };
         };
     };
     /**
@@ -105,9 +107,9 @@ var Validators = (function () {
      * of the individual error maps.
      */
     Validators.compose = function (validators) {
-        if (lang_1.isBlank(validators))
+        if (!validators)
             return null;
-        var presentValidators = validators.filter(lang_1.isPresent);
+        var presentValidators = validators.filter(isPresent);
         if (presentValidators.length == 0)
             return null;
         return function (control) {
@@ -115,9 +117,9 @@ var Validators = (function () {
         };
     };
     Validators.composeAsync = function (validators) {
-        if (lang_1.isBlank(validators))
+        if (!validators)
             return null;
-        var presentValidators = validators.filter(lang_1.isPresent);
+        var presentValidators = validators.filter(isPresent);
         if (presentValidators.length == 0)
             return null;
         return function (control) {
@@ -127,9 +129,8 @@ var Validators = (function () {
     };
     return Validators;
 }());
-exports.Validators = Validators;
 function _convertToPromise(obj) {
-    return lang_1.isPromise(obj) ? obj : toPromise_1.toPromise.call(obj);
+    return isPromise(obj) ? obj : toPromise.call(obj);
 }
 function _executeValidators(control, validators) {
     return validators.map(function (v) { return v(control); });
@@ -139,8 +140,8 @@ function _executeAsyncValidators(control, validators) {
 }
 function _mergeErrors(arrayOfErrors) {
     var res = arrayOfErrors.reduce(function (res, errors) {
-        return lang_1.isPresent(errors) ? collection_1.StringMapWrapper.merge(res, errors) : res;
+        return isPresent(errors) ? StringMapWrapper.merge(res, errors) : res;
     }, {});
-    return collection_1.StringMapWrapper.isEmpty(res) ? null : res;
+    return Object.keys(res).length === 0 ? null : res;
 }
 //# sourceMappingURL=validators.js.map

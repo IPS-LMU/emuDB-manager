@@ -5,12 +5,9 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-"use strict";
-var collection_1 = require('../src/facade/collection');
-var lang_1 = require('../src/facade/lang');
 function paramParser(rawParams) {
     if (rawParams === void 0) { rawParams = ''; }
-    var map = new collection_1.Map();
+    var map = new Map();
     if (rawParams.length > 0) {
         var params = rawParams.split('&');
         params.forEach(function (param) {
@@ -26,14 +23,13 @@ function paramParser(rawParams) {
 /**
  * @experimental
  **/
-var QueryEncoder = (function () {
+export var QueryEncoder = (function () {
     function QueryEncoder() {
     }
     QueryEncoder.prototype.encodeKey = function (k) { return standardEncoding(k); };
     QueryEncoder.prototype.encodeValue = function (v) { return standardEncoding(v); };
     return QueryEncoder;
 }());
-exports.QueryEncoder = QueryEncoder;
 function standardEncoding(v) {
     return encodeURIComponent(v)
         .replace(/%40/gi, '@')
@@ -42,7 +38,7 @@ function standardEncoding(v) {
         .replace(/%2C/gi, ',')
         .replace(/%3B/gi, ';')
         .replace(/%2B/gi, '+')
-        .replace(/%3D/gi, ';')
+        .replace(/%3D/gi, '=')
         .replace(/%3F/gi, '?')
         .replace(/%2F/gi, '/');
 }
@@ -81,7 +77,7 @@ function standardEncoding(v) {
  * ```
  * @experimental
  */
-var URLSearchParams = (function () {
+export var URLSearchParams = (function () {
     function URLSearchParams(rawParams, queryEncoder) {
         if (rawParams === void 0) { rawParams = ''; }
         if (queryEncoder === void 0) { queryEncoder = new QueryEncoder(); }
@@ -97,21 +93,16 @@ var URLSearchParams = (function () {
     URLSearchParams.prototype.has = function (param) { return this.paramsMap.has(param); };
     URLSearchParams.prototype.get = function (param) {
         var storedParam = this.paramsMap.get(param);
-        if (collection_1.isListLikeIterable(storedParam)) {
-            return collection_1.ListWrapper.first(storedParam);
-        }
-        else {
-            return null;
-        }
+        return Array.isArray(storedParam) ? storedParam[0] : null;
     };
-    URLSearchParams.prototype.getAll = function (param) {
-        var mapParam = this.paramsMap.get(param);
-        return lang_1.isPresent(mapParam) ? mapParam : [];
-    };
+    URLSearchParams.prototype.getAll = function (param) { return this.paramsMap.get(param) || []; };
     URLSearchParams.prototype.set = function (param, val) {
-        var mapParam = this.paramsMap.get(param);
-        var list = lang_1.isPresent(mapParam) ? mapParam : [];
-        collection_1.ListWrapper.clear(list);
+        if (val === void 0 || val === null) {
+            this.delete(param);
+            return;
+        }
+        var list = this.paramsMap.get(param) || [];
+        list.length = 0;
         list.push(val);
         this.paramsMap.set(param, list);
     };
@@ -124,16 +115,16 @@ var URLSearchParams = (function () {
     URLSearchParams.prototype.setAll = function (searchParams) {
         var _this = this;
         searchParams.paramsMap.forEach(function (value, param) {
-            var mapParam = _this.paramsMap.get(param);
-            var list = lang_1.isPresent(mapParam) ? mapParam : [];
-            collection_1.ListWrapper.clear(list);
+            var list = _this.paramsMap.get(param) || [];
+            list.length = 0;
             list.push(value[0]);
             _this.paramsMap.set(param, list);
         });
     };
     URLSearchParams.prototype.append = function (param, val) {
-        var mapParam = this.paramsMap.get(param);
-        var list = lang_1.isPresent(mapParam) ? mapParam : [];
+        if (val === void 0 || val === null)
+            return;
+        var list = this.paramsMap.get(param) || [];
         list.push(val);
         this.paramsMap.set(param, list);
     };
@@ -147,8 +138,7 @@ var URLSearchParams = (function () {
     URLSearchParams.prototype.appendAll = function (searchParams) {
         var _this = this;
         searchParams.paramsMap.forEach(function (value, param) {
-            var mapParam = _this.paramsMap.get(param);
-            var list = lang_1.isPresent(mapParam) ? mapParam : [];
+            var list = _this.paramsMap.get(param) || [];
             for (var i = 0; i < value.length; ++i) {
                 list.push(value[i]);
             }
@@ -165,9 +155,8 @@ var URLSearchParams = (function () {
     URLSearchParams.prototype.replaceAll = function (searchParams) {
         var _this = this;
         searchParams.paramsMap.forEach(function (value, param) {
-            var mapParam = _this.paramsMap.get(param);
-            var list = lang_1.isPresent(mapParam) ? mapParam : [];
-            collection_1.ListWrapper.clear(list);
+            var list = _this.paramsMap.get(param) || [];
+            list.length = 0;
             for (var i = 0; i < value.length; ++i) {
                 list.push(value[i]);
             }
@@ -185,5 +174,4 @@ var URLSearchParams = (function () {
     URLSearchParams.prototype.delete = function (param) { this.paramsMap.delete(param); };
     return URLSearchParams;
 }());
-exports.URLSearchParams = URLSearchParams;
 //# sourceMappingURL=url_search_params.js.map

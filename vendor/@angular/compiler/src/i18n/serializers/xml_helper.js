@@ -5,7 +5,11 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-"use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var _Visitor = (function () {
     function _Visitor() {
     }
@@ -20,7 +24,7 @@ var _Visitor = (function () {
     };
     _Visitor.prototype.visitText = function (text) { return text.value; };
     _Visitor.prototype.visitDeclaration = function (decl) {
-        return "<? xml" + this._serializeAttributes(decl.attrs) + " ?>";
+        return "<?xml" + this._serializeAttributes(decl.attrs) + " ?>";
     };
     _Visitor.prototype._serializeAttributes = function (attrs) {
         var strAttrs = Object.keys(attrs).map(function (name) { return (name + "=\"" + attrs[name] + "\""); }).join(' ');
@@ -32,11 +36,10 @@ var _Visitor = (function () {
     return _Visitor;
 }());
 var _visitor = new _Visitor();
-function serialize(nodes) {
+export function serialize(nodes) {
     return nodes.map(function (node) { return node.visit(_visitor); }).join('');
 }
-exports.serialize = serialize;
-var Declaration = (function () {
+export var Declaration = (function () {
     function Declaration(unescapedAttrs) {
         var _this = this;
         this.attrs = {};
@@ -47,8 +50,7 @@ var Declaration = (function () {
     Declaration.prototype.visit = function (visitor) { return visitor.visitDeclaration(this); };
     return Declaration;
 }());
-exports.Declaration = Declaration;
-var Doctype = (function () {
+export var Doctype = (function () {
     function Doctype(rootTag, dtd) {
         this.rootTag = rootTag;
         this.dtd = dtd;
@@ -57,8 +59,7 @@ var Doctype = (function () {
     Doctype.prototype.visit = function (visitor) { return visitor.visitDoctype(this); };
     return Doctype;
 }());
-exports.Doctype = Doctype;
-var Tag = (function () {
+export var Tag = (function () {
     function Tag(name, unescapedAttrs, children) {
         var _this = this;
         if (unescapedAttrs === void 0) { unescapedAttrs = {}; }
@@ -73,8 +74,7 @@ var Tag = (function () {
     Tag.prototype.visit = function (visitor) { return visitor.visitTag(this); };
     return Tag;
 }());
-exports.Tag = Tag;
-var Text = (function () {
+export var Text = (function () {
     function Text(unescapedValue) {
         this.value = _escapeXml(unescapedValue);
     }
@@ -82,7 +82,14 @@ var Text = (function () {
     Text.prototype.visit = function (visitor) { return visitor.visitText(this); };
     return Text;
 }());
-exports.Text = Text;
+export var CR = (function (_super) {
+    __extends(CR, _super);
+    function CR(ws) {
+        if (ws === void 0) { ws = 0; }
+        _super.call(this, "\n" + new Array(ws + 1).join(' '));
+    }
+    return CR;
+}(Text));
 var _ESCAPED_CHARS = [
     [/&/g, '&amp;'],
     [/"/g, '&quot;'],

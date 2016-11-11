@@ -5,11 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-"use strict";
-var collection_1 = require('./facade/collection');
-var exceptions_1 = require('./facade/exceptions');
-var lang_1 = require('./facade/lang');
-var _EMPTY_ATTR_VALUE = '';
+import { getHtmlTagDefinition } from './ml_parser/html_tags';
 var _SELECTOR_REGEXP = new RegExp('(\\:not\\()|' +
     '([-\\w]+)|' +
     '(?:\\.([-\\w]+))|' +
@@ -22,7 +18,7 @@ var _SELECTOR_REGEXP = new RegExp('(\\:not\\()|' +
  * css classes and attribute/value pairs with the purpose
  * of selecting subsets out of them.
  */
-var CssSelector = (function () {
+export var CssSelector = (function () {
     function CssSelector() {
         this.element = null;
         this.classNames = [];
@@ -32,8 +28,8 @@ var CssSelector = (function () {
     CssSelector.parse = function (selector) {
         var results = [];
         var _addResult = function (res, cssSel) {
-            if (cssSel.notSelectors.length > 0 && lang_1.isBlank(cssSel.element) &&
-                collection_1.ListWrapper.isEmpty(cssSel.classNames) && collection_1.ListWrapper.isEmpty(cssSel.attrs)) {
+            if (cssSel.notSelectors.length > 0 && !cssSel.element && cssSel.classNames.length == 0 &&
+                cssSel.attrs.length == 0) {
                 cssSel.element = '*';
             }
             res.push(cssSel);
@@ -43,31 +39,31 @@ var CssSelector = (function () {
         var current = cssSelector;
         var inNot = false;
         _SELECTOR_REGEXP.lastIndex = 0;
-        while (lang_1.isPresent(match = _SELECTOR_REGEXP.exec(selector))) {
-            if (lang_1.isPresent(match[1])) {
+        while (match = _SELECTOR_REGEXP.exec(selector)) {
+            if (match[1]) {
                 if (inNot) {
-                    throw new exceptions_1.BaseException('Nesting :not is not allowed in a selector');
+                    throw new Error('Nesting :not is not allowed in a selector');
                 }
                 inNot = true;
                 current = new CssSelector();
                 cssSelector.notSelectors.push(current);
             }
-            if (lang_1.isPresent(match[2])) {
+            if (match[2]) {
                 current.setElement(match[2]);
             }
-            if (lang_1.isPresent(match[3])) {
+            if (match[3]) {
                 current.addClassName(match[3]);
             }
-            if (lang_1.isPresent(match[4])) {
+            if (match[4]) {
                 current.addAttribute(match[4], match[5]);
             }
-            if (lang_1.isPresent(match[6])) {
+            if (match[6]) {
                 inNot = false;
                 current = cssSelector;
             }
-            if (lang_1.isPresent(match[7])) {
+            if (match[7]) {
                 if (inNot) {
-                    throw new exceptions_1.BaseException('Multiple selectors in :not are not supported');
+                    throw new Error('Multiple selectors in :not are not supported');
                 }
                 _addResult(results, cssSelector);
                 cssSelector = current = new CssSelector();
@@ -77,16 +73,17 @@ var CssSelector = (function () {
         return results;
     };
     CssSelector.prototype.isElementSelector = function () {
-        return lang_1.isPresent(this.element) && collection_1.ListWrapper.isEmpty(this.classNames) &&
-            collection_1.ListWrapper.isEmpty(this.attrs) && this.notSelectors.length === 0;
+        return this.hasElementSelector() && this.classNames.length == 0 && this.attrs.length == 0 &&
+            this.notSelectors.length === 0;
     };
+    CssSelector.prototype.hasElementSelector = function () { return !!this.element; };
     CssSelector.prototype.setElement = function (element) {
         if (element === void 0) { element = null; }
         this.element = element;
     };
     /** Gets a template string for an element that matches the selector. */
     CssSelector.prototype.getMatchingElementTemplate = function () {
-        var tagName = lang_1.isPresent(this.element) ? this.element : 'div';
+        var tagName = this.element || 'div';
         var classAttr = this.classNames.length > 0 ? " class=\"" + this.classNames.join(' ') + "\"" : '';
         var attrs = '';
         for (var i = 0; i < this.attrs.length; i += 2) {
@@ -94,39 +91,24 @@ var CssSelector = (function () {
             var attrValue = this.attrs[i + 1] !== '' ? "=\"" + this.attrs[i + 1] + "\"" : '';
             attrs += " " + attrName + attrValue;
         }
-        return "<" + tagName + classAttr + attrs + "></" + tagName + ">";
+        return getHtmlTagDefinition(tagName).isVoid ? "<" + tagName + classAttr + attrs + "/>" :
+            "<" + tagName + classAttr + attrs + "></" + tagName + ">";
     };
     CssSelector.prototype.addAttribute = function (name, value) {
-        if (value === void 0) { value = _EMPTY_ATTR_VALUE; }
-        this.attrs.push(name);
-        if (lang_1.isPresent(value)) {
-            value = value.toLowerCase();
-        }
-        else {
-            value = _EMPTY_ATTR_VALUE;
-        }
-        this.attrs.push(value);
+        if (value === void 0) { value = ''; }
+        this.attrs.push(name, value && value.toLowerCase() || '');
     };
     CssSelector.prototype.addClassName = function (name) { this.classNames.push(name.toLowerCase()); };
     CssSelector.prototype.toString = function () {
-        var res = '';
-        if (lang_1.isPresent(this.element)) {
-            res += this.element;
+        var res = this.element || '';
+        if (this.classNames) {
+            this.classNames.forEach(function (klass) { return res += "." + klass; });
         }
-        if (lang_1.isPresent(this.classNames)) {
-            for (var i = 0; i < this.classNames.length; i++) {
-                res += '.' + this.classNames[i];
-            }
-        }
-        if (lang_1.isPresent(this.attrs)) {
-            for (var i = 0; i < this.attrs.length;) {
-                var attrName = this.attrs[i++];
-                var attrValue = this.attrs[i++];
-                res += '[' + attrName;
-                if (attrValue.length > 0) {
-                    res += '=' + attrValue;
-                }
-                res += ']';
+        if (this.attrs) {
+            for (var i = 0; i < this.attrs.length; i += 2) {
+                var name_1 = this.attrs[i];
+                var value = this.attrs[i + 1];
+                res += "[" + name_1 + (value ? '=' + value : '') + "]";
             }
         }
         this.notSelectors.forEach(function (notSelector) { return res += ":not(" + notSelector + ")"; });
@@ -134,12 +116,11 @@ var CssSelector = (function () {
     };
     return CssSelector;
 }());
-exports.CssSelector = CssSelector;
 /**
  * Reads a list of CssSelectors and allows to calculate which ones
  * are contained in a given CssSelector.
  */
-var SelectorMatcher = (function () {
+export var SelectorMatcher = (function () {
     function SelectorMatcher() {
         this._elementMap = new Map();
         this._elementPartialMap = new Map();
@@ -175,7 +156,7 @@ var SelectorMatcher = (function () {
         var classNames = cssSelector.classNames;
         var attrs = cssSelector.attrs;
         var selectable = new SelectorContext(cssSelector, callbackCtxt, listContext);
-        if (lang_1.isPresent(element)) {
+        if (element) {
             var isTerminal = attrs.length === 0 && classNames.length === 0;
             if (isTerminal) {
                 this._addTerminal(matcher._elementMap, element, selectable);
@@ -184,10 +165,10 @@ var SelectorMatcher = (function () {
                 matcher = this._addPartial(matcher._elementPartialMap, element);
             }
         }
-        if (lang_1.isPresent(classNames)) {
-            for (var index = 0; index < classNames.length; index++) {
-                var isTerminal = attrs.length === 0 && index === classNames.length - 1;
-                var className = classNames[index];
+        if (classNames) {
+            for (var i = 0; i < classNames.length; i++) {
+                var isTerminal = attrs.length === 0 && i === classNames.length - 1;
+                var className = classNames[i];
                 if (isTerminal) {
                     this._addTerminal(matcher._classMap, className, selectable);
                 }
@@ -196,35 +177,35 @@ var SelectorMatcher = (function () {
                 }
             }
         }
-        if (lang_1.isPresent(attrs)) {
-            for (var index = 0; index < attrs.length;) {
-                var isTerminal = index === attrs.length - 2;
-                var attrName = attrs[index++];
-                var attrValue = attrs[index++];
+        if (attrs) {
+            for (var i = 0; i < attrs.length; i += 2) {
+                var isTerminal = i === attrs.length - 2;
+                var name_2 = attrs[i];
+                var value = attrs[i + 1];
                 if (isTerminal) {
                     var terminalMap = matcher._attrValueMap;
-                    var terminalValuesMap = terminalMap.get(attrName);
-                    if (lang_1.isBlank(terminalValuesMap)) {
+                    var terminalValuesMap = terminalMap.get(name_2);
+                    if (!terminalValuesMap) {
                         terminalValuesMap = new Map();
-                        terminalMap.set(attrName, terminalValuesMap);
+                        terminalMap.set(name_2, terminalValuesMap);
                     }
-                    this._addTerminal(terminalValuesMap, attrValue, selectable);
+                    this._addTerminal(terminalValuesMap, value, selectable);
                 }
                 else {
-                    var parttialMap = matcher._attrValuePartialMap;
-                    var partialValuesMap = parttialMap.get(attrName);
-                    if (lang_1.isBlank(partialValuesMap)) {
+                    var partialMap = matcher._attrValuePartialMap;
+                    var partialValuesMap = partialMap.get(name_2);
+                    if (!partialValuesMap) {
                         partialValuesMap = new Map();
-                        parttialMap.set(attrName, partialValuesMap);
+                        partialMap.set(name_2, partialValuesMap);
                     }
-                    matcher = this._addPartial(partialValuesMap, attrValue);
+                    matcher = this._addPartial(partialValuesMap, value);
                 }
             }
         }
     };
     SelectorMatcher.prototype._addTerminal = function (map, name, selectable) {
         var terminalList = map.get(name);
-        if (lang_1.isBlank(terminalList)) {
+        if (!terminalList) {
             terminalList = [];
             map.set(name, terminalList);
         }
@@ -232,7 +213,7 @@ var SelectorMatcher = (function () {
     };
     SelectorMatcher.prototype._addPartial = function (map, name) {
         var matcher = map.get(name);
-        if (lang_1.isBlank(matcher)) {
+        if (!matcher) {
             matcher = new SelectorMatcher();
             map.set(name, matcher);
         }
@@ -256,9 +237,9 @@ var SelectorMatcher = (function () {
         result = this._matchTerminal(this._elementMap, element, cssSelector, matchedCallback) || result;
         result = this._matchPartial(this._elementPartialMap, element, cssSelector, matchedCallback) ||
             result;
-        if (lang_1.isPresent(classNames)) {
-            for (var index = 0; index < classNames.length; index++) {
-                var className = classNames[index];
+        if (classNames) {
+            for (var i = 0; i < classNames.length; i++) {
+                var className = classNames[i];
                 result =
                     this._matchTerminal(this._classMap, className, cssSelector, matchedCallback) || result;
                 result =
@@ -266,56 +247,55 @@ var SelectorMatcher = (function () {
                         result;
             }
         }
-        if (lang_1.isPresent(attrs)) {
-            for (var index = 0; index < attrs.length;) {
-                var attrName = attrs[index++];
-                var attrValue = attrs[index++];
-                var terminalValuesMap = this._attrValueMap.get(attrName);
-                if (!lang_1.StringWrapper.equals(attrValue, _EMPTY_ATTR_VALUE)) {
-                    result = this._matchTerminal(terminalValuesMap, _EMPTY_ATTR_VALUE, cssSelector, matchedCallback) ||
-                        result;
-                }
-                result = this._matchTerminal(terminalValuesMap, attrValue, cssSelector, matchedCallback) ||
-                    result;
-                var partialValuesMap = this._attrValuePartialMap.get(attrName);
-                if (!lang_1.StringWrapper.equals(attrValue, _EMPTY_ATTR_VALUE)) {
-                    result = this._matchPartial(partialValuesMap, _EMPTY_ATTR_VALUE, cssSelector, matchedCallback) ||
-                        result;
+        if (attrs) {
+            for (var i = 0; i < attrs.length; i += 2) {
+                var name_3 = attrs[i];
+                var value = attrs[i + 1];
+                var terminalValuesMap = this._attrValueMap.get(name_3);
+                if (value) {
+                    result =
+                        this._matchTerminal(terminalValuesMap, '', cssSelector, matchedCallback) || result;
                 }
                 result =
-                    this._matchPartial(partialValuesMap, attrValue, cssSelector, matchedCallback) || result;
+                    this._matchTerminal(terminalValuesMap, value, cssSelector, matchedCallback) || result;
+                var partialValuesMap = this._attrValuePartialMap.get(name_3);
+                if (value) {
+                    result = this._matchPartial(partialValuesMap, '', cssSelector, matchedCallback) || result;
+                }
+                result =
+                    this._matchPartial(partialValuesMap, value, cssSelector, matchedCallback) || result;
             }
         }
         return result;
     };
     /** @internal */
     SelectorMatcher.prototype._matchTerminal = function (map, name, cssSelector, matchedCallback) {
-        if (lang_1.isBlank(map) || lang_1.isBlank(name)) {
+        if (!map || typeof name !== 'string') {
             return false;
         }
         var selectables = map.get(name);
         var starSelectables = map.get('*');
-        if (lang_1.isPresent(starSelectables)) {
+        if (starSelectables) {
             selectables = selectables.concat(starSelectables);
         }
-        if (lang_1.isBlank(selectables)) {
+        if (!selectables) {
             return false;
         }
         var selectable;
         var result = false;
-        for (var index = 0; index < selectables.length; index++) {
-            selectable = selectables[index];
+        for (var i = 0; i < selectables.length; i++) {
+            selectable = selectables[i];
             result = selectable.finalize(cssSelector, matchedCallback) || result;
         }
         return result;
     };
     /** @internal */
     SelectorMatcher.prototype._matchPartial = function (map, name, cssSelector, matchedCallback) {
-        if (lang_1.isBlank(map) || lang_1.isBlank(name)) {
+        if (!map || typeof name !== 'string') {
             return false;
         }
         var nestedSelector = map.get(name);
-        if (lang_1.isBlank(nestedSelector)) {
+        if (!nestedSelector) {
             return false;
         }
         // TODO(perf): get rid of recursion and measure again
@@ -325,17 +305,15 @@ var SelectorMatcher = (function () {
     };
     return SelectorMatcher;
 }());
-exports.SelectorMatcher = SelectorMatcher;
-var SelectorListContext = (function () {
+export var SelectorListContext = (function () {
     function SelectorListContext(selectors) {
         this.selectors = selectors;
         this.alreadyMatched = false;
     }
     return SelectorListContext;
 }());
-exports.SelectorListContext = SelectorListContext;
 // Store context to pass back selector and context when a selector is matched
-var SelectorContext = (function () {
+export var SelectorContext = (function () {
     function SelectorContext(selector, cbContext, listContext) {
         this.selector = selector;
         this.cbContext = cbContext;
@@ -344,14 +322,12 @@ var SelectorContext = (function () {
     }
     SelectorContext.prototype.finalize = function (cssSelector, callback) {
         var result = true;
-        if (this.notSelectors.length > 0 &&
-            (lang_1.isBlank(this.listContext) || !this.listContext.alreadyMatched)) {
+        if (this.notSelectors.length > 0 && (!this.listContext || !this.listContext.alreadyMatched)) {
             var notMatcher = SelectorMatcher.createNotMatcher(this.notSelectors);
             result = !notMatcher.match(cssSelector, null);
         }
-        if (result && lang_1.isPresent(callback) &&
-            (lang_1.isBlank(this.listContext) || !this.listContext.alreadyMatched)) {
-            if (lang_1.isPresent(this.listContext)) {
+        if (result && callback && (!this.listContext || !this.listContext.alreadyMatched)) {
+            if (this.listContext) {
                 this.listContext.alreadyMatched = true;
             }
             callback(this.selector, this.cbContext);
@@ -360,5 +336,4 @@ var SelectorContext = (function () {
     };
     return SelectorContext;
 }());
-exports.SelectorContext = SelectorContext;
 //# sourceMappingURL=selector.js.map

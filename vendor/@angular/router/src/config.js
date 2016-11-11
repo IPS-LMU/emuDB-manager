@@ -5,14 +5,16 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-"use strict";
-function validateConfig(config) {
+import { PRIMARY_OUTLET } from './shared';
+export function validateConfig(config) {
     config.forEach(validateNode);
 }
-exports.validateConfig = validateConfig;
 function validateNode(route) {
     if (Array.isArray(route)) {
         throw new Error("Invalid route configuration: Array cannot be specified");
+    }
+    if (route.component === undefined && (route.outlet && route.outlet !== PRIMARY_OUTLET)) {
+        throw new Error("Invalid route configuration of route '" + route.path + "': a componentless route cannot have a named outlet set");
     }
     if (!!route.redirectTo && !!route.children) {
         throw new Error("Invalid configuration of route '" + route.path + "': redirectTo and children cannot be used together");
@@ -36,8 +38,7 @@ function validateNode(route) {
     if (route.path.startsWith('/')) {
         throw new Error("Invalid route configuration of route '" + route.path + "': path cannot start with a slash");
     }
-    if (route.path === '' && route.redirectTo !== undefined &&
-        (route.terminal === undefined && route.pathMatch === undefined)) {
+    if (route.path === '' && route.redirectTo !== undefined && route.pathMatch === undefined) {
         var exp = "The default value of 'pathMatch' is 'prefix', but often the intent is to use 'full'.";
         throw new Error("Invalid route configuration of route '{path: \"" + route.path + "\", redirectTo: \"" + route.redirectTo + "\"}': please provide 'pathMatch'. " + exp);
     }

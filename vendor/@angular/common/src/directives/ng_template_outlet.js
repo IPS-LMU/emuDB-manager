@@ -5,9 +5,30 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-"use strict";
-var core_1 = require('@angular/core');
-var NgTemplateOutlet = (function () {
+import { Directive, Input, ViewContainerRef } from '@angular/core';
+/**
+ * @ngModule CommonModule
+ *
+ * @whatItDoes Inserts an embedded view from a prepared `TemplateRef`
+ *
+ * @howToUse
+ * ```
+ * <template [ngTemplateOutlet]="templateRefExpression"
+ *           [ngOutletContext]="objectExpression">
+ * </template>
+ * ```
+ *
+ * @description
+ *
+ * You can attach a context object to the `EmbeddedViewRef` by setting `[ngOutletContext]`.
+ * `[ngOutletContext]` should be an object, the object's keys will be the local template variables
+ * available within the `TemplateRef`.
+ *
+ * Note: using the key `$implicit` in the context object will set it's value as default.
+ *
+ * @experimental
+ */
+export var NgTemplateOutlet = (function () {
     function NgTemplateOutlet(_viewContainerRef) {
         this._viewContainerRef = _viewContainerRef;
     }
@@ -21,7 +42,7 @@ var NgTemplateOutlet = (function () {
         enumerable: true,
         configurable: true
     });
-    NgTemplateOutlet.prototype.ngOnChanges = function () {
+    NgTemplateOutlet.prototype.ngOnChanges = function (changes) {
         if (this._viewRef) {
             this._viewContainerRef.remove(this._viewContainerRef.indexOf(this._viewRef));
         }
@@ -29,20 +50,17 @@ var NgTemplateOutlet = (function () {
             this._viewRef = this._viewContainerRef.createEmbeddedView(this._templateRef, this._context);
         }
     };
-    /** @nocollapse */
     NgTemplateOutlet.decorators = [
-        { type: core_1.Directive, args: [{ selector: '[ngTemplateOutlet]' },] },
+        { type: Directive, args: [{ selector: '[ngTemplateOutlet]' },] },
     ];
     /** @nocollapse */
     NgTemplateOutlet.ctorParameters = [
-        { type: core_1.ViewContainerRef, },
+        { type: ViewContainerRef, },
     ];
-    /** @nocollapse */
     NgTemplateOutlet.propDecorators = {
-        'ngOutletContext': [{ type: core_1.Input },],
-        'ngTemplateOutlet': [{ type: core_1.Input },],
+        'ngOutletContext': [{ type: Input },],
+        'ngTemplateOutlet': [{ type: Input },],
     };
     return NgTemplateOutlet;
 }());
-exports.NgTemplateOutlet = NgTemplateOutlet;
 //# sourceMappingURL=ng_template_outlet.js.map

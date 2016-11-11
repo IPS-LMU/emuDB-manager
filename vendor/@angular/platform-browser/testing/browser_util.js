@@ -5,27 +5,27 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-"use strict";
-var dom_adapter_1 = require('../src/dom/dom_adapter');
-var collection_1 = require('../src/facade/collection');
-var lang_1 = require('../src/facade/lang');
-var BrowserDetection = (function () {
+import { NgZone } from '@angular/core';
+import { MapWrapper } from './facade/collection';
+import { global, isPresent } from './facade/lang';
+import { getDOM } from './private_import_platform-browser';
+export var BrowserDetection = (function () {
     function BrowserDetection(ua) {
         this._overrideUa = ua;
     }
     Object.defineProperty(BrowserDetection.prototype, "_ua", {
         get: function () {
-            if (lang_1.isPresent(this._overrideUa)) {
+            if (isPresent(this._overrideUa)) {
                 return this._overrideUa;
             }
             else {
-                return lang_1.isPresent(dom_adapter_1.getDOM()) ? dom_adapter_1.getDOM().getUserAgent() : '';
+                return getDOM() ? getDOM().getUserAgent() : '';
             }
         },
         enumerable: true,
         configurable: true
     });
-    BrowserDetection.setup = function () { exports.browserDetection = new BrowserDetection(null); };
+    BrowserDetection.setup = function () { browserDetection = new BrowserDetection(null); };
     Object.defineProperty(BrowserDetection.prototype, "isFirefox", {
         get: function () { return this._ua.indexOf('Firefox') > -1; },
         enumerable: true,
@@ -71,11 +71,14 @@ var BrowserDetection = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(BrowserDetection.prototype, "supportsIntlApi", {
-        // The Intl API is only properly supported in recent Chrome and Opera.
-        // Note: Edge is disguised as Chrome 42, so checking the "Edge" part is needed,
-        // see https://msdn.microsoft.com/en-us/library/hh869301(v=vs.85).aspx
-        get: function () { return !!lang_1.global.Intl; },
+    Object.defineProperty(BrowserDetection.prototype, "supportsNativeIntlApi", {
+        // The Intl API is only natively supported in Chrome, Firefox, IE11 and Edge.
+        // This detector is needed in tests to make the difference between:
+        // 1) IE11/Edge: they have a native Intl API, but with some discrepancies
+        // 2) IE9/IE10: they use the polyfill, and so no discrepancies
+        get: function () {
+            return !!global.Intl && global.Intl !== global.IntlPolyfill;
+        },
         enumerable: true,
         configurable: true
     });
@@ -87,44 +90,59 @@ var BrowserDetection = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(BrowserDetection.prototype, "isOldChrome", {
+        // "Old Chrome" means Chrome 3X, where there are some discrepancies in the Intl API.
+        // Android 4.4 and 5.X have such browsers by default (respectively 30 and 39).
+        get: function () {
+            return this._ua.indexOf('Chrome') > -1 && this._ua.indexOf('Chrome/3') > -1 &&
+                this._ua.indexOf('Edge') == -1;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return BrowserDetection;
 }());
-exports.BrowserDetection = BrowserDetection;
 BrowserDetection.setup();
-function dispatchEvent(element /** TODO #9100 */, eventType /** TODO #9100 */) {
-    dom_adapter_1.getDOM().dispatchEvent(element, dom_adapter_1.getDOM().createEvent(eventType));
+export function dispatchEvent(element /** TODO #9100 */, eventType /** TODO #9100 */) {
+    getDOM().dispatchEvent(element, getDOM().createEvent(eventType));
 }
-exports.dispatchEvent = dispatchEvent;
-function el(html) {
-    return dom_adapter_1.getDOM().firstChild(dom_adapter_1.getDOM().content(dom_adapter_1.getDOM().createTemplate(html)));
+export function el(html) {
+    return getDOM().firstChild(getDOM().content(getDOM().createTemplate(html)));
 }
-exports.el = el;
-function normalizeCSS(css) {
-    css = lang_1.StringWrapper.replaceAll(css, /\s+/g, ' ');
-    css = lang_1.StringWrapper.replaceAll(css, /:\s/g, ':');
-    css = lang_1.StringWrapper.replaceAll(css, /'/g, '"');
-    css = lang_1.StringWrapper.replaceAll(css, / }/g, '}');
-    css = lang_1.StringWrapper.replaceAllMapped(css, /url\((\"|\s)(.+)(\"|\s)\)(\s*)/g, function (match /** TODO #9100 */) { return ("url(\"" + match[2] + "\")"); });
-    css = lang_1.StringWrapper.replaceAllMapped(css, /\[(.+)=([^"\]]+)\]/g, function (match /** TODO #9100 */) { return ("[" + match[1] + "=\"" + match[2] + "\"]"); });
-    return css;
+export function normalizeCSS(css) {
+    return css.replace(/\s+/g, ' ')
+        .replace(/:\s/g, ':')
+        .replace(/'/g, '"')
+        .replace(/ }/g, '}')
+        .replace(/url\((\"|\s)(.+)(\"|\s)\)(\s*)/g, function () {
+        var match = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            match[_i - 0] = arguments[_i];
+        }
+        return ("url(\"" + match[2] + "\")");
+    })
+        .replace(/\[(.+)=([^"\]]+)\]/g, function () {
+        var match = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            match[_i - 0] = arguments[_i];
+        }
+        return ("[" + match[1] + "=\"" + match[2] + "\"]");
+    });
 }
-exports.normalizeCSS = normalizeCSS;
 var _singleTagWhitelist = ['br', 'hr', 'input'];
-function stringifyElement(el /** TODO #9100 */) {
+export function stringifyElement(el /** TODO #9100 */) {
     var result = '';
-    if (dom_adapter_1.getDOM().isElementNode(el)) {
-        var tagName = dom_adapter_1.getDOM().tagName(el).toLowerCase();
+    if (getDOM().isElementNode(el)) {
+        var tagName = getDOM().tagName(el).toLowerCase();
         // Opening tag
         result += "<" + tagName;
         // Attributes in an ordered way
-        var attributeMap = dom_adapter_1.getDOM().attributeMap(el);
-        var keys = [];
-        attributeMap.forEach(function (v, k) { return keys.push(k); });
-        collection_1.ListWrapper.sort(keys);
+        var attributeMap = getDOM().attributeMap(el);
+        var keys = MapWrapper.keys(attributeMap).sort();
         for (var i = 0; i < keys.length; i++) {
             var key = keys[i];
             var attValue = attributeMap.get(key);
-            if (!lang_1.isString(attValue)) {
+            if (typeof attValue !== 'string') {
                 result += " " + key;
             }
             else {
@@ -133,24 +151,26 @@ function stringifyElement(el /** TODO #9100 */) {
         }
         result += '>';
         // Children
-        var childrenRoot = dom_adapter_1.getDOM().templateAwareRoot(el);
-        var children = lang_1.isPresent(childrenRoot) ? dom_adapter_1.getDOM().childNodes(childrenRoot) : [];
+        var childrenRoot = getDOM().templateAwareRoot(el);
+        var children = isPresent(childrenRoot) ? getDOM().childNodes(childrenRoot) : [];
         for (var j = 0; j < children.length; j++) {
             result += stringifyElement(children[j]);
         }
         // Closing tag
-        if (!collection_1.ListWrapper.contains(_singleTagWhitelist, tagName)) {
+        if (_singleTagWhitelist.indexOf(tagName) == -1) {
             result += "</" + tagName + ">";
         }
     }
-    else if (dom_adapter_1.getDOM().isCommentNode(el)) {
-        result += "<!--" + dom_adapter_1.getDOM().nodeValue(el) + "-->";
+    else if (getDOM().isCommentNode(el)) {
+        result += "<!--" + getDOM().nodeValue(el) + "-->";
     }
     else {
-        result += dom_adapter_1.getDOM().getText(el);
+        result += getDOM().getText(el);
     }
     return result;
 }
-exports.stringifyElement = stringifyElement;
-exports.browserDetection = new BrowserDetection(null);
+export var browserDetection = new BrowserDetection(null);
+export function createNgZone() {
+    return new NgZone({ enableLongStackTrace: true });
+}
 //# sourceMappingURL=browser_util.js.map
