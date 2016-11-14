@@ -95,9 +95,10 @@
 
 						<ul *ngIf="day.open">
 							<li *ngFor="let commit of day.commits">
-								<a (click)="fail()">
-									{{commit.dateTime}}: {{commit.message}}
-								</a>
+								<button class="btn btn-primary btn-xs">
+									Download
+								</button>
+								{{commit.dateTime}}: {{commit.message}}
 							</li>
 						</ul>
 					</li>
