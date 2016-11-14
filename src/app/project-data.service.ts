@@ -505,7 +505,8 @@ export class ProjectDataService {
 						dayObject.commits.push({
 							commitID: next.data[i].commitID,
 							dateTime: time,
-							message: next.data[i].message
+							message: next.data[i].message,
+							tagLabel: ''
 						});
 					}
 

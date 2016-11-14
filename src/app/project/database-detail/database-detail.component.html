@@ -62,15 +62,35 @@
 
 	<div *ngIf="state === 'Download'" class="panel-body">
 		<p>
+			<button class="btn btn-primary">Download current version</button>
+		</p>
+
+		<hr>
+
+		<p>
 			Every change to a database is recorded (using the software git).
 		</p>
 		<p>
 			It is possible to create and download a ZIP file containing the database’s state at any
-			point in time.
+			point in time (i.e. any git commit).
+		</p>
+		<p>
+			It is also possible to tag certain points in time such that they are easier to find
+			(i.e. add a git tag).
 		</p>
 
+		<hr>
+
+		<h3 class="sub-header">
+			Tagged versions <span class="badge">{{countTags()}}</span>
+		</h3>
+
+		<h3 class="sub-header">
+			All versions <span class="badge">{{countCommits()}}</span>
+		</h3>
+
 		<ul>
-			<li *ngFor="let month of commitListing">
+			<li *ngFor="let month of commitList">
 				<a (click)="month.open = !month.open">
 					<span [ngClass]="{
 						'glyphicon': true,
@@ -95,10 +115,29 @@
 
 						<ul *ngIf="day.open">
 							<li *ngFor="let commit of day.commits">
+								<hr *ngIf="commit.editingTag">
+
 								<button class="btn btn-primary btn-xs">
 									Download
 								</button>
+
+								<button class="btn btn-primary btn-xs" (click)="editTag(commit)"
+								        [ngClass]="{active: commit.editingTag}">
+									Add tag
+								</button>
+
 								{{commit.dateTime}}: {{commit.message}}
+
+								<div *ngIf="commit.editingTag" class="form-inline">
+									<input class="form-control" placeholder="Tag label"
+									       [(ngModel)]="commit.tagLabel">
+									<button class="btn btn-xs btn-primary"
+									        [ngClass]="{disabled: commit.tagLabel===''}">
+										Save tag
+									</button>
+								</div>
+
+								<hr *ngIf="commit.editingTag">
 							</li>
 						</ul>
 					</li>

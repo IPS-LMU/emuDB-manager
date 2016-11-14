@@ -13,12 +13,12 @@ type State = 'BundleLists' | 'Session' | 'Download' | 'Rename';
 	styleUrls: ['database-detail.component.css']
 })
 export class DatabaseDetailComponent implements OnInit,OnDestroy {
-	private commitListing; //@todo add type
+	private commitList; //@todo add type
 	private database:DatabaseInfo;
 	private newName:string = '';
 	private renameError:string = '';
 	private renameSuccess:string = '';
-	private subCommitListing:Subscription;
+	private subCommitList:Subscription;
 	private subDatabase:Subscription;
 	private subParams:Subscription;
 	private subWebAppLink:Subscription;
@@ -37,8 +37,8 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 			this.subWebAppLink = this.projectDataService.getEmuWebAppURL(params['name']).subscribe(nextLink => {
 				this.webAppLink = nextLink;
 			});
-			this.subCommitListing = this.projectDataService.getCommitListing(params['name']).subscribe(nextCommitListing => {
-				this.commitListing = nextCommitListing;
+			this.subCommitList = this.projectDataService.getCommitListing(params['name']).subscribe(nextCommitList => {
+				this.commitList = nextCommitList;
 			});
 		})
 	}
@@ -53,6 +53,30 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 		if (this.subWebAppLink) {
 			this.subWebAppLink.unsubscribe();
 		}
+	}
+
+	private editTag (commit) {
+		commit.editingTag = ! commit.editingTag;
+
+	}
+
+	private countTags () {
+		let count = 0;
+		return count;
+	}
+
+	private countCommits () {
+		let count = 0;
+
+		if (this.commitList) {
+			for (let i = 0; i < this.commitList.length; ++i) {
+				for (let j = 0; j < this.commitList[i].days.length; ++j) {
+					count += this.commitList[i].days[j].commits.length;
+				}
+			}
+		}
+
+		return count;
 	}
 
 	private renameDatabase () {
@@ -74,8 +98,8 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 			if (this.subWebAppLink) {
 				this.subWebAppLink.unsubscribe();
 			}
-			if (this.subCommitListing) {
-				this.subCommitListing.unsubscribe();
+			if (this.subCommitList) {
+				this.subCommitList.unsubscribe();
 			}
 			this.subDatabase = this.projectDataService.getDatabase(this.newName).subscribe(nextDatabase => {
 				this.database = nextDatabase;
@@ -83,8 +107,8 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 			this.subWebAppLink = this.projectDataService.getEmuWebAppURL(this.newName).subscribe(nextLink => {
 				this.webAppLink = nextLink;
 			});
-			this.subCommitListing = this.projectDataService.getCommitListing(this.newName).subscribe(nextCommitListing => {
-				this.commitListing = nextCommitListing;
+			this.subCommitList = this.projectDataService.getCommitListing(this.newName).subscribe(nextCommitList => {
+				this.commitList = nextCommitList;
 			});
 		}, error => {
 			this.renameError = error.message;
