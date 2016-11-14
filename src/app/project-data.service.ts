@@ -462,64 +462,61 @@ export class ProjectDataService {
 	public getCommitListing(database:string):Observable<string> {
 		return Observable.create(observer => {
 			let params = {
-				query: 'get_commit_listing',
+				query: 'list_commits',
 				database: database
 			};
 
-			/*
-			this.serverQuery(params).subscribe((next:any) => {
+			this.serverQuery(params).subscribe((next: any) => {
 				if (next.success === true) {
-				*/
-			//for (let i = 0; i < next.length; ++i) {
+					let sortedResult = [];
 
-			//}
-			observer.next([{
-				month: '2016-11',
-				open: false,
-				days: [{
-					day: '2016-11-03',
-					open: false,
-					commits: [{
-						commitID: '65e25b674d17f0470a6eef6485b70a156280fa35',
-						dateTime: '11:35 CET',
-						message: 'my message'
-					}]
-				}, {
-					day: '2016-11-04',
-					open: false,
-					commits: [{
-						commitID: '65e25b674d17f0470a6eef6485b70a156280fa35',
-						dateTime: '11:35 CET',
-						message: 'EMU-webApp auto save commit; User: leah.meier; DB: /r22/EMU/server/emuDBs/manager/manager-test/databases/studDB_emuDB; Bundle: Cgi_3'
-					}, {
-						commitID: '65e25b674d17f0470a6eef6485b70a156280fa35',
-						dateTime: '11:21 CET',
-						message: 'EMU-webApp auto save commit; User: leah.meier; DB: /r22/EMU/server/emuDBs/manager/manager-test/databases/studDB_emuDB; Bundle: Cgi_3'
-					}]
-				}]
-			}, {
-				month: '2016-10',
-				open: false,
-				days: [{
-					day: '2016-10-04',
-					open: false,
-					commits: [{
-						commitID: '65e25b674d17f0470a6eef6485b70a156280fa35',
-						dateTime: '17:03 CET',
-						message: 'EMU-webApp auto save commit; User: leah.meier; DB: /r22/EMU/server/emuDBs/manager/manager-test/databases/studDB_emuDB; Bundle: Cgi_3'
-					}]
-				}]
-			}]);
+					let currentMonth: string;
+					let currentDay: string;
 
-			observer.complete();
-			/*
+					for (let i = 0; i < next.data.length; ++i) {
+						console.log('Processing ', i, next.data[i]);
+
+						let dateTime:string = next.data[i].date;
+
+						let month = dateTime.substring(0, 7);
+						let day = dateTime.substring(0, 10);
+						let time = dateTime.substring(11);
+
+						if (month !== currentMonth) {
+							sortedResult.push({
+								month: month,
+								open: false,
+								days: []
+							});
+						}
+
+						let monthObject = sortedResult[sortedResult.length - 1];
+
+						if (day !== currentDay) {
+							monthObject.days.push({
+								day: day,
+								open: false,
+								commits: []
+							});
+						}
+
+						let dayObject = monthObject.days[monthObject.days.length - 1];
+
+						dayObject.commits.push({
+							commitID: next.data[i].commitID,
+							dateTime: time,
+							message: next.data[i].message
+						});
+					}
+
+					observer.next (sortedResult);
+
+					observer.complete();
+
 				} else {
 					observer.error(next);
 				}
 			});
-			*/
-
-
 		});
 	}
 }
