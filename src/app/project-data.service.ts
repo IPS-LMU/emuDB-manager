@@ -10,44 +10,44 @@ import {ServerResponse} from "./types/server-response";
 import {BundleListItem} from "./types/bundle-list-item";
 
 interface UploadTarget {
-	url:string,
-	params:{
-		user:string,
-		password:string,
-		query:string
+	url: string,
+	params: {
+		user: string,
+		password: string,
+		query: string
 	}
 }
 
 @Injectable()
 export class ProjectDataService {
-	private _connectionCount:number = 0;
+	private _connectionCount: number = 0;
 	private emuWebAppURL = 'https://ips-lmu.github.io/EMU-webApp/';
-	private infoObservable:ConnectableObservable<ProjectInfo>;
-	private infoObserver:Observer<ProjectInfo>;
+	private infoObservable: ConnectableObservable<ProjectInfo>;
+	private infoObserver: Observer<ProjectInfo>;
 	private nodeJSServerURL = 'wss://webapp2.phonetik.uni-muenchen.de:17890/manager';
-	private password:string;
+	private password: string;
 	private url = 'https://www.phonetik.uni-muenchen.de/apps/emuDB-manager/server-side/emudb-manager.php';
-	private username:string;
+	private username: string;
 
-	constructor(private http:Http) {
+	constructor(private http: Http) {
 		this.username = '';
 		this.password = '';
 		this.createHotObservable();
 	}
 
-	private createHotObservable():void {
+	private createHotObservable(): void {
 		this.infoObservable = Observable.create(observer => {
 			this.infoObserver = observer;
 		}).publishReplay(1);
 		this.infoObservable.connect();
 	}
 
-	public fetchData():void {
+	public fetchData(): void {
 		let params = {
 			query: 'project_info'
 		};
 
-		this.serverQuery(params).subscribe((next:any) => {
+		this.serverQuery(params).subscribe((next: any) => {
 			if (next.success === true) {
 				this.infoObserver.next(next.data);
 			} else {
@@ -62,7 +62,7 @@ export class ProjectDataService {
 		});
 	}
 
-	private serverQuery(params:any):Observable<ServerResponse> {
+	private serverQuery(params: any): Observable<ServerResponse> {
 		console.log('Querying server', params);
 
 		let headers = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
@@ -94,7 +94,7 @@ export class ProjectDataService {
 			});
 	}
 
-	public login(username:string, password:string):Observable<void> {
+	public login(username: string, password: string): Observable<void> {
 		return Observable.create(observer => {
 			this.username = username;
 			this.password = password;
@@ -103,7 +103,7 @@ export class ProjectDataService {
 				query: 'login'
 			};
 
-			this.serverQuery(params).subscribe((next:any) => {
+			this.serverQuery(params).subscribe((next: any) => {
 				if (next.success === true) {
 					observer.next(null);
 					observer.complete();
@@ -115,20 +115,20 @@ export class ProjectDataService {
 		});
 	}
 
-	public logout():void {
+	public logout(): void {
 		this.createHotObservable();
 	}
 
 
-	public getAllDatabases():Observable<DatabaseInfo[]> {
-		return this.infoObservable.map((x:ProjectInfo) => {
+	public getAllDatabases(): Observable<DatabaseInfo[]> {
+		return this.infoObservable.map((x: ProjectInfo) => {
 			return x.databases;
 		});
 	}
 
-	public getAllBundleLists():Observable<BundleList[]> {
-		return this.infoObservable.map((x:ProjectInfo) => {
-			let result:BundleList[] = [];
+	public getAllBundleLists(): Observable<BundleList[]> {
+		return this.infoObservable.map((x: ProjectInfo) => {
+			let result: BundleList[] = [];
 			for (let i = 0; i < x.databases.length; ++i) {
 				result = result.concat(x.databases[i].bundleLists);
 			}
@@ -136,8 +136,8 @@ export class ProjectDataService {
 		});
 	}
 
-	public getBundleList(database:string, name:string, status:string):Observable<BundleList> {
-		return this.infoObservable.map((x:ProjectInfo) => {
+	public getBundleList(database: string, name: string, status: string): Observable<BundleList> {
+		return this.infoObservable.map((x: ProjectInfo) => {
 			for (let i = 0; i < x.databases.length; ++i) {
 				if (x.databases[i].name === database) {
 					for (let j = 0; j < x.databases[i].bundleLists.length; ++j) {
@@ -161,8 +161,8 @@ export class ProjectDataService {
 	 * @param name The name of the database in question
 	 * @returns A DatabaseInfo object if the DB exists, otherwise null
 	 */
-	public getDatabase(name:string):Observable<DatabaseInfo> {
-		return this.infoObservable.map((x:ProjectInfo) => {
+	public getDatabase(name: string): Observable<DatabaseInfo> {
+		return this.infoObservable.map((x: ProjectInfo) => {
 			for (let i = 0; i < x.databases.length; ++i) {
 				if (x.databases[i].name === name) {
 					return x.databases[i];
@@ -172,20 +172,20 @@ export class ProjectDataService {
 		});
 	}
 
-	public getName():Observable<string> {
-		return this.infoObservable.map((x:ProjectInfo) => {
+	public getName(): Observable<string> {
+		return this.infoObservable.map((x: ProjectInfo) => {
 			return x.name;
 		});
 	}
 
-	public getAllUploads():Observable<UploadInfo[]> {
-		return this.infoObservable.map((x:ProjectInfo) => {
+	public getAllUploads(): Observable<UploadInfo[]> {
+		return this.infoObservable.map((x: ProjectInfo) => {
 			return x.uploads;
 		});
 	}
 
-	public getUpload(uuid:string):Observable<UploadInfo> {
-		return this.infoObservable.map((x:ProjectInfo) => {
+	public getUpload(uuid: string): Observable<UploadInfo> {
+		return this.infoObservable.map((x: ProjectInfo) => {
 			for (let i = 0; i < x.uploads.length; ++i) {
 				if (x.uploads[i].uuid === uuid) {
 					return x.uploads[i];
@@ -195,7 +195,7 @@ export class ProjectDataService {
 		});
 	}
 
-	public countBundles(sessions:SessionInfo[]):number {
+	public countBundles(sessions: SessionInfo[]): number {
 		let result = 0;
 		for (let i = 0; i < sessions.length; ++i) {
 			result += sessions[i].bundles.length;
@@ -203,7 +203,7 @@ export class ProjectDataService {
 		return result;
 	}
 
-	public renameDatabase(oldName:string, newName:string):Observable<void> {
+	public renameDatabase(oldName: string, newName: string): Observable<void> {
 		return Observable.create(observer => {
 			let params = {
 				query: 'rename_db',
@@ -211,7 +211,7 @@ export class ProjectDataService {
 				new_name: newName
 			};
 
-			this.serverQuery(params).subscribe((next:any) => {
+			this.serverQuery(params).subscribe((next: any) => {
 				if (next.success === true) {
 					observer.next(null);
 					observer.complete();
@@ -222,11 +222,11 @@ export class ProjectDataService {
 		});
 	}
 
-	public editBundle(database:string,
-	                  name:string,
-	                  status:string,
-	                  newName:string,
-	                  newStatus:string):Observable<void> {
+	public editBundle(database: string,
+	                  name: string,
+	                  status: string,
+	                  newName: string,
+	                  newStatus: string): Observable<void> {
 		return Observable.create(observer => {
 			let params = {
 				'query': 'edit_bundle_list',
@@ -237,7 +237,7 @@ export class ProjectDataService {
 				'new_status': newStatus
 			};
 
-			this.serverQuery(params).subscribe((next:any) => {
+			this.serverQuery(params).subscribe((next: any) => {
 				if (next.success === true) {
 					observer.next(null);
 					observer.complete();
@@ -248,7 +248,7 @@ export class ProjectDataService {
 		});
 	}
 
-	public getUploadTarget():UploadTarget {
+	public getUploadTarget(): UploadTarget {
 		return {
 			url: this.url,
 			params: {
@@ -259,14 +259,14 @@ export class ProjectDataService {
 		};
 	}
 
-	public deleteUpload(identifier:string) {
+	public deleteUpload(identifier: string) {
 		return Observable.create(observer => {
 			let params = {
 				'query': 'delete_upload',
 				'uuid': identifier
 			};
 
-			this.serverQuery(params).subscribe((next:any) => {
+			this.serverQuery(params).subscribe((next: any) => {
 				if (next.success === true) {
 					observer.next(null);
 					observer.complete();
@@ -277,7 +277,7 @@ export class ProjectDataService {
 		});
 	}
 
-	public saveUpload(identifier:string, name:string):Observable<ServerResponse> {
+	public saveUpload(identifier: string, name: string): Observable<ServerResponse> {
 		return Observable.create(observer => {
 			let params = {
 				'query': 'save_upload',
@@ -285,7 +285,7 @@ export class ProjectDataService {
 				'name': name
 			};
 
-			this.serverQuery(params).subscribe((next:any) => {
+			this.serverQuery(params).subscribe((next: any) => {
 				if (next.success === true) {
 					observer.next(null);
 					observer.complete();
@@ -296,12 +296,12 @@ export class ProjectDataService {
 		});
 	}
 
-	public generateBundleList(database:string,
-	                          sessionPattern:string,
-	                          bundlePattern:string,
-	                          editors:string[],
-	                          personsPerBundle:number,
-	                          shuffled:boolean) {
+	public generateBundleList(database: string,
+	                          sessionPattern: string,
+	                          bundlePattern: string,
+	                          editors: string[],
+	                          personsPerBundle: number,
+	                          shuffled: boolean) {
 		return Observable.create(observer => {
 			//////////
 			// Check parameter constraints
@@ -341,7 +341,7 @@ export class ProjectDataService {
 				// Select the bundles to add to the newly generated bundle list(s)
 				//
 
-				let bundleListSource:BundleListItem[] = [];
+				let bundleListSource: BundleListItem[] = [];
 
 				for (let i = 0; i < dbInfo.sessions.length; ++i) {
 					if (sessionRegex.test(dbInfo.sessions[i].name)) {
@@ -378,7 +378,7 @@ export class ProjectDataService {
 
 				// Prepare a bundle list for each editor
 
-				let resultBundleLists:BundleList[] = [];
+				let resultBundleLists: BundleList[] = [];
 
 				for (let i = 0; i < editors.length; ++i) {
 					resultBundleLists.push({
@@ -389,7 +389,7 @@ export class ProjectDataService {
 				}
 
 				// The next editor who will receive a bundle
-				let nextEditor:number = -1;
+				let nextEditor: number = -1;
 
 				for (let i = 0; i < bundleListSource.length; ++i) {
 					for (let j = 0; j < personsPerBundle; ++j) {
@@ -405,7 +405,7 @@ export class ProjectDataService {
 				//
 				//////////
 
-				let successCount:number = 0;
+				let successCount: number = 0;
 
 				for (let i = 0; i < resultBundleLists.length; ++i) {
 					let params = {
@@ -415,7 +415,7 @@ export class ProjectDataService {
 						list: JSON.stringify(resultBundleLists[i].items)
 					};
 
-					this.serverQuery(params).subscribe((next:any) => {
+					this.serverQuery(params).subscribe((next: any) => {
 						if (next.success === true) {
 							++successCount;
 							observer.next(null);
@@ -432,7 +432,7 @@ export class ProjectDataService {
 		});
 	}
 
-	public getEmuWebAppURL(database:string):Observable<string> {
+	public getEmuWebAppURL(database: string): Observable<string> {
 		return this.getName().map(projectName => {
 			let url = this.emuWebAppURL;
 			url += '?autoConnect=true&serverUrl=';
@@ -459,7 +459,7 @@ export class ProjectDataService {
 		this._connectionCount = value;
 	}
 
-	public getCommitList(database:string):Observable<Object> {
+	public getCommitList(database: string): Observable<Object> {
 		return Observable.create(observer => {
 			let params = {
 				query: 'list_commits',
@@ -474,7 +474,7 @@ export class ProjectDataService {
 					let currentDay: string;
 
 					for (let i = 0; i < next.data.length; ++i) {
-						let dateTime:string = next.data[i].date;
+						let dateTime: string = next.data[i].date;
 
 						let month = dateTime.substring(0, 7);
 						let day = dateTime.substring(0, 10);
@@ -510,7 +510,7 @@ export class ProjectDataService {
 						});
 					}
 
-					observer.next (sortedResult);
+					observer.next(sortedResult);
 
 					observer.complete();
 
@@ -521,7 +521,7 @@ export class ProjectDataService {
 		});
 	}
 
-	public getTagList(database:string):Observable<string[]> {
+	public getTagList(database: string): Observable<string[]> {
 		return Observable.create(observer => {
 			let params = {
 				query: 'list_tags',
@@ -530,7 +530,7 @@ export class ProjectDataService {
 
 			this.serverQuery(params).subscribe((next: any) => {
 				if (next.success === true) {
-					observer.next (next.data);
+					observer.next(next.data);
 					observer.complete();
 				} else {
 					observer.error(next);
