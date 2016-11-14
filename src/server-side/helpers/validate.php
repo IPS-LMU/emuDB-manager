@@ -259,6 +259,43 @@ function validateTagLabel ($label) {
 	return positiveResult(null);
 }
 
+/**
+ * Check whether a given tree-ish identifier is valid (see also
+ * validatePlainString()).
+ *
+ * NB: This is actually the same as validatePlainString() and therefore only
+ * allows a subset of valid tree-ish identifiers.
+ *
+ * @param $treeish string The tree-ish identifier to validate.
+ * @return Result
+ */
+function validateTreeish ($treeish) {
+	if (!is_string($treeish)) {
+		return negativeResult(
+			'INVALID_TREEISH',
+			'The specified tree-ish identifier is invalid.'
+		);
+	}
+
+	$result = validatePlainString($treeish);
+
+	if ($result === false) {
+		return negativeResult(
+			'REGEX_FAILED',
+			'Failed to check whether a given tree-ish identifier is valid.'
+		);
+	}
+
+	if ($result === 1 || $treeish === '') {
+		return negativeResult(
+			'INVALID_TREEISH',
+			'The specified tree-ish identifier is invalid.'
+		);
+	}
+
+	return positiveResult(null);
+}
+
 
 /**
  * Check whether a given string is a "plain string", which is taken to

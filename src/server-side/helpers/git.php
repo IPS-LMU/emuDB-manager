@@ -126,3 +126,28 @@ function gitTag ($path, $tag, $commit) {
 		null
 	);
 }
+
+function gitArchive ($path, $dbName, $treeish) {
+	$tmpFileName = tempnam(sys_get_temp_dir(),
+		'emuDBmanager-download-archive-');
+
+	$output = array();
+	exec(
+		gitCommand(
+			'archive --format=zip -o ' . $tmpFileName . ' --prefix=' .
+			$dbName . '_emuDB/ -0 ' . $treeish,
+			$path
+		),
+		$output,
+		$result
+	);
+
+	if ($result !== 0) {
+		return negativeResult(
+			'GIT_ARCHIVE_FAILED',
+			'Failed to create ZIP file for download.'
+		);
+	}
+
+	return positiveResult($tmpFileName);
+}

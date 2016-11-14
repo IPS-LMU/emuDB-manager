@@ -24,6 +24,7 @@ require_once 'helpers/validate.php';
 
 require_once 'queryHandlers/add_tag.php';
 require_once 'queryHandlers/delete_upload.php';
+require_once 'queryHandlers/download_database.php';
 require_once 'queryHandlers/edit_bundle_list.php';
 require_once 'queryHandlers/list_commits.php';
 require_once 'queryHandlers/list_tags.php';
@@ -157,6 +158,25 @@ function executeQuery (AuthToken $authToken) {
 			return delete_upload(
 				$authToken->projectDir,
 				$_POST['uuid']
+			);
+
+			break;
+
+		case 'download_database':
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateTreeish($_POST['treeish']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return download_database(
+				$authToken->projectDir,
+				$_POST['database'],
+				$_POST['treeish']
 			);
 
 			break;
