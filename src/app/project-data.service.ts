@@ -474,8 +474,6 @@ export class ProjectDataService {
 					let currentDay: string;
 
 					for (let i = 0; i < next.data.length; ++i) {
-						console.log('Processing ', i, next.data[i]);
-
 						let dateTime:string = next.data[i].date;
 
 						let month = dateTime.substring(0, 7);
@@ -490,6 +488,7 @@ export class ProjectDataService {
 							});
 						}
 
+						currentMonth = month;
 						let monthObject = sortedResult[sortedResult.length - 1];
 
 						if (day !== currentDay) {
@@ -500,6 +499,7 @@ export class ProjectDataService {
 							});
 						}
 
+						currentDay = day;
 						let dayObject = monthObject.days[monthObject.days.length - 1];
 
 						dayObject.commits.push({
