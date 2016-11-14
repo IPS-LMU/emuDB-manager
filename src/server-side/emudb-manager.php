@@ -22,6 +22,7 @@ require_once 'helpers/result_helper.php';
 require_once 'helpers/type_definitions.php';
 require_once 'helpers/validate.php';
 
+require_once 'queryHandlers/add_tag.php';
 require_once 'queryHandlers/delete_upload.php';
 require_once 'queryHandlers/edit_bundle_list.php';
 require_once 'queryHandlers/list_commits.php';
@@ -122,6 +123,31 @@ function authorize () {
  */
 function executeQuery (AuthToken $authToken) {
 	switch ($_POST['query']) {
+		case 'add_tag':
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateGitObjectName($_POST['commit']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateTagLabel($_POST['tagLabel']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return add_tag(
+				$authToken->projectDir,
+				$_POST['database'],
+				$_POST['commit'],
+				$_POST['tagLabel']
+			);
+
+			break;
+
 		case 'delete_upload':
 			$result = validateUploadIdentifier($_POST['uuid']);
 			if ($result->success !== true) {

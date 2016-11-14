@@ -103,3 +103,26 @@ function gitShowRefTags ($path) {
 		$output
 	);
 }
+
+function gitTag ($path, $tag, $commit) {
+	$output = array();
+	exec (
+		gitCommand(
+			'tag -am "Created by emuDB Manager" ' + $tag + ' ' + $commit,
+			$path
+		),
+		$output,
+		$result
+	);
+
+	if ($result !== 0) {
+		return negativeResult(
+			'GIT_TAG_FAILED',
+			'Failed to add git tag to database.'
+		);
+	}
+
+	return positiveResult(
+		null
+	);
+}

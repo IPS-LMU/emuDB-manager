@@ -182,6 +182,83 @@ function validateUploadIdentifier ($string) {
 	return positiveResult(null);
 }
 
+/**
+ * Check whether a given string is a valid SHA-1 git object name.
+ *
+ * Valid object names contain at least 1 and at the most 40 hexadeicmal
+ * digits (0-9, a-f).
+ *
+ * @param $string string The string to validate.
+ * @return Result
+ */
+function validateGitObjectName ($string) {
+	if (!is_string($string)) {
+		return negativeResult(
+			'INVALID_OBJECT_NAME',
+			'The specified object name is invalid.'
+		);
+	}
+
+	$result = preg_match('/^[a-f0-9]*$/', $string);
+
+	if ($result === false) {
+		return negativeResult(
+			'REGEX_FAILED',
+			'Failed to check whether a given object name is valid.'
+		);
+	}
+
+	if ($result === 0) {
+		return negativeResult(
+			'INVALID_OBJECT_NAME',
+			'The specified object name contains non-hexadecimal digits.'
+		);
+	}
+
+	if (strlen($string) > 40 && strlen($string) === 0) {
+		return negativeResult(
+			'INVALID_OBJECT_NAME',
+			'The specified object name is empty or too long.'
+		);
+	}
+
+	return positiveResult(null);
+}
+
+/**
+ * Check whether a given name is a valid tag label (see also
+ * validatePlainString()).
+ *
+ * @param $label string The label to validate.
+ * @return Result
+ */
+function validateTagLabel ($label) {
+	if (!is_string($label)) {
+		return negativeResult(
+			'INVALID_TAG_LABEL',
+			'The specified tag label is invalid.'
+		);
+	}
+
+	$result = validatePlainString($label);
+
+	if ($result === false) {
+		return negativeResult(
+			'REGEX_FAILED',
+			'Failed to check whether a given tag label is valid.'
+		);
+	}
+
+	if ($result === 1 || $label === '') {
+		return negativeResult(
+			'INVALID_TAG_LABEL',
+			'The specified tag label is invalid.'
+		);
+	}
+
+	return positiveResult(null);
+}
+
 
 /**
  * Check whether a given string is a "plain string", which is taken to
