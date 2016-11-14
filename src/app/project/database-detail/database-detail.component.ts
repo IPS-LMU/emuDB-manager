@@ -21,8 +21,10 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private subCommitList:Subscription;
 	private subDatabase:Subscription;
 	private subParams:Subscription;
+	private subTagList:Subscription;
 	private subWebAppLink:Subscription;
 	private state:State = 'BundleLists';
+	private tagList:string[] = [];
 	private webAppLink:string = '';
 
 	constructor(private projectDataService:ProjectDataService, private route:ActivatedRoute) {
@@ -30,25 +32,45 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 
 	ngOnInit() {
 		this.subParams = this.route.params.subscribe(params => {
-			// @todo should we first unsubscribe here?
-			this.subDatabase = this.projectDataService.getDatabase(params['name']).subscribe(nextDatabase => {
-				this.database = nextDatabase;
-			});
-			this.subWebAppLink = this.projectDataService.getEmuWebAppURL(params['name']).subscribe(nextLink => {
-				this.webAppLink = nextLink;
-			});
-			this.subCommitList = this.projectDataService.getCommitList(params['name']).subscribe(nextCommitList => {
-				this.commitList = nextCommitList;
-			});
+			this.unsubscribe(false);
+			this.subscribe(params['name']);
 		})
 	}
 
 	ngOnDestroy() {
-		if (this.subParams) {
+		this.unsubscribe(true);
+	}
+
+	private subscribe (databaseName:string) {
+		this.subDatabase = this.projectDataService.getDatabase(databaseName).subscribe(nextDatabase => {
+			this.database = nextDatabase;
+		});
+
+		this.subCommitList = this.projectDataService.getCommitList(databaseName).subscribe(nextCommitList => {
+			this.commitList = nextCommitList;
+		});
+		this.subTagList = this.projectDataService.getTagList(databaseName).subscribe(nextTagList => {
+			this.tagList = nextTagList;
+		});
+		this.subWebAppLink = this.projectDataService.getEmuWebAppURL(databaseName).subscribe(nextLink => {
+			this.webAppLink = nextLink;
+		});
+	}
+
+	private unsubscribe(unsubscribeParams) {
+		if (this.subParams && unsubscribeParams) {
 			this.subParams.unsubscribe();
 		}
+
 		if (this.subDatabase) {
 			this.subDatabase.unsubscribe();
+		}
+
+		if (this.subCommitList) {
+			this.subCommitList.unsubscribe();
+		}
+		if (this.subTagList) {
+			this.subTagList.unsubscribe();
 		}
 		if (this.subWebAppLink) {
 			this.subWebAppLink.unsubscribe();
@@ -92,24 +114,8 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 			this.renameSuccess = 'Successfully renamed';
 			this.projectDataService.fetchData();
 
-			if (this.subDatabase) {
-				this.subDatabase.unsubscribe();
-			}
-			if (this.subWebAppLink) {
-				this.subWebAppLink.unsubscribe();
-			}
-			if (this.subCommitList) {
-				this.subCommitList.unsubscribe();
-			}
-			this.subDatabase = this.projectDataService.getDatabase(this.newName).subscribe(nextDatabase => {
-				this.database = nextDatabase;
-			});
-			this.subWebAppLink = this.projectDataService.getEmuWebAppURL(this.newName).subscribe(nextLink => {
-				this.webAppLink = nextLink;
-			});
-			this.subCommitList = this.projectDataService.getCommitList(this.newName).subscribe(nextCommitList => {
-				this.commitList = nextCommitList;
-			});
+			this.unsubscribe(false);
+			this.subscribe(this.newName);
 		}, error => {
 			this.renameError = error.message;
 		});
