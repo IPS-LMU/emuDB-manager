@@ -530,7 +530,7 @@ export class ProjectDataService {
 
 			this.serverQuery(params).subscribe((next: any) => {
 				if (next.success === true) {
-					observer.next (next);
+					observer.next (next.data);
 					observer.complete();
 				} else {
 					observer.error(next);
