@@ -25,6 +25,11 @@
 				Sessions <span class="badge">{{database?.sessions?.length}}</span>
 			</a>
 		</li>
+		<li role="presentation" [ngClass]="{active: state === 'Download'}">
+			<a (click)="state = 'Download'">
+				Download database
+			</a>
+		</li>
 		<li role="presentation" [ngClass]="{active: state === 'Rename'}">
 			<a (click)="state = 'Rename'">
 				Rename database
@@ -53,6 +58,153 @@
 			</tr>
 			</tbody>
 		</table>
+	</div>
+
+	<div *ngIf="state === 'Download'" class="panel-body">
+		<form method="post" [action]="downloadTarget.url" target="_blank" ngNoForm>
+			<input type="hidden" name="query" [value]="downloadTarget.query">
+			<input type="hidden" name="user" [value]="downloadTarget.user">
+			<input type="hidden" name="password" [value]="downloadTarget.password">
+			<input type="hidden" name="database" [value]="this.database?.name">
+			<input type="hidden" name="treeish" value="HEAD">
+
+			<button class="btn btn-primary">
+				Download current version
+			</button>
+		</form>
+
+		<hr>
+
+		<p>
+			Every change to a database is recorded (using the software git).
+		</p>
+		<p>
+			It is possible to create and download a ZIP file containing the database’s state at any
+			point in time (i.e. any git commit).
+		</p>
+		<p>
+			It is also possible to tag certain points in time such that they are easier to find
+			(i.e. add a git tag).
+		</p>
+
+		<hr>
+
+		<h3 class="sub-header">
+			Tagged versions <span class="badge">{{countTags()}}</span>
+		</h3>
+
+		<p *ngIf="countTags() === 0">
+			<em>No tagged versions so far. You can search a version and tag it below (in the all
+			versions section).</em>
+		</p>
+
+		<ul>
+			<li *ngFor="let tag of tagList">
+				<form method="post" [action]="downloadTarget.url" target="_blank" ngNoForm>
+					<input type="hidden" name="query" [value]="downloadTarget.query">
+					<input type="hidden" name="user" [value]="downloadTarget.user">
+					<input type="hidden" name="password" [value]="downloadTarget.password">
+					<input type="hidden" name="database" [value]="this.database?.name">
+					<input type="hidden" name="treeish" [value]="tag">
+
+					<button class="btn btn-primary btn-xs">
+						Download
+					</button>
+				</form>
+
+				{{tag}}
+			</li>
+		</ul>
+
+		<h3 class="sub-header">
+			All versions <span class="badge">{{countCommits()}}</span>
+		</h3>
+
+		<ul>
+			<li *ngFor="let month of commitList">
+				<a (click)="month.open = !month.open">
+					<span [ngClass]="{
+						'glyphicon': true,
+						'glyphicon-collapse-down': !month.open,
+						'glyphicon-collapse-up': month.open
+					}"></span>
+
+					{{month.month}}
+				</a>
+
+				<ul *ngIf="month.open">
+					<li *ngFor="let day of month.days">
+						<a (click)="day.open = !day.open">
+							<span [ngClass]="{
+								'glyphicon': true,
+								'glyphicon-collapse-down': !day.open,
+								'glyphicon-collapse-up': day.open
+							}"></span>
+
+							{{day.day}}
+						</a>
+
+						<ul *ngIf="day.open">
+							<li *ngFor="let commit of day.commits">
+								<hr *ngIf="commit.editingTag || commit.saveTagSuccess">
+
+								<form method="post" [action]="downloadTarget.url" target="_blank"
+								      ngNoForm>
+									<input type="hidden" name="query"
+									       [value]="downloadTarget.query">
+									<input type="hidden" name="user" [value]="downloadTarget.user">
+									<input type="hidden" name="password"
+									       [value]="downloadTarget.password">
+									<input type="hidden" name="database"
+									       [value]="this.database?.name">
+									<input type="hidden" name="treeish" [value]="commit.commitID">
+
+									<button class="btn btn-primary btn-xs">
+										Download
+									</button>
+								</form>
+
+								<button class="btn btn-primary btn-xs" (click)="editTag(commit)"
+								        [ngClass]="{active: commit.editingTag}">
+									Add tag
+								</button>
+
+								{{commit.dateTime}}: {{commit.message}}
+
+								<form *ngIf="commit.editingTag" class="form-inline"
+								      (ngSubmit)="saveTag(commit)">
+									<input class="form-control" placeholder="Tag label"
+									       [(ngModel)]="commit.tagLabel" name="tagLabel">
+									<button type="submit" class="btn btn-xs btn-primary"
+									        [ngClass]="{disabled: commit.tagLabel===''}">
+										Save tag
+									</button>
+								</form>
+
+								<p *ngIf="commit.saveTagError" class="alert alert-danger">
+									<button type="button" class="close" aria-label="Close"
+									        (click)="commit.saveTagError = ''">
+										<span aria-hidden="true">&times;</span>
+									</button>
+
+									{{commit.saveTagError}}
+								</p>
+
+								<p *ngIf="commit.saveTagSuccess" class="alert alert-success">
+									<button type="button" class="close" aria-label="Close" (click)="commit.saveTagSuccess = ''">
+										<span aria-hidden="true">&times;</span>
+									</button>
+
+									{{commit.saveTagSuccess}}
+								</p>
+
+								<hr *ngIf="commit.editingTag || commit.saveTagSuccess">
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
 	</div>
 
 	<div *ngIf="state === 'Rename'" class="panel-body">

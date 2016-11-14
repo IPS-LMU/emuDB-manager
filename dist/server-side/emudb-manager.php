@@ -22,8 +22,12 @@ require_once 'helpers/result_helper.php';
 require_once 'helpers/type_definitions.php';
 require_once 'helpers/validate.php';
 
+require_once 'queryHandlers/add_tag.php';
 require_once 'queryHandlers/delete_upload.php';
+require_once 'queryHandlers/download_database.php';
 require_once 'queryHandlers/edit_bundle_list.php';
+require_once 'queryHandlers/list_commits.php';
+require_once 'queryHandlers/list_tags.php';
 require_once 'queryHandlers/project_info.php';
 require_once 'queryHandlers/rename_db.php';
 require_once 'queryHandlers/save_bundle_list.php';
@@ -120,6 +124,31 @@ function authorize () {
  */
 function executeQuery (AuthToken $authToken) {
 	switch ($_POST['query']) {
+		case 'add_tag':
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateGitObjectName($_POST['commit']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateTagLabel($_POST['label']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return add_tag(
+				$authToken->projectDir,
+				$_POST['database'],
+				$_POST['commit'],
+				$_POST['label']
+			);
+
+			break;
+
 		case 'delete_upload':
 			$result = validateUploadIdentifier($_POST['uuid']);
 			if ($result->success !== true) {
@@ -129,6 +158,25 @@ function executeQuery (AuthToken $authToken) {
 			return delete_upload(
 				$authToken->projectDir,
 				$_POST['uuid']
+			);
+
+			break;
+
+		case 'download_database':
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateTreeish($_POST['treeish']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return download_database(
+				$authToken->projectDir,
+				$_POST['database'],
+				$_POST['treeish']
 			);
 
 			break;
@@ -166,6 +214,30 @@ function executeQuery (AuthToken $authToken) {
 				$_POST['old_name'],
 				$_POST['new_status'],
 				$_POST['new_name']
+			);
+			break;
+
+		case 'list_commits':
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return list_commits(
+				$authToken->projectDir,
+				$_POST['database']
+			);
+			break;
+
+		case 'list_tags':
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return list_tags(
+				$authToken->projectDir,
+				$_POST['database']
 			);
 			break;
 
