@@ -83,7 +83,7 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	}
 
 	private countTags () {
-		let count = 0;
+		let count = this.tagList.length;
 		return count;
 	}
 

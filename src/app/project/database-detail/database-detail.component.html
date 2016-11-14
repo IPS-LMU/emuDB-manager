@@ -85,6 +85,20 @@
 			Tagged versions <span class="badge">{{countTags()}}</span>
 		</h3>
 
+		<p *ngIf="countTags() === 0">
+			<em>No tagged versions so far. You can search a version and tag it below (in the all
+			versions section).</em>
+		</p>
+
+		<ul>
+			<li *ngFor="let tag of tagList">
+				<button class="btn btn-primary btn-xs">
+					Download
+				</button>
+				{{tag}}
+			</li>
+		</ul>
+
 		<h3 class="sub-header">
 			All versions <span class="badge">{{countCommits()}}</span>
 		</h3>
