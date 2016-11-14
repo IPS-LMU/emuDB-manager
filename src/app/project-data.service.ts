@@ -18,6 +18,13 @@ interface UploadTarget {
 	}
 }
 
+interface DownloadTarget {
+	url: string;
+	query: string;
+	user: string;
+	password: string;
+}
+
 @Injectable()
 export class ProjectDataService {
 	private _connectionCount: number = 0;
@@ -276,6 +283,15 @@ export class ProjectDataService {
 				'password': this.password,
 				'query': 'upload'
 			}
+		};
+	}
+
+	public getDownloadTarget(): DownloadTarget {
+		return {
+			url: this.url,
+			query: 'download_database',
+			user: this.username,
+			password: this.password
 		};
 	}
 

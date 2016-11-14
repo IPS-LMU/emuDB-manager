@@ -15,6 +15,7 @@ type State = 'BundleLists' | 'Session' | 'Download' | 'Rename';
 export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private commitList; //@todo add type
 	private database:DatabaseInfo;
+	private downloadTarget = this.projectDataService.getDownloadTarget();
 	private newName:string = '';
 	private renameError:string = '';
 	private renameSuccess:string = '';

@@ -61,9 +61,17 @@
 	</div>
 
 	<div *ngIf="state === 'Download'" class="panel-body">
-		<p>
-			<button class="btn btn-primary">Download current version</button>
-		</p>
+		<form method="post" [action]="downloadTarget.url" target="_blank" ngNoForm>
+			<input type="hidden" name="query" [value]="downloadTarget.query">
+			<input type="hidden" name="user" [value]="downloadTarget.user">
+			<input type="hidden" name="password" [value]="downloadTarget.password">
+			<input type="hidden" name="database" [value]="this.database?.name">
+			<input type="hidden" name="treeish" value="HEAD">
+
+			<button class="btn btn-primary">
+				Download current version
+			</button>
+		</form>
 
 		<hr>
 
@@ -92,9 +100,18 @@
 
 		<ul>
 			<li *ngFor="let tag of tagList">
-				<button class="btn btn-primary btn-xs">
-					Download
-				</button>
+				<form method="post" [action]="downloadTarget.url" target="_blank" ngNoForm>
+					<input type="hidden" name="query" [value]="downloadTarget.query">
+					<input type="hidden" name="user" [value]="downloadTarget.user">
+					<input type="hidden" name="password" [value]="downloadTarget.password">
+					<input type="hidden" name="database" [value]="this.database?.name">
+					<input type="hidden" name="treeish" [value]="tag">
+
+					<button class="btn btn-primary btn-xs">
+						Download
+					</button>
+				</form>
+
 				{{tag}}
 			</li>
 		</ul>
@@ -131,9 +148,21 @@
 							<li *ngFor="let commit of day.commits">
 								<hr *ngIf="commit.editingTag || commit.saveTagSuccess">
 
-								<button class="btn btn-primary btn-xs">
-									Download
-								</button>
+								<form method="post" [action]="downloadTarget.url" target="_blank"
+								      ngNoForm>
+									<input type="hidden" name="query"
+									       [value]="downloadTarget.query">
+									<input type="hidden" name="user" [value]="downloadTarget.user">
+									<input type="hidden" name="password"
+									       [value]="downloadTarget.password">
+									<input type="hidden" name="database"
+									       [value]="this.database?.name">
+									<input type="hidden" name="treeish" [value]="commit.commitID">
+
+									<button class="btn btn-primary btn-xs">
+										Download
+									</button>
+								</form>
 
 								<button class="btn btn-primary btn-xs" (click)="editTag(commit)"
 								        [ngClass]="{active: commit.editingTag}">
