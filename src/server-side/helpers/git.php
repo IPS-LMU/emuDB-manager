@@ -83,3 +83,23 @@ function gitLog ($path) {
 		$output
 	);
 }
+
+function gitShowRefTags ($path) {
+	$output = array();
+	exec (
+		gitCommand('show-ref --tags', $path),
+		$output,
+		$result
+	);
+
+	if ($result !== 0) {
+		return negativeResult(
+			'GIT_SHOW_REF_TAGS_FAILED',
+			'Failed to list git tags in database.'
+		);
+	}
+
+	return positiveResult(
+		$output
+	);
+}
