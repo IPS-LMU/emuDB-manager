@@ -520,4 +520,22 @@ export class ProjectDataService {
 			});
 		});
 	}
+
+	public getTagList(database:string):Observable<string[]> {
+		return Observable.create(observer => {
+			let params = {
+				query: 'list_tags',
+				database: database
+			};
+
+			this.serverQuery(params).subscribe((next: any) => {
+				if (next.success === true) {
+					observer.next (next);
+					observer.complete();
+				} else {
+					observer.error(next);
+				}
+			});
+		});
+	}
 }
