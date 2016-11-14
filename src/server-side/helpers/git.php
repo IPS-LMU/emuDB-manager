@@ -92,7 +92,7 @@ function gitShowRefTags ($path) {
 		$result
 	);
 
-	if ($result !== 0) {
+	if ($result !== 0 && $result !== 1) {
 		return negativeResult(
 			'GIT_SHOW_REF_TAGS_FAILED',
 			'Failed to list git tags in database.'
