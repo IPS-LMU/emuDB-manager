@@ -18,7 +18,6 @@ var AppComponent = (function () {
         this.nextActiveAppendix = '';
     }
     AppComponent.prototype.changeState = function (event) {
-        console.log(event);
         this.nextActiveAppendix += '.';
     };
     AppComponent.prototype.ngAfterViewInit = function () {
@@ -78,4 +77,4 @@ var AppComponent = (function () {
     return AppComponent;
 }());
 exports.AppComponent = AppComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-IMPk92KA.tmp/0/src/app/app.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-oasCtxJN.tmp/0/src/app/app.component.js.map

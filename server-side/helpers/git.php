@@ -6,6 +6,8 @@
 // However, it is no security issue if it is called directly, because it only
 // contains functions (thus, no code is executed).
 
+require_once 'helpers/result_helper.php';
+
 /**
  * Concatenates strings to form a git command.
  *
@@ -60,4 +62,92 @@ function gitCommitEverything ($path, $commitMessage) {
 	}
 
 	return positiveResult(null);
+}
+
+function gitLog ($path) {
+	$output = array();
+	exec (
+		gitCommand('log "--pretty=format:%H/%ad/%s" --date=iso', $path),
+		$output,
+		$result
+	);
+
+	if ($result !== 0) {
+		return negativeResult(
+			'GIT_LOG_FAILED',
+			'Failed to list git commits in database.'
+		);
+	}
+
+	return positiveResult(
+		$output
+	);
+}
+
+function gitShowRefTags ($path) {
+	$output = array();
+	exec (
+		gitCommand('show-ref --tags', $path),
+		$output,
+		$result
+	);
+
+	if ($result !== 0 && $result !== 1) {
+		return negativeResult(
+			'GIT_SHOW_REF_TAGS_FAILED',
+			'Failed to list git tags in database.'
+		);
+	}
+
+	return positiveResult(
+		$output
+	);
+}
+
+function gitTag ($path, $tag, $commit) {
+	$output = array();
+	exec (
+		gitCommand(
+			'tag -am "Created by emuDB Manager" ' . $tag . ' ' . $commit,
+			$path
+		),
+		$output,
+		$result
+	);
+
+	if ($result !== 0) {
+		return negativeResult(
+			'GIT_TAG_FAILED',
+			'Failed to add git tag to database.'
+		);
+	}
+
+	return positiveResult(
+		null
+	);
+}
+
+function gitArchive ($path, $dbName, $treeish) {
+	$tmpFileName = tempnam(sys_get_temp_dir(),
+		'emuDBmanager-download-archive-');
+
+	$output = array();
+	exec(
+		gitCommand(
+			'archive --format=zip -o ' . $tmpFileName . ' --prefix=' .
+			$dbName . '_emuDB/ -0 ' . $treeish,
+			$path
+		),
+		$output,
+		$result
+	);
+
+	if ($result !== 0) {
+		return negativeResult(
+			'GIT_ARCHIVE_FAILED',
+			'Failed to create ZIP file for download.'
+		);
+	}
+
+	return positiveResult($tmpFileName);
 }

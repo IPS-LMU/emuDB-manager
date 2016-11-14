@@ -191,6 +191,26 @@ var ProjectDataService = (function () {
             });
         });
     };
+    ProjectDataService.prototype.addTag = function (database, commit, label) {
+        var _this = this;
+        return Rx_1.Observable.create(function (observer) {
+            var params = {
+                query: 'add_tag',
+                database: database,
+                commit: commit,
+                label: label
+            };
+            _this.serverQuery(params).subscribe(function (next) {
+                if (next.success === true) {
+                    observer.next(null);
+                    observer.complete();
+                }
+                else {
+                    observer.error(next);
+                }
+            });
+        });
+    };
     ProjectDataService.prototype.editBundle = function (database, name, status, newName, newStatus) {
         var _this = this;
         return Rx_1.Observable.create(function (observer) {
@@ -221,6 +241,14 @@ var ProjectDataService = (function () {
                 'password': this.password,
                 'query': 'upload'
             }
+        };
+    };
+    ProjectDataService.prototype.getDownloadTarget = function () {
+        return {
+            url: this.url,
+            query: 'download_database',
+            user: this.username,
+            password: this.password
         };
     };
     ProjectDataService.prototype.deleteUpload = function (identifier) {
@@ -393,6 +421,75 @@ var ProjectDataService = (function () {
         enumerable: true,
         configurable: true
     });
+    ProjectDataService.prototype.getCommitList = function (database) {
+        var _this = this;
+        return Rx_1.Observable.create(function (observer) {
+            var params = {
+                query: 'list_commits',
+                database: database
+            };
+            _this.serverQuery(params).subscribe(function (next) {
+                if (next.success === true) {
+                    var sortedResult = [];
+                    var currentMonth = void 0;
+                    var currentDay = void 0;
+                    for (var i = 0; i < next.data.length; ++i) {
+                        var dateTime = next.data[i].date;
+                        var month = dateTime.substring(0, 7);
+                        var day = dateTime.substring(0, 10);
+                        var time = dateTime.substring(11);
+                        if (month !== currentMonth) {
+                            sortedResult.push({
+                                month: month,
+                                open: false,
+                                days: []
+                            });
+                        }
+                        currentMonth = month;
+                        var monthObject = sortedResult[sortedResult.length - 1];
+                        if (day !== currentDay) {
+                            monthObject.days.push({
+                                day: day,
+                                open: false,
+                                commits: []
+                            });
+                        }
+                        currentDay = day;
+                        var dayObject = monthObject.days[monthObject.days.length - 1];
+                        dayObject.commits.push({
+                            commitID: next.data[i].commitID,
+                            dateTime: time,
+                            message: next.data[i].message,
+                            tagLabel: ''
+                        });
+                    }
+                    observer.next(sortedResult);
+                    observer.complete();
+                }
+                else {
+                    observer.error(next);
+                }
+            });
+        });
+    };
+    ProjectDataService.prototype.getTagList = function (database) {
+        var _this = this;
+        return Rx_1.Observable.create(function (observer) {
+            var params = {
+                query: 'list_tags',
+                database: database
+            };
+            _this.serverQuery(params).subscribe(function (next) {
+                if (next.success === true) {
+                    observer.next(next.data);
+                    observer.complete();
+                }
+                else {
+                    observer.error(next);
+                }
+            });
+        });
+    };
     ProjectDataService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
@@ -400,4 +497,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-IMPk92KA.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-oasCtxJN.tmp/0/src/app/project-data.service.js.map
