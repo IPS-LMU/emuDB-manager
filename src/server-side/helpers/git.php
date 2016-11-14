@@ -108,7 +108,7 @@ function gitTag ($path, $tag, $commit) {
 	$output = array();
 	exec (
 		gitCommand(
-			'tag -am "Created by emuDB Manager" ' + $tag + ' ' + $commit,
+			'tag -am "Created by emuDB Manager" ' . $tag . ' ' . $commit,
 			$path
 		),
 		$output,

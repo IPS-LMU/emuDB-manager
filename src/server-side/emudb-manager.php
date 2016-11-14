@@ -134,7 +134,7 @@ function executeQuery (AuthToken $authToken) {
 				return $result;
 			}
 
-			$result = validateTagLabel($_POST['tagLabel']);
+			$result = validateTagLabel($_POST['label']);
 			if ($result->success !== true) {
 				return $result;
 			}
@@ -143,7 +143,7 @@ function executeQuery (AuthToken $authToken) {
 				$authToken->projectDir,
 				$_POST['database'],
 				$_POST['commit'],
-				$_POST['tagLabel']
+				$_POST['label']
 			);
 
 			break;

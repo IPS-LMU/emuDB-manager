@@ -129,7 +129,7 @@
 
 						<ul *ngIf="day.open">
 							<li *ngFor="let commit of day.commits">
-								<hr *ngIf="commit.editingTag">
+								<hr *ngIf="commit.editingTag || commit.saveTagSuccess">
 
 								<button class="btn btn-primary btn-xs">
 									Download
@@ -142,16 +142,34 @@
 
 								{{commit.dateTime}}: {{commit.message}}
 
-								<div *ngIf="commit.editingTag" class="form-inline">
+								<form *ngIf="commit.editingTag" class="form-inline"
+								      (ngSubmit)="saveTag(commit)">
 									<input class="form-control" placeholder="Tag label"
-									       [(ngModel)]="commit.tagLabel">
-									<button class="btn btn-xs btn-primary"
+									       [(ngModel)]="commit.tagLabel" name="tagLabel">
+									<button type="submit" class="btn btn-xs btn-primary"
 									        [ngClass]="{disabled: commit.tagLabel===''}">
 										Save tag
 									</button>
-								</div>
+								</form>
 
-								<hr *ngIf="commit.editingTag">
+								<p *ngIf="commit.saveTagError" class="alert alert-danger">
+									<button type="button" class="close" aria-label="Close"
+									        (click)="commit.saveTagError = ''">
+										<span aria-hidden="true">&times;</span>
+									</button>
+
+									{{commit.saveTagError}}
+								</p>
+
+								<p *ngIf="commit.saveTagSuccess" class="alert alert-success">
+									<button type="button" class="close" aria-label="Close" (click)="commit.saveTagSuccess = ''">
+										<span aria-hidden="true">&times;</span>
+									</button>
+
+									{{commit.saveTagSuccess}}
+								</p>
+
+								<hr *ngIf="commit.editingTag || commit.saveTagSuccess">
 							</li>
 						</ul>
 					</li>

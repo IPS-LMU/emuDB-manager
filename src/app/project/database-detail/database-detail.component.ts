@@ -79,7 +79,6 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 
 	private editTag (commit) {
 		commit.editingTag = ! commit.editingTag;
-
 	}
 
 	private countTags () {
@@ -99,6 +98,32 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 		}
 
 		return count;
+	}
+
+	private saveTag (commit) {
+		commit.saveTagError = '';
+		commit.saveTagSuccess = '';
+
+		if (commit.tagLabel === '') {
+			commit.saveTagError = 'Empty labels are not allowed.';
+			return;
+		}
+
+		this.projectDataService.addTag(this.database.name, commit.commitID, commit.tagLabel).subscribe(next => {
+			commit.saveTagSuccess = 'Successfully created tag: ' + commit.tagLabel;
+			commit.tagLabel = '';
+			commit.editingTag = false;
+
+			if (this.subTagList) {
+				this.subTagList.unsubscribe();
+			}
+
+			this.subTagList = this.projectDataService.getTagList(this.database.name).subscribe(nextTagList => {
+				this.tagList = nextTagList;
+			});
+		}, error => {
+			commit.saveTagError = error.message;
+		});
 	}
 
 	private renameDatabase () {

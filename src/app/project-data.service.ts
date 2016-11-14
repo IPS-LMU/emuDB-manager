@@ -222,6 +222,26 @@ export class ProjectDataService {
 		});
 	}
 
+	public addTag(database: string, commit: string, label: string): Observable<void> {
+		return Observable.create(observer => {
+			let params = {
+				query: 'add_tag',
+				database: database,
+				commit: commit,
+				label: label
+			};
+
+			this.serverQuery(params).subscribe((next: any) => {
+				if (next.success === true) {
+					observer.next(null);
+					observer.complete();
+				} else {
+					observer.error(next);
+				}
+			});
+		});
+	}
+
 	public editBundle(database: string,
 	                  name: string,
 	                  status: string,

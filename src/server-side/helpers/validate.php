@@ -185,7 +185,7 @@ function validateUploadIdentifier ($string) {
 /**
  * Check whether a given string is a valid SHA-1 git object name.
  *
- * Valid object names contain at least 1 and at the most 40 hexadeicmal
+ * Valid object names contain at least 1 and at the most 40 hexadecimal
  * digits (0-9, a-f).
  *
  * @param $string string The string to validate.
