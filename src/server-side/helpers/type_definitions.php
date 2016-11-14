@@ -72,3 +72,9 @@ class AuthToken {
 	public $projectName;
 	public $projectDir;
 }
+
+class GitCommit {
+	public $commitID;
+	public $date;
+	public $message;
+}

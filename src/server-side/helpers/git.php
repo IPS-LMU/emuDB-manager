@@ -6,6 +6,8 @@
 // However, it is no security issue if it is called directly, because it only
 // contains functions (thus, no code is executed).
 
+require_once 'helpers/result_helper.php';
+
 /**
  * Concatenates strings to form a git command.
  *
@@ -60,4 +62,24 @@ function gitCommitEverything ($path, $commitMessage) {
 	}
 
 	return positiveResult(null);
+}
+
+function gitLog ($path) {
+	$output = array();
+	exec (
+		gitCommand('log "--pretty=format:%H/%ad/%s" --date=iso', $path),
+		$output,
+		$result
+	);
+
+	if ($result !== 0) {
+		return negativeResult(
+			'GIT_LOG_FAILED',
+			'Failed to list git commits in database.'
+		);
+	}
+
+	return positiveResult(
+		$output
+	);
 }

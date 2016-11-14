@@ -24,6 +24,7 @@ require_once 'helpers/validate.php';
 
 require_once 'queryHandlers/delete_upload.php';
 require_once 'queryHandlers/edit_bundle_list.php';
+require_once 'queryHandlers/list_commits.php';
 require_once 'queryHandlers/project_info.php';
 require_once 'queryHandlers/rename_db.php';
 require_once 'queryHandlers/save_bundle_list.php';
@@ -166,6 +167,18 @@ function executeQuery (AuthToken $authToken) {
 				$_POST['old_name'],
 				$_POST['new_status'],
 				$_POST['new_name']
+			);
+			break;
+
+		case 'list_commits':
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return list_commits(
+				$authToken->projectDir,
+				$_POST['database']
 			);
 			break;
 
