@@ -58,7 +58,6 @@ export class AppComponent implements AfterViewInit {
 	private nextActiveAppendix: string = '';
 
 	private changeState(event) {
-		console.log(event);
 		this.nextActiveAppendix += '.';
 	}
 
