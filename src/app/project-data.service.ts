@@ -459,7 +459,7 @@ export class ProjectDataService {
 		this._connectionCount = value;
 	}
 
-	public getCommitListing(database:string):Observable<string> {
+	public getCommitList(database:string):Observable<string> {
 		return Observable.create(observer => {
 			let params = {
 				query: 'list_commits',

@@ -37,7 +37,7 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 			this.subWebAppLink = this.projectDataService.getEmuWebAppURL(params['name']).subscribe(nextLink => {
 				this.webAppLink = nextLink;
 			});
-			this.subCommitList = this.projectDataService.getCommitListing(params['name']).subscribe(nextCommitList => {
+			this.subCommitList = this.projectDataService.getCommitList(params['name']).subscribe(nextCommitList => {
 				this.commitList = nextCommitList;
 			});
 		})
@@ -107,7 +107,7 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 			this.subWebAppLink = this.projectDataService.getEmuWebAppURL(this.newName).subscribe(nextLink => {
 				this.webAppLink = nextLink;
 			});
-			this.subCommitList = this.projectDataService.getCommitListing(this.newName).subscribe(nextCommitList => {
+			this.subCommitList = this.projectDataService.getCommitList(this.newName).subscribe(nextCommitList => {
 				this.commitList = nextCommitList;
 			});
 		}, error => {
