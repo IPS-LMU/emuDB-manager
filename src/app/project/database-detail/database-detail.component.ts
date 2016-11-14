@@ -4,7 +4,7 @@ import {ProjectDataService} from "../../project-data.service";
 import {ActivatedRoute} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 
-type State = 'BundleLists' | 'Session' | 'Rename';
+type State = 'BundleLists' | 'Session' | 'Download' | 'Rename';
 
 @Component({
 	moduleId: module.id,
@@ -13,10 +13,12 @@ type State = 'BundleLists' | 'Session' | 'Rename';
 	styleUrls: ['database-detail.component.css']
 })
 export class DatabaseDetailComponent implements OnInit,OnDestroy {
+	private commitListing; //@todo add type
 	private database:DatabaseInfo;
 	private newName:string = '';
 	private renameError:string = '';
 	private renameSuccess:string = '';
+	private subCommitListing:Subscription;
 	private subDatabase:Subscription;
 	private subParams:Subscription;
 	private subWebAppLink:Subscription;
@@ -28,11 +30,15 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 
 	ngOnInit() {
 		this.subParams = this.route.params.subscribe(params => {
+			// @todo should we first unsubscribe here?
 			this.subDatabase = this.projectDataService.getDatabase(params['name']).subscribe(nextDatabase => {
 				this.database = nextDatabase;
 			});
 			this.subWebAppLink = this.projectDataService.getEmuWebAppURL(params['name']).subscribe(nextLink => {
 				this.webAppLink = nextLink;
+			});
+			this.subCommitListing = this.projectDataService.getCommitListing(params['name']).subscribe(nextCommitListing => {
+				this.commitListing = nextCommitListing;
 			});
 		})
 	}
@@ -68,11 +74,17 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 			if (this.subWebAppLink) {
 				this.subWebAppLink.unsubscribe();
 			}
+			if (this.subCommitListing) {
+				this.subCommitListing.unsubscribe();
+			}
 			this.subDatabase = this.projectDataService.getDatabase(this.newName).subscribe(nextDatabase => {
 				this.database = nextDatabase;
 			});
 			this.subWebAppLink = this.projectDataService.getEmuWebAppURL(this.newName).subscribe(nextLink => {
 				this.webAppLink = nextLink;
+			});
+			this.subCommitListing = this.projectDataService.getCommitListing(this.newName).subscribe(nextCommitListing => {
+				this.commitListing = nextCommitListing;
 			});
 		}, error => {
 			this.renameError = error.message;

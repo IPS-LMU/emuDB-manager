@@ -458,4 +458,68 @@ export class ProjectDataService {
 	set connectionCount(value: number) {
 		this._connectionCount = value;
 	}
+
+	public getCommitListing(database:string):Observable<string> {
+		return Observable.create(observer => {
+			let params = {
+				query: 'get_commit_listing',
+				database: database
+			};
+
+			/*
+			this.serverQuery(params).subscribe((next:any) => {
+				if (next.success === true) {
+				*/
+			//for (let i = 0; i < next.length; ++i) {
+
+			//}
+			observer.next([{
+				month: '2016-11',
+				open: false,
+				days: [{
+					day: '2016-11-03',
+					open: false,
+					commits: [{
+						commitID: '65e25b674d17f0470a6eef6485b70a156280fa35',
+						dateTime: '11:35 CET',
+						message: 'my message'
+					}]
+				}, {
+					day: '2016-11-04',
+					open: false,
+					commits: [{
+						commitID: '65e25b674d17f0470a6eef6485b70a156280fa35',
+						dateTime: '11:35 CET',
+						message: 'EMU-webApp auto save commit; User: leah.meier; DB: /r22/EMU/server/emuDBs/manager/manager-test/databases/studDB_emuDB; Bundle: Cgi_3'
+					}, {
+						commitID: '65e25b674d17f0470a6eef6485b70a156280fa35',
+						dateTime: '11:21 CET',
+						message: 'EMU-webApp auto save commit; User: leah.meier; DB: /r22/EMU/server/emuDBs/manager/manager-test/databases/studDB_emuDB; Bundle: Cgi_3'
+					}]
+				}]
+			}, {
+				month: '2016-10',
+				open: false,
+				days: [{
+					day: '2016-10-04',
+					open: false,
+					commits: [{
+						commitID: '65e25b674d17f0470a6eef6485b70a156280fa35',
+						dateTime: '17:03 CET',
+						message: 'EMU-webApp auto save commit; User: leah.meier; DB: /r22/EMU/server/emuDBs/manager/manager-test/databases/studDB_emuDB; Bundle: Cgi_3'
+					}]
+				}]
+			}]);
+
+			observer.complete();
+			/*
+				} else {
+					observer.error(next);
+				}
+			});
+			*/
+
+
+		});
+	}
 }
