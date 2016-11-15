@@ -269,6 +269,26 @@ var ProjectDataService = (function () {
             });
         });
     };
+    ProjectDataService.prototype.deleteBundleList = function (database, bundleList) {
+        var _this = this;
+        return Rx_1.Observable.create(function (observer) {
+            var params = {
+                query: 'delete_bundle_list',
+                database: database,
+                name: bundleList.name,
+                status: bundleList.status
+            };
+            _this.serverQuery(params).subscribe(function (next) {
+                if (next.success === true) {
+                    observer.next(null);
+                    observer.complete();
+                }
+                else {
+                    observer.error(next);
+                }
+            });
+        });
+    };
     ProjectDataService.prototype.saveUpload = function (identifier, name) {
         var _this = this;
         return Rx_1.Observable.create(function (observer) {
@@ -497,4 +517,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-erRlJAW8.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-EYLEpM3b.tmp/0/src/app/project-data.service.js.map

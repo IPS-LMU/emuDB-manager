@@ -23,6 +23,7 @@ require_once 'helpers/type_definitions.php';
 require_once 'helpers/validate.php';
 
 require_once 'queryHandlers/add_tag.php';
+require_once 'queryHandlers/delete_bundle_list.php';
 require_once 'queryHandlers/delete_upload.php';
 require_once 'queryHandlers/download_database.php';
 require_once 'queryHandlers/edit_bundle_list.php';
@@ -147,6 +148,30 @@ function executeQuery (AuthToken $authToken) {
 				$_POST['label']
 			);
 
+			break;
+
+		case 'delete_bundle_list':
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateBundleListName($_POST['name']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateStatus($_POST['status']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return delete_bundle_list(
+				$authToken->projectDir,
+				$_POST['database'],
+				$_POST['name'],
+				$_POST['status']
+			);
 			break;
 
 		case 'delete_upload':
