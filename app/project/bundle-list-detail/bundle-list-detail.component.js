@@ -12,12 +12,14 @@ var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var project_data_service_1 = require("../../project-data.service");
 var BundleListDetailComponent = (function () {
-    function BundleListDetailComponent(projectDataService, route) {
+    function BundleListDetailComponent(projectDataService, router, route) {
         this.projectDataService = projectDataService;
+        this.router = router;
         this.route = route;
         this.allBundles = [];
         this.commentedBundles = [];
         this.database = '';
+        this.deleteError = '';
         this.infoEditor = {
             isEditing: false,
             messageError: '',
@@ -25,6 +27,7 @@ var BundleListDetailComponent = (function () {
             newName: '',
             newStatus: ''
         };
+        this.reallyDelete = false;
         this.state = 'Info';
     }
     BundleListDetailComponent.prototype.ngOnInit = function () {
@@ -95,6 +98,16 @@ var BundleListDetailComponent = (function () {
             this.infoEditor.isEditing = true;
         }
     };
+    BundleListDetailComponent.prototype.deleteBundleList = function () {
+        var _this = this;
+        this.reallyDelete = false;
+        this.projectDataService.deleteBundleList(this.database, this.bundleList).subscribe(function (next) {
+            _this.projectDataService.fetchData();
+            _this.router.navigate(['/project/databases', _this.database]);
+        }, function (error) {
+            _this.deleteError = error.message;
+        });
+    };
     BundleListDetailComponent = __decorate([
         core_1.Component({
             moduleId: module.id,
@@ -102,9 +115,9 @@ var BundleListDetailComponent = (function () {
             templateUrl: 'bundle-list-detail.component.html',
             styleUrls: ['bundle-list-detail.component.css']
         }), 
-        __metadata('design:paramtypes', [project_data_service_1.ProjectDataService, router_1.ActivatedRoute])
+        __metadata('design:paramtypes', [project_data_service_1.ProjectDataService, router_1.Router, router_1.ActivatedRoute])
     ], BundleListDetailComponent);
     return BundleListDetailComponent;
 }());
 exports.BundleListDetailComponent = BundleListDetailComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-erRlJAW8.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-EYLEpM3b.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.js.map
