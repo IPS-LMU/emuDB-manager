@@ -100,7 +100,7 @@
 
 		<p *ngIf="countTags() === 0">
 			<em>No tagged versions so far. You can search a version and tag it below (in the all
-			versions section).</em>
+				versions section).</em>
 		</p>
 
 		<ul>
@@ -196,7 +196,8 @@
 								</p>
 
 								<p *ngIf="commit.saveTagSuccess" class="alert alert-success">
-									<button type="button" class="close" aria-label="Close" (click)="commit.saveTagSuccess = ''">
+									<button type="button" class="close" aria-label="Close"
+									        (click)="commit.saveTagSuccess = ''">
 										<span aria-hidden="true">&times;</span>
 									</button>
 

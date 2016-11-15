@@ -16,21 +16,21 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private commitList; //@todo add type
 	private configComments: boolean;
 	private configFinishedEditing: boolean;
-	private database:DatabaseInfo;
+	private database: DatabaseInfo;
 	private downloadTarget = this.projectDataService.getDownloadTarget();
-	private newName:string = '';
-	private renameError:string = '';
-	private renameSuccess:string = '';
-	private subCommitList:Subscription;
-	private subDatabase:Subscription;
-	private subParams:Subscription;
-	private subTagList:Subscription;
-	private subWebAppLink:Subscription;
-	private state:State = 'BundleLists';
-	private tagList:string[] = [];
-	private webAppLink:string = '';
+	private newName: string = '';
+	private renameError: string = '';
+	private renameSuccess: string = '';
+	private subCommitList: Subscription;
+	private subDatabase: Subscription;
+	private subParams: Subscription;
+	private subTagList: Subscription;
+	private subWebAppLink: Subscription;
+	private state: State = 'BundleLists';
+	private tagList: string[] = [];
+	private webAppLink: string = '';
 
-	constructor(private projectDataService:ProjectDataService, private route:ActivatedRoute) {
+	constructor(private projectDataService: ProjectDataService, private route: ActivatedRoute) {
 	}
 
 	ngOnInit() {
@@ -44,7 +44,7 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 		this.unsubscribe(true);
 	}
 
-	private subscribe (databaseName:string) {
+	private subscribe(databaseName: string) {
 		this.subDatabase = this.projectDataService.getDatabase(databaseName).subscribe(nextDatabase => {
 			this.database = nextDatabase;
 			this.configComments = this.savedConfigComments();
@@ -82,16 +82,16 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 		}
 	}
 
-	private editTag (commit) {
-		commit.editingTag = ! commit.editingTag;
+	private editTag(commit) {
+		commit.editingTag = !commit.editingTag;
 	}
 
-	private countTags () {
+	private countTags() {
 		let count = this.tagList.length;
 		return count;
 	}
 
-	private countCommits () {
+	private countCommits() {
 		let count = 0;
 
 		if (this.commitList) {
@@ -105,7 +105,7 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 		return count;
 	}
 
-	private saveTag (commit) {
+	private saveTag(commit) {
 		commit.saveTagError = '';
 		commit.saveTagSuccess = '';
 
@@ -131,7 +131,7 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 		});
 	}
 
-	private renameDatabase () {
+	private renameDatabase() {
 		this.renameError = '';
 		this.renameSuccess = '';
 
@@ -140,7 +140,7 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 			return;
 		}
 
-		this.projectDataService.renameDatabase(this.database.name, this.newName).subscribe (next => {
+		this.projectDataService.renameDatabase(this.database.name, this.newName).subscribe(next => {
 			this.renameSuccess = 'Successfully renamed';
 			this.projectDataService.fetchData();
 
