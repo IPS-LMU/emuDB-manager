@@ -86,7 +86,7 @@ class GitCommit {
 /**
  * Class EmuDBConfig
  *
- * This is an *extremely and inntentionally incomplete definition of an Emu
+ * This is an *extremely and intentionally incomplete definition of an Emu
  * database configuration. It has only those values that need to be
  * manipulated by set_database_configuration.
  */
