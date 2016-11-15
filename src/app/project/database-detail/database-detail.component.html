@@ -239,8 +239,25 @@
 			</label>
 		</div>
 
+		<p *ngIf="saveConfigSuccess" class="alert alert-success">
+			<button type="button" class="close" aria-label="Close" (click)="saveConfigSuccess = ''">
+				<span aria-hidden="true">&times;</span>
+			</button>
+
+			{{saveConfigSuccess}}
+		</p>
+
+		<p *ngIf="saveConfigError" class="alert alert-danger">
+			<button type="button" class="close" aria-label="Close" (click)="saveConfigError = ''">
+				<span aria-hidden="true">&times;</span>
+			</button>
+
+			{{saveConfigError}}
+		</p>
+
+
 		<p>
-			<button class="btn btn-default">Save</button>
+			<button class="btn btn-default" (click)="saveConfiguration()">Save</button>
 		</p>
 
 		<p class="alert alert-warning" *ngIf="hasUnsavedChanges()">

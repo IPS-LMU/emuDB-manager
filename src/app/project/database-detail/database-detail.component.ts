@@ -21,6 +21,8 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private newName: string = '';
 	private renameError: string = '';
 	private renameSuccess: string = '';
+	private saveConfigError: string = '';
+	private saveConfigSuccess: string = '';
 	private subCommitList: Subscription;
 	private subDatabase: Subscription;
 	private subParams: Subscription;
@@ -129,6 +131,25 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 		}, error => {
 			commit.saveTagError = error.message;
 		});
+	}
+
+	private saveConfiguration() {
+		this.saveConfigError = '';
+		this.saveConfigSuccess = '';
+
+		if (!this.hasUnsavedChanges()) {
+			this.saveConfigError = 'No changes to be saved.';
+			return;
+		}
+
+		this.projectDataService.setDatabaseConfiguration(this.database.name, this.configComments, this.configFinishedEditing)
+			.subscribe(next => {
+				this.saveConfigSuccess = 'Successfully stored configuration' +
+					' changes.';
+				this.projectDataService.fetchData();
+			}, error => {
+				this.saveConfigError = error.message;
+			});
 	}
 
 	private renameDatabase() {

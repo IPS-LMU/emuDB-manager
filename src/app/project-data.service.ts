@@ -229,6 +229,25 @@ export class ProjectDataService {
 		});
 	}
 
+	public setDatabaseConfiguration(database: string, bundleComments: boolean, bundleFinishedEditing: boolean): Observable<void> {
+		return Observable.create(observer => {
+			let params = {
+				query: 'set_database_configuration',
+				bundleComments: bundleComments,
+				bundleFinishedEditing: bundleFinishedEditing
+			};
+
+			this.serverQuery(params).subscribe((next: any) => {
+				if (next.success === true) {
+					observer.next(null);
+					observer.complete();
+				} else {
+					observer.error(next);
+				}
+			});
+		});
+	}
+
 	public addTag(database: string, commit: string, label: string): Observable<void> {
 		return Observable.create(observer => {
 			let params = {
