@@ -191,6 +191,26 @@ var ProjectDataService = (function () {
             });
         });
     };
+    ProjectDataService.prototype.setDatabaseConfiguration = function (database, bundleComments, bundleFinishedEditing) {
+        var _this = this;
+        return Rx_1.Observable.create(function (observer) {
+            var params = {
+                query: 'set_database_configuration',
+                database: database,
+                bundleComments: bundleComments,
+                bundleFinishedEditing: bundleFinishedEditing
+            };
+            _this.serverQuery(params).subscribe(function (next) {
+                if (next.success === true) {
+                    observer.next(null);
+                    observer.complete();
+                }
+                else {
+                    observer.error(next);
+                }
+            });
+        });
+    };
     ProjectDataService.prototype.addTag = function (database, commit, label) {
         var _this = this;
         return Rx_1.Observable.create(function (observer) {
@@ -510,6 +530,24 @@ var ProjectDataService = (function () {
             });
         });
     };
+    ProjectDataService.prototype.getConfigComments = function (database) {
+        if (!database
+            || !database.dbConfig
+            || !database.dbConfig['EMUwebAppConfig']
+            || !database.dbConfig['EMUwebAppConfig'].restrictions) {
+            return false;
+        }
+        return (database.dbConfig['EMUwebAppConfig'].restrictions.bundleComments === true);
+    };
+    ProjectDataService.prototype.getConfigFinishedEditing = function (database) {
+        if (!database
+            || !database.dbConfig
+            || !database.dbConfig['EMUwebAppConfig']
+            || !database.dbConfig['EMUwebAppConfig'].restrictions) {
+            return false;
+        }
+        return (database.dbConfig['EMUwebAppConfig'].restrictions.bundleFinishedEditing === true);
+    };
     ProjectDataService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
@@ -517,4 +555,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-EYLEpM3b.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-KJgFj9nx.tmp/0/src/app/project-data.service.js.map

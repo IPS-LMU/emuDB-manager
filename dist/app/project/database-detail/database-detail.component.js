@@ -19,6 +19,8 @@ var DatabaseDetailComponent = (function () {
         this.newName = '';
         this.renameError = '';
         this.renameSuccess = '';
+        this.saveConfigError = '';
+        this.saveConfigSuccess = '';
         this.state = 'BundleLists';
         this.tagList = [];
         this.webAppLink = '';
@@ -37,6 +39,8 @@ var DatabaseDetailComponent = (function () {
         var _this = this;
         this.subDatabase = this.projectDataService.getDatabase(databaseName).subscribe(function (nextDatabase) {
             _this.database = nextDatabase;
+            _this.configComments = _this.savedConfigComments();
+            _this.configFinishedEditing = _this.savedConfigFinishedEditing();
         });
         this.subCommitList = this.projectDataService.getCommitList(databaseName).subscribe(function (nextCommitList) {
             _this.commitList = nextCommitList;
@@ -105,6 +109,23 @@ var DatabaseDetailComponent = (function () {
             commit.saveTagError = error.message;
         });
     };
+    DatabaseDetailComponent.prototype.saveConfiguration = function () {
+        var _this = this;
+        this.saveConfigError = '';
+        this.saveConfigSuccess = '';
+        if (!this.hasUnsavedChanges()) {
+            this.saveConfigError = 'No changes to be saved.';
+            return;
+        }
+        this.projectDataService.setDatabaseConfiguration(this.database.name, this.configComments, this.configFinishedEditing)
+            .subscribe(function (next) {
+            _this.saveConfigSuccess = 'Successfully stored configuration' +
+                ' changes.';
+            _this.projectDataService.fetchData();
+        }, function (error) {
+            _this.saveConfigError = error.message;
+        });
+    };
     DatabaseDetailComponent.prototype.renameDatabase = function () {
         var _this = this;
         this.renameError = '';
@@ -122,6 +143,21 @@ var DatabaseDetailComponent = (function () {
             _this.renameError = error.message;
         });
     };
+    DatabaseDetailComponent.prototype.hasUnsavedChanges = function () {
+        if (this.savedConfigComments() !== this.configComments) {
+            return true;
+        }
+        if (this.savedConfigFinishedEditing() !== this.configFinishedEditing) {
+            return true;
+        }
+        return false;
+    };
+    DatabaseDetailComponent.prototype.savedConfigComments = function () {
+        return this.projectDataService.getConfigComments(this.database);
+    };
+    DatabaseDetailComponent.prototype.savedConfigFinishedEditing = function () {
+        return this.projectDataService.getConfigFinishedEditing(this.database);
+    };
     DatabaseDetailComponent = __decorate([
         core_1.Component({
             moduleId: module.id,
@@ -134,4 +170,4 @@ var DatabaseDetailComponent = (function () {
     return DatabaseDetailComponent;
 }());
 exports.DatabaseDetailComponent = DatabaseDetailComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-EYLEpM3b.tmp/0/src/app/project/database-detail/database-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-KJgFj9nx.tmp/0/src/app/project/database-detail/database-detail.component.js.map
