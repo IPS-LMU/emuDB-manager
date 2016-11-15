@@ -12,6 +12,8 @@ collection of EMU speech databases. It allows:
 database visible online to a certain editor and allows the editor to make 
 changes and comments)
 * Evaluating the online comments from editors
+* Keeping a history of changes to the database (using git)
+* Managing a small portion of DBconfig options
 
 ## Authors
 
