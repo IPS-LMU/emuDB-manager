@@ -233,6 +233,7 @@ export class ProjectDataService {
 		return Observable.create(observer => {
 			let params = {
 				query: 'set_database_configuration',
+				database: database,
 				bundleComments: bundleComments,
 				bundleFinishedEditing: bundleFinishedEditing
 			};
