@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy} from "@angular/core";
 import {Subscription} from "rxjs/Rx";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ProjectDataService} from "../../project-data.service";
 import {BundleListItem} from "../../types/bundle-list-item";
 import {BundleList} from "../../types/bundle-list";
@@ -18,6 +18,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 	private bundleList:BundleList;
 	private commentedBundles:BundleListItem[] = [];
 	private database:string = '';
+	private deleteError:string = '';
 	private infoEditor = {
 		isEditing: false,
 		messageError: '',
@@ -25,11 +26,13 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 		newName: '',
 		newStatus: ''
 	};
+	private reallyDelete:boolean = false;
 	private state:State = 'Info';
 	private subBundleList:Subscription;
 	private subParams:Subscription;
 
 	constructor(private projectDataService:ProjectDataService,
+	            private router:Router,
 	            private route:ActivatedRoute) {
 	}
 
@@ -120,5 +123,17 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 		} else {
 			this.infoEditor.isEditing = true;
 		}
+	}
+
+	private deleteBundleList () {
+		this.reallyDelete = false;
+
+		this.projectDataService.deleteBundleList(this.database, this.bundleList).subscribe(next => {
+			this.projectDataService.fetchData();
+
+			this.router.navigate(['/project/databases', this.database]);
+		}, error => {
+			this.deleteError = error.message;
+		});
 	}
 }

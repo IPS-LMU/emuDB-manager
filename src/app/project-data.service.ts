@@ -313,6 +313,26 @@ export class ProjectDataService {
 		});
 	}
 
+	public deleteBundleList(database: string, bundleList: BundleList) {
+		return Observable.create(observer => {
+			let params = {
+				query: 'delete_bundle_list',
+				database: database,
+				name: bundleList.name,
+				status: bundleList.status
+			};
+
+			this.serverQuery(params).subscribe((next: any) => {
+				if (next.success === true) {
+					observer.next(null);
+					observer.complete();
+				} else {
+					observer.error(next);
+				}
+			});
+		});
+	}
+
 	public saveUpload(identifier: string, name: string): Observable<ServerResponse> {
 		return Observable.create(observer => {
 			let params = {

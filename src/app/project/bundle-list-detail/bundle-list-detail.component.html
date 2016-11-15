@@ -86,6 +86,33 @@
 				</p>
 			</div>
 		</form>
+
+		<hr>
+
+		<div class="panel-body">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" [(ngModel)]="reallyDelete">
+					Delete this bundle list? This is irreversible!
+				</label>
+			</div>
+
+			<p *ngIf="deleteError" class="alert alert-danger">
+				<button type="button" class="close" aria-label="Close" (click)="deleteError = ''">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+				{{deleteError}}
+			</p>
+
+			<p>
+				<button type="button" class="btn btn-danger" [disabled]="!reallyDelete"
+				        (click)="deleteBundleList()">
+					Delete
+				</button>
+			</p>
+
+		</div>
 	</div>
 
 	<div *ngIf="state === 'CommentedBundles'" class="table-responsive">
