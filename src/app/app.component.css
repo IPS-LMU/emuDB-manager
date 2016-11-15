@@ -30,4 +30,9 @@
 
 .progress-bar {
     font-weight: bold;
+    width: 100%;
+}
+
+.progress {
+    margin: 0;
 }
