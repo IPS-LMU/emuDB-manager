@@ -4,7 +4,7 @@ import {ProjectDataService} from "../../project-data.service";
 import {ActivatedRoute} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 
-type State = 'BundleLists' | 'Session' | 'Download' | 'Rename';
+type State = 'BundleLists' | 'Session' | 'Download' | 'Rename' | 'Config';
 
 @Component({
 	moduleId: module.id,
@@ -14,6 +14,8 @@ type State = 'BundleLists' | 'Session' | 'Download' | 'Rename';
 })
 export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private commitList; //@todo add type
+	private configComments: boolean;
+	private configFinishedEditing: boolean;
 	private database:DatabaseInfo;
 	private downloadTarget = this.projectDataService.getDownloadTarget();
 	private newName:string = '';
@@ -45,6 +47,8 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private subscribe (databaseName:string) {
 		this.subDatabase = this.projectDataService.getDatabase(databaseName).subscribe(nextDatabase => {
 			this.database = nextDatabase;
+			this.configComments = this.savedConfigComments();
+			this.configFinishedEditing = this.savedConfigFinishedEditing();
 		});
 
 		this.subCommitList = this.projectDataService.getCommitList(databaseName).subscribe(nextCommitList => {
@@ -145,5 +149,43 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 		}, error => {
 			this.renameError = error.message;
 		});
+	}
+
+	private hasUnsavedChanges(): boolean {
+		if (this.savedConfigComments() !== this.configComments) {
+			return true;
+		}
+
+		if (this.savedConfigFinishedEditing() !== this.configFinishedEditing) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private savedConfigComments(): boolean {
+		if (
+			!this.database
+			|| !this.database.dbConfig
+			|| !this.database.dbConfig['EMUwebAppConfig']
+			|| !this.database.dbConfig['EMUwebAppConfig'].restrictions
+		) {
+			return false;
+		}
+
+		return (this.database.dbConfig['EMUwebAppConfig'].restrictions.bundleComments === true);
+	}
+
+	private savedConfigFinishedEditing(): boolean {
+		if (
+			!this.database
+			|| !this.database.dbConfig
+			|| !this.database.dbConfig['EMUwebAppConfig']
+			|| !this.database.dbConfig['EMUwebAppConfig'].restrictions
+		) {
+			return false;
+		}
+
+		return (this.database.dbConfig['EMUwebAppConfig'].restrictions.bundleFinishedEditing === true);
 	}
 }

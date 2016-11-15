@@ -30,6 +30,11 @@
 				Download database
 			</a>
 		</li>
+		<li role="presentation" [ngClass]="{active: state === 'Config'}">
+			<a (click)="state = 'Config'">
+				Database configuration
+			</a>
+		</li>
 		<li role="presentation" [ngClass]="{active: state === 'Rename'}">
 			<a (click)="state = 'Rename'">
 				Rename database
@@ -205,6 +210,41 @@
 				</ul>
 			</li>
 		</ul>
+	</div>
+
+	<div *ngIf="state === 'Config'" class="panel-body">
+		<p>
+			Emu databases are configured by means of the _DBconfig.json file.
+		</p>
+
+		<p>
+			The emuDB Manager is only meant to manage a small portion of the numerous possible
+			configuration options. All other options must be configured via emuR.
+		</p>
+
+		<hr>
+
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" [(ngModel)]="configFinishedEditing">
+				In EMU-webApp, show “finished editing” checkboxes
+			</label>
+		</div>
+
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" [(ngModel)]="configComments">
+				In EMU-webApp, show “bundle comment” fields
+			</label>
+		</div>
+
+		<p>
+			<button class="btn btn-default">Save</button>
+		</p>
+
+		<p class="alert alert-warning" *ngIf="hasUnsavedChanges()">
+			You have unsaved changes.
+		</p>
 	</div>
 
 	<div *ngIf="state === 'Rename'" class="panel-body">
