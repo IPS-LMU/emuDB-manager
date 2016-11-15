@@ -105,4 +105,11 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 		}
 	}
 
+	private checkDBConfig():boolean {
+		return (
+			this.projectDataService.getConfigComments(this.selectedDatabase)
+			&&
+			this.projectDataService.getConfigFinishedEditing(this.selectedDatabase)
+		);
+	}
 }

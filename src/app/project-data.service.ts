@@ -614,4 +614,30 @@ export class ProjectDataService {
 			});
 		});
 	}
+
+	public getConfigComments(database: DatabaseInfo): boolean {
+		if (
+			!database
+			|| !database.dbConfig
+			|| !database.dbConfig['EMUwebAppConfig']
+			|| !database.dbConfig['EMUwebAppConfig'].restrictions
+		) {
+			return false;
+		}
+
+		return (database.dbConfig['EMUwebAppConfig'].restrictions.bundleComments === true);
+	}
+
+	public getConfigFinishedEditing(database: DatabaseInfo): boolean {
+		if (
+			!database
+			|| !database.dbConfig
+			|| !database.dbConfig['EMUwebAppConfig']
+			|| !database.dbConfig['EMUwebAppConfig'].restrictions
+		) {
+			return false;
+		}
+
+		return (database.dbConfig['EMUwebAppConfig'].restrictions.bundleFinishedEditing === true);
+	}
 }

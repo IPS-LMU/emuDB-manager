@@ -26,14 +26,22 @@
 					Select the database for which to generate a bundle list:
 				</p>
 
-				<p class="col-md-8">
-					<select class="form-control" [(ngModel)]="selectedDatabase"
-					        [ngModelOptions]="{standalone: true}">
-						<option *ngFor="let database of databases" [ngValue]="database">
-							{{database.name}}
-						</option>
-					</select>
-				</p>
+				<div class="col-md-8">
+					<p>
+						<select class="form-control" [(ngModel)]="selectedDatabase"
+						        [ngModelOptions]="{standalone: true}">
+							<option *ngFor="let database of databases" [ngValue]="database">
+								{{database.name}}
+							</option>
+						</select>
+					</p>
+
+					<p class="alert alert-warning" *ngIf="selectedDatabase && !checkDBConfig()">
+						The selected database {{selectedDatabase?.name}} is not configured to
+						allow bundle comments and “finished editing” checkboxes. Please review
+						the database configuration.
+					</p>
+				</div>
 			</div>
 
 			<hr>

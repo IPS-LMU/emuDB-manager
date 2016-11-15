@@ -185,28 +185,10 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	}
 
 	private savedConfigComments(): boolean {
-		if (
-			!this.database
-			|| !this.database.dbConfig
-			|| !this.database.dbConfig['EMUwebAppConfig']
-			|| !this.database.dbConfig['EMUwebAppConfig'].restrictions
-		) {
-			return false;
-		}
-
-		return (this.database.dbConfig['EMUwebAppConfig'].restrictions.bundleComments === true);
+		return this.projectDataService.getConfigComments(this.database);
 	}
 
 	private savedConfigFinishedEditing(): boolean {
-		if (
-			!this.database
-			|| !this.database.dbConfig
-			|| !this.database.dbConfig['EMUwebAppConfig']
-			|| !this.database.dbConfig['EMUwebAppConfig'].restrictions
-		) {
-			return false;
-		}
-
-		return (this.database.dbConfig['EMUwebAppConfig'].restrictions.bundleFinishedEditing === true);
+		return this.projectDataService.getConfigFinishedEditing(this.database);
 	}
 }
