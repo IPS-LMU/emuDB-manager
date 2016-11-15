@@ -19,22 +19,16 @@
 
 			</div>
 		</div>
-	</nav>
 
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-sm-offset-3 col-md-offset-2">
-				<div class="progress" [@progressBarContainer]="progressBarState()">
-					<div class="progress-bar progress-bar-striped" role="progressbar"
-					     style="width:100%" [@progressBar]="progressBarState()"
-					     (@progressBar.start)="changeState($event)"
-					>
-						Communicating with server
-					</div>
-				</div>
+		<div class="progress" [@progressBarContainer]="progressBarState()">
+			<div class="progress-bar progress-bar-striped" role="progressbar"
+			     [@progressBar]="progressBarState()"
+			     (@progressBar.start)="changeState($event)"
+			>
+				Communicating with server
 			</div>
 		</div>
-	</div>
+	</nav>
 
 	<router-outlet></router-outlet>
 </div>
