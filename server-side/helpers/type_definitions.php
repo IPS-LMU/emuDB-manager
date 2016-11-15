@@ -33,6 +33,10 @@ class BundleList {
 
 class Database {
 	public $name;
+
+	/**
+	 * @var EmuDBConfig Configuration object
+	 */
 	public $dbConfig;
 	public $bundleLists;
 	public $sessions;
@@ -77,4 +81,34 @@ class GitCommit {
 	public $commitID;
 	public $date;
 	public $message;
+}
+
+/**
+ * Class EmuDBConfig
+ *
+ * This is an *extremely and intentionally incomplete definition of an Emu
+ * database configuration. It has only those values that need to be
+ * manipulated by set_database_configuration.
+ */
+class EmuDBConfig {
+	/**
+	 * @var EMUwebAppConfig
+	 */
+	public $EMUwebAppConfig;
+}
+
+class EMUwebAppConfig {
+	/** @var  Restrictions */
+	public $restrictions;
+}
+
+class Restrictions {
+	/**
+	 * @var bool
+	 */
+	public $bundleComments;
+	/**
+	 * @var bool
+	 */
+	public $bundleFinishedEditing;
 }

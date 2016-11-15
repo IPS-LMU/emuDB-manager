@@ -33,6 +33,7 @@ require_once 'queryHandlers/project_info.php';
 require_once 'queryHandlers/rename_db.php';
 require_once 'queryHandlers/save_bundle_list.php';
 require_once 'queryHandlers/save_upload.php';
+require_once 'queryHandlers/set_database_configuration.php';
 require_once 'queryHandlers/upload.php';
 
 //
@@ -312,6 +313,25 @@ function executeQuery (AuthToken $authToken) {
 				$_POST['database'],
 				$_POST['name'],
 				$bundleList
+			);
+
+			break;
+
+		case 'set_database_configuration':
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			// Convert string to boolean
+			$bundleComments = ($_POST['bundleComments'] === 'true');
+			$bundleFinishedEditing = ($_POST['bundleFinishedEditing'] === 'true');
+
+			return set_database_configuration(
+				$authToken->projectDir,
+				$_POST['database'],
+				$bundleComments,
+				$bundleFinishedEditing
 			);
 
 			break;

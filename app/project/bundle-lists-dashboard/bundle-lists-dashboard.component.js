@@ -81,6 +81,11 @@ var BundleListsDashboardComponent = (function () {
             this.personsPerBundle = this.editors.length;
         }
     };
+    BundleListsDashboardComponent.prototype.checkDBConfig = function () {
+        return (this.projectDataService.getConfigComments(this.selectedDatabase)
+            &&
+                this.projectDataService.getConfigFinishedEditing(this.selectedDatabase));
+    };
     BundleListsDashboardComponent = __decorate([
         core_1.Component({
             moduleId: module.id,
@@ -93,4 +98,4 @@ var BundleListsDashboardComponent = (function () {
     return BundleListsDashboardComponent;
 }());
 exports.BundleListsDashboardComponent = BundleListsDashboardComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-EYLEpM3b.tmp/0/src/app/project/bundle-lists-dashboard/bundle-lists-dashboard.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-KJgFj9nx.tmp/0/src/app/project/bundle-lists-dashboard/bundle-lists-dashboard.component.js.map
