@@ -19,6 +19,12 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 	private commentedBundles:BundleListItem[] = [];
 	private database:string = '';
 	private deleteError:string = '';
+	private duplicationEditor = {
+		commentedOnly: false,
+		editorName: '',
+		messageError: '',
+		messageSuccess: ''
+	};
 	private infoEditor = {
 		isEditing: false,
 		messageError: '',
@@ -134,6 +140,24 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 			this.router.navigate(['/project/databases', this.database]);
 		}, error => {
 			this.deleteError = error.message;
+		});
+	}
+
+	private duplicateBundleList () {
+		this.duplicationEditor.messageError = '';
+		this.duplicationEditor.messageSuccess = '';
+
+		this.projectDataService.duplicateBundleList(
+			this.database,
+			this.bundleList,
+			this.duplicationEditor.editorName,
+			this.duplicationEditor.commentedOnly
+		).subscribe (next => {
+			this.duplicationEditor.messageSuccess = 'Successfully duplicated' +
+				' bundle list.';
+			this.projectDataService.fetchData();
+		}, error => {
+			this.duplicationEditor.messageError = error.message;
 		});
 	}
 }

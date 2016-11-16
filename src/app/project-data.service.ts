@@ -372,6 +372,53 @@ export class ProjectDataService {
 		});
 	}
 
+	public duplicateBundleList(database: string,
+	                           bundleList: BundleList,
+	                           newName: string,
+	                           commentedOnly: boolean) {
+		return Observable.create(observer => {
+			//
+			// Create a modified copy of `bundleList`
+			let newBundleList: BundleList = {
+				name: bundleList.name,
+				archiveLabel: bundleList.archiveLabel,
+				items: []
+			};
+
+			// Copy the items from `bundleList` to `newBundleList`
+			for (let i = 0; i < bundleList.items.length; ++i) {
+				if (commentedOnly && !bundleList.items[i].comment) {
+					continue;
+				}
+
+				newBundleList.items.push({
+					name: bundleList.items[i].name,
+					session: bundleList.items[i].session,
+					comment: bundleList.items[i].comment,
+					finishedEditing: false
+				});
+			}
+
+			//
+			// Send query to server
+			let params = {
+				query: 'save_bundle_list',
+				database: database,
+				name: newName,
+				list: JSON.stringify(newBundleList.items)
+			};
+
+			this.serverQuery(params).subscribe((next: any) => {
+				if (next.success === true) {
+					observer.next(null);
+					observer.complete();
+				} else {
+					observer.error(next);
+				}
+			});
+		});
+	}
+
 	public generateBundleList(database: string,
 	                          sessionPattern: string,
 	                          bundlePattern: string,
