@@ -3,7 +3,7 @@
 	<th *ngFor="let column of columns">{{column.heading}}</th>
 </tr>
 <tr>
-	<th *ngFor="let column of columns">
+	<td *ngFor="let column of columns">
 		<template [ngIf]="column.type === 'string'">
 			<input class="form-control" placeholder="Filter" [(ngModel)]="column.filter">
 		</template>
@@ -24,6 +24,12 @@
 				<span class="glyphicon glyphicon-remove"></span>
 			</button>
 		</template>
+	</td>
+</tr>
+<tr>
+	<th [attr.colspan]="columns.length">
+		Viewing {{visibleCount}} of {{data.length}} items
+		({{percentage()}} %)
 	</th>
 </tr>
 </thead>

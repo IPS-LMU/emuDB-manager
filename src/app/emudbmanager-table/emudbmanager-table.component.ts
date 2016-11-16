@@ -15,6 +15,8 @@ export class EmudbmanagerTableComponent implements OnInit {
 	}[];
 	@Input() data: Array<any>;
 
+	private visibleCount = 0;
+
 	/**
 	 * Filter this.data based on the filters specified in this.columns[x].filter
 	 * @returns {Array}
@@ -66,6 +68,7 @@ export class EmudbmanagerTableComponent implements OnInit {
 			}
 		}
 
+		this.visibleCount = result.length;
 		return result;
 	}
 
@@ -80,4 +83,10 @@ export class EmudbmanagerTableComponent implements OnInit {
 		return typeof test === 'boolean';
 	}
 
+	private percentage():number {
+		if (this.data.length === 0) {
+			return 0;
+		}
+		return Math.round(100 * this.visibleCount / this.data.length);
+	}
 }
