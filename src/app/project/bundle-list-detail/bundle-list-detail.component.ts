@@ -14,11 +14,11 @@ type State = 'Info' | 'AllBundles' | 'CommentedItems';
 	styleUrls: ['bundle-list-detail.component.css']
 })
 export class BundleListDetailComponent implements OnInit,OnDestroy {
-	private allBundles:BundleListItem[] = [];
-	private bundleList:BundleList;
-	private commentedBundles:BundleListItem[] = [];
-	private database:string = '';
-	private deleteError:string = '';
+	private allBundles: BundleListItem[] = [];
+	private bundleList: BundleList;
+	private commentedBundles: BundleListItem[] = [];
+	private database: string = '';
+	private deleteError: string = '';
 	private duplicationEditor = {
 		commentedOnly: false,
 		editorName: '',
@@ -32,14 +32,20 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 		newName: '',
 		newArchiveLabel: ''
 	};
-	private reallyDelete:boolean = false;
-	private state:State = 'Info';
-	private subBundleList:Subscription;
-	private subParams:Subscription;
+	private reallyDelete: boolean = false;
+	private state: State = 'Info';
+	private subBundleList: Subscription;
+	private subParams: Subscription;
+	private tableFormat = [
+		{name: 'session', type: 'string', heading: 'Session'},
+		{name: 'name', type: 'string', heading: 'Bundle'},
+		{name: 'finishedEditing', type: 'boolean', heading: 'Finished editing'},
+		{name: 'comment', type: 'string', heading: 'Comment'}
+	];
 
-	constructor(private projectDataService:ProjectDataService,
-	            private router:Router,
-	            private route:ActivatedRoute) {
+	constructor(private projectDataService: ProjectDataService,
+	            private router: Router,
+	            private route: ActivatedRoute) {
 	}
 
 	ngOnInit() {

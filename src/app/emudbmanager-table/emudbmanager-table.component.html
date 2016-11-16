@@ -1,0 +1,20 @@
+<thead>
+<tr>
+	<th *ngFor="let column of columns">{{column.heading}}</th>
+</tr>
+</thead>
+
+<tbody>
+<tr *ngFor="let item of data">
+	<td *ngFor="let column of columns">
+		<template [ngIf]="column.type === 'string'">
+			{{item[column.name]}}
+		</template>
+
+		<template [ngIf]="column.type === 'boolean'">
+			<span *ngIf="item[column.name]" class="glyphicon glyphicon-ok"></span>
+			<span *ngIf="!item[column.name]" class="glyphicon glyphicon-remove"></span>
+		</template>
+	</td>
+</tr>
+</tbody>

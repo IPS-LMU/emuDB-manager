@@ -20,6 +20,7 @@ import {BundleListDetailComponent} from "./project/bundle-list-detail/bundle-lis
 import {UploadDetailComponent} from "./project/upload-detail/upload-detail.component";
 import {UploadsDashboardComponent} from "./project/uploads-dashboard/uploads-dashboard.component";
 import {NgFileSelectDirective} from "ng2-uploader/ng2-uploader";
+import {EmudbmanagerTableComponent} from "./emudbmanager-table/emudbmanager-table.component";
 
 @NgModule({
 	declarations: [
@@ -31,6 +32,7 @@ import {NgFileSelectDirective} from "ng2-uploader/ng2-uploader";
 		DatabaseDashboardComponent,
 		DatabaseDetailComponent,
 		DatabasesOverviewComponent,
+		EmudbmanagerTableComponent,
 		ProjectComponent,
 		UploadDetailComponent,
 		UploadFormComponent,
