@@ -32,33 +32,34 @@ export class EmudbmanagerTableComponent implements OnInit {
 			let include = true;
 
 			for (let j = 0; j < this.columns.length; ++j) {
-				if (this.columns[j].filter) {
-					// There are several types of filter
-					switch (this.columns[j].type) {
-						case 'string':
-							let regex;
-							try {
-								regex = new RegExp(this.columns[j].filter);
-							} catch (e) {
-								continue;
-							}
+				if (typeof this.columns[j].filter !== 'undefined') {
+					// Different data types (string, boolean) are filtered
+					// differently
 
-							if (this.data[i][this.columns[j].name].match(regex) === null) {
-								include = false;
-								break;
-							}
-							break;
+					if (this.columns[j].type === 'string') {
+						let regex;
 
-						case 'boolean':
-							let filter = this.columns[j].filter;
-							if (typeof filter !== 'boolean') {
-								continue;
-							}
-							if (this.data[i][this.columns[j].name] !== filter) {
-								include = false;
-								break;
-							}
+						try {
+							regex = new RegExp(this.columns[j].filter);
+						} catch (e) {
+							continue;
+						}
+
+						if (this.data[i][this.columns[j].name].match(regex) === null) {
+							include = false;
 							break;
+						}
+					}
+
+					if (this.columns[j].type === 'boolean') {
+						let filter = this.columns[j].filter;
+						if (typeof filter !== 'boolean') {
+							continue;
+						}
+						if (this.data[i][this.columns[j].name] !== filter) {
+							include = false;
+							break;
+						}
 					}
 				}
 			}
