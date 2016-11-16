@@ -28,6 +28,10 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 	private subDatabaseList:Subscription;
 	private subParams:Subscription;
 	private subUpload:Subscription;
+	private tableFormat = [
+		{type: 'string', heading: 'Name', value: x => x.name},
+		{type: 'string', heading: 'Bundles', value: x => x.bundles.length}
+	];
 	private upload:UploadInfo;
 
 	constructor(private projectDataService:ProjectDataService,

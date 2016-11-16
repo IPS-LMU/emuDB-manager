@@ -48,21 +48,9 @@
 
 
 	<div *ngIf="state === 'Sessions'" class="table-responsive">
-		<table class="table table-striped">
-			<thead>
-			<tr>
-				<th>Name</th>
-				<th>Bundles</th>
-			</tr>
-			</thead>
-
-			<tbody>
-			<tr *ngFor="let session of database?.sessions">
-				<td>{{session.name}}</td>
-				<td>{{session.bundles.length}}</td>
-			</tr>
-			</tbody>
-		</table>
+		<emudbmanager-table class="table table-striped"
+		                    [columns]="tableFormat" [data]="database?.sessions">
+		</emudbmanager-table>
 	</div>
 
 	<div *ngIf="state === 'Download'" class="panel-body">

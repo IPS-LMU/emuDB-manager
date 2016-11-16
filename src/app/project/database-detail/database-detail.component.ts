@@ -29,6 +29,10 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private subTagList: Subscription;
 	private subWebAppLink: Subscription;
 	private state: State = 'BundleLists';
+	private tableFormat = [
+		{type: 'string', heading: 'Name', value: x => x.name},
+		{type: 'string', heading: 'Bundles', value: x => x.bundles.length}
+	];
 	private tagList: string[] = [];
 	private webAppLink: string = '';
 
