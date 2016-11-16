@@ -13,7 +13,18 @@ export class EmudbmanagerTableComponent implements OnInit {
 		filter: any;
 		value: Function;
 	}[];
-	@Input() data: Array<any>;
+	private _data: Array<any>;
+
+	get data ():Array<any> {
+		return this._data;
+	}
+	@Input() set data (a:Array<any>) {
+		if (!Array.isArray(a)) {
+			this._data = [];
+		} else {
+			this._data = a;
+		}
+	}
 
 	private reverseSort = false;
 	private sortColumn;
