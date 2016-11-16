@@ -46,12 +46,12 @@
 <tr *ngFor="let item of getVisibleData()">
 	<td *ngFor="let column of columns">
 		<template [ngIf]="column.type === 'string'">
-			{{item[column.name]}}
+			{{column.value(item)}}
 		</template>
 
 		<template [ngIf]="column.type === 'boolean'">
-			<span *ngIf="item[column.name]" class="glyphicon glyphicon-ok"></span>
-			<span *ngIf="!item[column.name]" class="glyphicon glyphicon-remove"></span>
+			<span *ngIf="column.value(item)" class="glyphicon glyphicon-ok"></span>
+			<span *ngIf="!column.value(item)" class="glyphicon glyphicon-remove"></span>
 		</template>
 	</td>
 </tr>

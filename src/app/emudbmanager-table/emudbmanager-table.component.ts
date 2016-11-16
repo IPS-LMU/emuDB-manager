@@ -8,10 +8,10 @@ import {Component, OnInit, Input} from "@angular/core";
 })
 export class EmudbmanagerTableComponent implements OnInit {
 	@Input() columns: {
-		name: string;
 		type: 'boolean' | 'string';
 		heading: string;
 		filter: any;
+		value: Function;
 	}[];
 	@Input() data: Array<any>;
 
@@ -47,7 +47,7 @@ export class EmudbmanagerTableComponent implements OnInit {
 							continue;
 						}
 
-						if (this.data[i][this.columns[j].name].match(regex) === null) {
+						if (this.columns[j].value(this.data[i]).match(regex) === null) {
 							include = false;
 							break;
 						}
@@ -58,7 +58,7 @@ export class EmudbmanagerTableComponent implements OnInit {
 						if (typeof filter !== 'boolean') {
 							continue;
 						}
-						if (this.data[i][this.columns[j].name] !== filter) {
+						if (this.columns[j].value(this.data[i]) !== filter) {
 							include = false;
 							break;
 						}
@@ -75,13 +75,13 @@ export class EmudbmanagerTableComponent implements OnInit {
 
 		if (this.sortColumn) {
 			result.sort((a, b) => {
-				if (a[this.sortColumn.name] > b[this.sortColumn.name]) {
+				if (this.sortColumn.value(a) > this.sortColumn.value(b)) {
 					if (this.reverseSort) {
 						return -1;
 					} else {
 						return 1;
 					}
-				} else if (a[this.sortColumn.name] == b[this.sortColumn.name]) {
+				} else if (this.sortColumn.value(a) == this.sortColumn.value(b)) {
 					return 0;
 				} else {
 					if (this.reverseSort) {

@@ -37,10 +37,10 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 	private subBundleList: Subscription;
 	private subParams: Subscription;
 	private tableFormat = [
-		{name: 'session', type: 'string', heading: 'Session'},
-		{name: 'name', type: 'string', heading: 'Bundle'},
-		{name: 'finishedEditing', type: 'boolean', heading: 'Finished editing'},
-		{name: 'comment', type: 'string', heading: 'Comment'}
+		{type: 'string', heading: 'Session', value: x => x.session},
+		{type: 'string', heading: 'Bundle', value: x => x.name},
+		{type: 'boolean', heading: 'Finished editing', value: x => x.finishedEditing},
+		{type: 'string', heading: 'Comment', value: x => x.comment}
 	];
 
 	constructor(private projectDataService: ProjectDataService,
