@@ -37,7 +37,11 @@
 	<th [attr.colspan]="columns.length">
 		Viewing {{visibleCount}} of {{data.length}} items
 		({{percentage()}} %)
-		<span class="pull-right">Click headings to sort</span>
+		<span class="pull-right">
+			Click headings to sort
+			|
+			<span (click)="sort(undefined)">Remove sorting</span>
+		</span>
 	</th>
 </tr>
 </thead>
