@@ -2,10 +2,34 @@
 <tr>
 	<th *ngFor="let column of columns">{{column.heading}}</th>
 </tr>
+<tr>
+	<th *ngFor="let column of columns">
+		<template [ngIf]="column.type === 'string'">
+			<input class="form-control" placeholder="Filter" [(ngModel)]="column.filter">
+		</template>
+
+		<template [ngIf]="column.type === 'boolean'">
+			<button class="btn btn-default" (click)="column.filter = undefined"
+			        [ngClass]="{active: !isBoolean(column.filter)}">
+				all
+			</button>
+
+			<button class="btn btn-default" (click)="column.filter = true"
+			        [ngClass]="{active: column.filter === true}">
+				<span class="glyphicon glyphicon-ok"></span>
+			</button>
+
+			<button class="btn btn-default" (click)="column.filter = false"
+			        [ngClass]="{active: column.filter === false}">
+				<span class="glyphicon glyphicon-remove"></span>
+			</button>
+		</template>
+	</th>
+</tr>
 </thead>
 
 <tbody>
-<tr *ngFor="let item of data">
+<tr *ngFor="let item of getVisibleData()">
 	<td *ngFor="let column of columns">
 		<template [ngIf]="column.type === 'string'">
 			{{item[column.name]}}
