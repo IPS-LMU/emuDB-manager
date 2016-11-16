@@ -147,10 +147,15 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 		this.duplicationEditor.messageError = '';
 		this.duplicationEditor.messageSuccess = '';
 
+		// Reset editorName but keep commentedOnly.
+		// This way the user won't be able to click twice without typing again
+		let editorName = this.duplicationEditor.editorName;
+		this.duplicationEditor.editorName = '';
+
 		this.projectDataService.duplicateBundleList(
 			this.database,
 			this.bundleList,
-			this.duplicationEditor.editorName,
+			editorName,
 			this.duplicationEditor.commentedOnly
 		).subscribe (next => {
 			this.duplicationEditor.messageSuccess = 'Successfully duplicated' +
