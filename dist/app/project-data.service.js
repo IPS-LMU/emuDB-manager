@@ -77,6 +77,20 @@ var ProjectDataService = (function () {
             return Rx_1.Observable.throw('Error during download', error);
         });
     };
+    ProjectDataService.prototype.serverQueryWithDefaultSubscription = function (params) {
+        var _this = this;
+        return Rx_1.Observable.create(function (observer) {
+            _this.serverQuery(params).subscribe(function (next) {
+                if (next.success === true) {
+                    observer.next(next.data);
+                    observer.complete();
+                }
+                else {
+                    observer.error(next);
+                }
+            });
+        });
+    };
     ProjectDataService.prototype.login = function (username, password) {
         var _this = this;
         return Rx_1.Observable.create(function (observer) {
@@ -173,84 +187,36 @@ var ProjectDataService = (function () {
         return result;
     };
     ProjectDataService.prototype.renameDatabase = function (oldName, newName) {
-        var _this = this;
-        return Rx_1.Observable.create(function (observer) {
-            var params = {
-                query: 'rename_db',
-                old_name: oldName,
-                new_name: newName
-            };
-            _this.serverQuery(params).subscribe(function (next) {
-                if (next.success === true) {
-                    observer.next(null);
-                    observer.complete();
-                }
-                else {
-                    observer.error(next);
-                }
-            });
+        return this.serverQueryWithDefaultSubscription({
+            query: 'rename_db',
+            old_name: oldName,
+            new_name: newName
         });
     };
     ProjectDataService.prototype.setDatabaseConfiguration = function (database, bundleComments, bundleFinishedEditing) {
-        var _this = this;
-        return Rx_1.Observable.create(function (observer) {
-            var params = {
-                query: 'set_database_configuration',
-                database: database,
-                bundleComments: bundleComments,
-                bundleFinishedEditing: bundleFinishedEditing
-            };
-            _this.serverQuery(params).subscribe(function (next) {
-                if (next.success === true) {
-                    observer.next(null);
-                    observer.complete();
-                }
-                else {
-                    observer.error(next);
-                }
-            });
+        return this.serverQueryWithDefaultSubscription({
+            query: 'set_database_configuration',
+            database: database,
+            bundleComments: bundleComments,
+            bundleFinishedEditing: bundleFinishedEditing
         });
     };
     ProjectDataService.prototype.addTag = function (database, commit, label) {
-        var _this = this;
-        return Rx_1.Observable.create(function (observer) {
-            var params = {
-                query: 'add_tag',
-                database: database,
-                commit: commit,
-                label: label
-            };
-            _this.serverQuery(params).subscribe(function (next) {
-                if (next.success === true) {
-                    observer.next(null);
-                    observer.complete();
-                }
-                else {
-                    observer.error(next);
-                }
-            });
+        return this.serverQueryWithDefaultSubscription({
+            query: 'add_tag',
+            database: database,
+            commit: commit,
+            label: label
         });
     };
     ProjectDataService.prototype.editBundleList = function (database, name, archiveLabel, newName, newArchiveLabel) {
-        var _this = this;
-        return Rx_1.Observable.create(function (observer) {
-            var params = {
-                'query': 'edit_bundle_list',
-                'database': database,
-                'old_name': name,
-                'old_archive_label': archiveLabel,
-                'new_name': newName,
-                'new_archive_label': newArchiveLabel
-            };
-            _this.serverQuery(params).subscribe(function (next) {
-                if (next.success === true) {
-                    observer.next(null);
-                    observer.complete();
-                }
-                else {
-                    observer.error(next);
-                }
-            });
+        return this.serverQueryWithDefaultSubscription({
+            'query': 'edit_bundle_list',
+            'database': database,
+            'old_name': name,
+            'old_archive_label': archiveLabel,
+            'new_name': newName,
+            'new_archive_label': newArchiveLabel
         });
     };
     ProjectDataService.prototype.getUploadTarget = function () {
@@ -272,101 +238,53 @@ var ProjectDataService = (function () {
         };
     };
     ProjectDataService.prototype.deleteUpload = function (identifier) {
-        var _this = this;
-        return Rx_1.Observable.create(function (observer) {
-            var params = {
-                'query': 'delete_upload',
-                'uuid': identifier
-            };
-            _this.serverQuery(params).subscribe(function (next) {
-                if (next.success === true) {
-                    observer.next(null);
-                    observer.complete();
-                }
-                else {
-                    observer.error(next);
-                }
-            });
+        return this.serverQueryWithDefaultSubscription({
+            'query': 'delete_upload',
+            'uuid': identifier
         });
     };
     ProjectDataService.prototype.deleteBundleList = function (database, bundleList) {
-        var _this = this;
-        return Rx_1.Observable.create(function (observer) {
-            var params = {
-                query: 'delete_bundle_list',
-                database: database,
-                name: bundleList.name,
-                archive_label: bundleList.archiveLabel
-            };
-            _this.serverQuery(params).subscribe(function (next) {
-                if (next.success === true) {
-                    observer.next(null);
-                    observer.complete();
-                }
-                else {
-                    observer.error(next);
-                }
-            });
+        return this.serverQueryWithDefaultSubscription({
+            query: 'delete_bundle_list',
+            database: database,
+            name: bundleList.name,
+            archive_label: bundleList.archiveLabel
         });
     };
     ProjectDataService.prototype.saveUpload = function (identifier, name) {
-        var _this = this;
-        return Rx_1.Observable.create(function (observer) {
-            var params = {
-                'query': 'save_upload',
-                'uuid': identifier,
-                'name': name
-            };
-            _this.serverQuery(params).subscribe(function (next) {
-                if (next.success === true) {
-                    observer.next(null);
-                    observer.complete();
-                }
-                else {
-                    observer.error(next);
-                }
-            });
+        return this.serverQueryWithDefaultSubscription({
+            'query': 'save_upload',
+            'uuid': identifier,
+            'name': name
         });
     };
     ProjectDataService.prototype.duplicateBundleList = function (database, bundleList, newName, commentedOnly) {
-        var _this = this;
-        return Rx_1.Observable.create(function (observer) {
-            //
-            // Create a modified copy of `bundleList`
-            var newBundleList = {
-                name: bundleList.name,
-                archiveLabel: bundleList.archiveLabel,
-                items: []
-            };
-            // Copy the items from `bundleList` to `newBundleList`
-            for (var i = 0; i < bundleList.items.length; ++i) {
-                if (commentedOnly && !bundleList.items[i].comment) {
-                    continue;
-                }
-                newBundleList.items.push({
-                    name: bundleList.items[i].name,
-                    session: bundleList.items[i].session,
-                    comment: bundleList.items[i].comment,
-                    finishedEditing: false
-                });
+        //
+        // Create a modified copy of `bundleList`
+        var newBundleList = {
+            name: bundleList.name,
+            archiveLabel: bundleList.archiveLabel,
+            items: []
+        };
+        // Copy the items from `bundleList` to `newBundleList`
+        for (var i = 0; i < bundleList.items.length; ++i) {
+            if (commentedOnly && !bundleList.items[i].comment) {
+                continue;
             }
-            //
-            // Send query to server
-            var params = {
-                query: 'save_bundle_list',
-                database: database,
-                name: newName,
-                list: JSON.stringify(newBundleList.items)
-            };
-            _this.serverQuery(params).subscribe(function (next) {
-                if (next.success === true) {
-                    observer.next(null);
-                    observer.complete();
-                }
-                else {
-                    observer.error(next);
-                }
+            newBundleList.items.push({
+                name: bundleList.items[i].name,
+                session: bundleList.items[i].session,
+                comment: bundleList.items[i].comment,
+                finishedEditing: false
             });
+        }
+        //
+        // Send query to server
+        return this.serverQueryWithDefaultSubscription({
+            query: 'save_bundle_list',
+            database: database,
+            name: newName,
+            list: JSON.stringify(newBundleList.items)
         });
     };
     ProjectDataService.prototype.generateBundleList = function (database, sessionPattern, bundlePattern, editors, personsPerBundle, shuffled) {
@@ -554,21 +472,9 @@ var ProjectDataService = (function () {
         });
     };
     ProjectDataService.prototype.getTagList = function (database) {
-        var _this = this;
-        return Rx_1.Observable.create(function (observer) {
-            var params = {
-                query: 'list_tags',
-                database: database
-            };
-            _this.serverQuery(params).subscribe(function (next) {
-                if (next.success === true) {
-                    observer.next(next.data);
-                    observer.complete();
-                }
-                else {
-                    observer.error(next);
-                }
-            });
+        return this.serverQueryWithDefaultSubscription({
+            query: 'list_tags',
+            database: database
         });
     };
     ProjectDataService.prototype.getConfigComments = function (database) {
@@ -596,4 +502,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-pbsVkT0w.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-LSvAMGsH.tmp/0/src/app/project-data.service.js.map

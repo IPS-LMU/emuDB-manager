@@ -30,6 +30,7 @@ var bundle_list_detail_component_1 = require("./project/bundle-list-detail/bundl
 var upload_detail_component_1 = require("./project/upload-detail/upload-detail.component");
 var uploads_dashboard_component_1 = require("./project/uploads-dashboard/uploads-dashboard.component");
 var ng2_uploader_1 = require("ng2-uploader/ng2-uploader");
+var emudbmanager_table_component_1 = require("./emudbmanager-table/emudbmanager-table.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -44,6 +45,7 @@ var AppModule = (function () {
                 database_dashboard_component_1.DatabaseDashboardComponent,
                 database_detail_component_1.DatabaseDetailComponent,
                 databases_overview_component_1.DatabasesOverviewComponent,
+                emudbmanager_table_component_1.EmudbmanagerTableComponent,
                 project_component_1.ProjectComponent,
                 upload_detail_component_1.UploadDetailComponent,
                 upload_form_component_1.UploadFormComponent,
@@ -70,4 +72,4 @@ var AppModule = (function () {
     return AppModule;
 }());
 exports.AppModule = AppModule;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-pbsVkT0w.tmp/0/src/app/app.module.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-LSvAMGsH.tmp/0/src/app/app.module.js.map
