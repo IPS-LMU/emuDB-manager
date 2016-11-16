@@ -15,6 +15,8 @@ export class EmudbmanagerTableComponent implements OnInit {
 	}[];
 	@Input() data: Array<any>;
 
+	private reverseSort = false;
+	private sortColumn;
 	private visibleCount = 0;
 
 	/**
@@ -70,6 +72,27 @@ export class EmudbmanagerTableComponent implements OnInit {
 		}
 
 		this.visibleCount = result.length;
+
+		if (this.sortColumn) {
+			result.sort((a, b) => {
+				if (a[this.sortColumn.name] > b[this.sortColumn.name]) {
+					if (this.reverseSort) {
+						return -1;
+					} else {
+						return 1;
+					}
+				} else if (a[this.sortColumn.name] == b[this.sortColumn.name]) {
+					return 0;
+				} else {
+					if (this.reverseSort) {
+						return 1;
+					} else {
+						return -1;
+					}
+				}
+			});
+		}
+
 		return result;
 	}
 
@@ -89,5 +112,14 @@ export class EmudbmanagerTableComponent implements OnInit {
 			return 0;
 		}
 		return Math.round(100 * this.visibleCount / this.data.length);
+	}
+
+	private sort (column) {
+		if (this.sortColumn === column) {
+			this.reverseSort = !this.reverseSort;
+		} else {
+			this.sortColumn = column;
+			this.reverseSort = false;
+		}
 	}
 }

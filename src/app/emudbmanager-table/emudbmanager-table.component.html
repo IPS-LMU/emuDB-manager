@@ -1,6 +1,13 @@
 <thead>
 <tr>
-	<th *ngFor="let column of columns">{{column.heading}}</th>
+	<th *ngFor="let column of columns" (click)="sort(column)">
+		{{column.heading}}
+
+		<template [ngIf]="sortColumn === column">
+			<span *ngIf="!reverseSort" class="glyphicon glyphicon-triangle-top"></span>
+			<span *ngIf="reverseSort" class="glyphicon glyphicon-triangle-bottom"></span>
+		</template>
+	</th>
 </tr>
 <tr>
 	<td *ngFor="let column of columns">
@@ -30,6 +37,7 @@
 	<th [attr.colspan]="columns.length">
 		Viewing {{visibleCount}} of {{data.length}} items
 		({{percentage()}} %)
+		<span class="pull-right">Click headings to sort</span>
 	</th>
 </tr>
 </thead>
