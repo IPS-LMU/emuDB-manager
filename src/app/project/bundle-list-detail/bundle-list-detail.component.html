@@ -55,9 +55,8 @@
 
 			<div class="panel-body">
 				<p>
-					<button type="button" class="btn btn-default" [ngClass]="{active:
-					infoEditor.isEditing}"
-					        (click)="toggleEditInfo()">
+					<button type="button" class="btn btn-default" (click)="toggleEditInfo()"
+					        [ngClass]="{active: infoEditor.isEditing}">
 						Edit
 					</button>
 
