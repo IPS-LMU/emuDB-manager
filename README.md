@@ -41,6 +41,8 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 The deployment process currently looks like this:
 
 ```bash
+##### On your development machine
+
 # Make sure the working directory is clean
 # This is important becaus `ng build` will be based on the working dir and not on the HEAD revision
 git status
@@ -59,7 +61,28 @@ git push
 # to the root directory of build branch on origin
 git subtree push --prefix dist origin build
 
-# On the web server
-git pull # or git fetch and then git merge if you are careful
+###### On the web server
+
+# Download current version of build branch
+git fetch
+
+# This will tell you if the web server’s local branch can be fast-forwarded,
+# which should always be the case.
+git status
+
+# Do the fast-forward
+git pull
+
+# Make sure the web server can read all files
 chmod go+rX -R .
+
+# The config file will be protected by means of ACL
+chmod 600 server-side/emudb-manager.config.php
+setfacl -m mask:r server-side/emudb-manager.config.php
 ```
+
+### Initial deploy
+
+The first time you deploy emuDB Manager on your web server, you do a `git clone` and then a `git checkout build`.
+
+Protect the config file (server-side/emudb-manager.config.php) by means of ACL.
