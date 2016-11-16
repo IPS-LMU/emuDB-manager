@@ -59,7 +59,9 @@ export class EmudbmanagerTableComponent implements OnInit {
 							continue;
 						}
 
-						if (this.columns[j].value(this.data[i]).match(regex) === null) {
+						let value = this.columns[j].value(this.data[i]).toString();
+
+						if (value.match(regex) === null) {
 							include = false;
 							break;
 						}
