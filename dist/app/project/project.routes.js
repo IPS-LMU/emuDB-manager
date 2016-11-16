@@ -16,10 +16,10 @@ exports.projectRoutes = [{
             { path: 'databases/:name', component: database_detail_component_1.DatabaseDetailComponent },
             { path: 'bundle-lists', component: bundle_lists_dashboard_component_1.BundleListsDashboardComponent },
             { path: 'bundle-lists/:database/:name', component: bundle_list_detail_component_1.BundleListDetailComponent },
-            { path: 'bundle-lists/:database/:name/:status', component: bundle_list_detail_component_1.BundleListDetailComponent },
+            { path: 'bundle-lists/:database/:name/:archiveLabel', component: bundle_list_detail_component_1.BundleListDetailComponent },
             { path: 'uploads', component: uploads_dashboard_component_1.UploadsDashboardComponent },
             { path: 'uploads/:uuid', component: upload_detail_component_1.UploadDetailComponent },
             { path: 'progress', component: dashboard_component_1.DashboardComponent },
         ]
     }];
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-KJgFj9nx.tmp/0/src/app/project/project.routes.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-6gU2OLNd.tmp/0/src/app/project/project.routes.js.map

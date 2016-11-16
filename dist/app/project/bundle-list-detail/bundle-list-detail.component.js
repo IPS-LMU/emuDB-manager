@@ -25,7 +25,7 @@ var BundleListDetailComponent = (function () {
             messageError: '',
             messageSuccess: '',
             newName: '',
-            newStatus: ''
+            newArchiveLabel: ''
         };
         this.reallyDelete = false;
         this.state = 'Info';
@@ -33,10 +33,10 @@ var BundleListDetailComponent = (function () {
     BundleListDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.subParams = this.route.params.subscribe(function (nextParams) {
-            if (typeof nextParams['status'] === 'undefined') {
-                nextParams['status'] = '';
+            if (typeof nextParams['archiveLabel'] === 'undefined') {
+                nextParams['archiveLabel'] = '';
             }
-            _this.subBundleList = _this.projectDataService.getBundleList(nextParams['database'], nextParams['name'], nextParams['status']).subscribe(function (nextBundleList) {
+            _this.subBundleList = _this.projectDataService.getBundleList(nextParams['database'], nextParams['name'], nextParams['archiveLabel']).subscribe(function (nextBundleList) {
                 _this.database = nextParams['database'];
                 _this.setBundleList(nextBundleList);
             });
@@ -56,7 +56,7 @@ var BundleListDetailComponent = (function () {
         else {
             this.bundleList = bundleList;
             this.infoEditor.newName = bundleList.name;
-            this.infoEditor.newStatus = bundleList.status;
+            this.infoEditor.newArchiveLabel = bundleList.archiveLabel;
             this.allBundles = bundleList.items;
             this.commentedBundles = bundleList.items.filter(function (element) {
                 return element.comment !== '';
@@ -66,22 +66,22 @@ var BundleListDetailComponent = (function () {
     BundleListDetailComponent.prototype.saveEditedInfo = function () {
         var _this = this;
         var newName = this.infoEditor.newName;
-        var newStatus = this.infoEditor.newStatus;
+        var newArchiveLabel = this.infoEditor.newArchiveLabel;
         this.toggleEditInfo(); // that will reset this.infoEditor.newName
-        // and .newStatus
+        // and .newArchiveLabel
         this.infoEditor.messageError = '';
         this.infoEditor.messageSuccess = '';
-        if (this.bundleList.name === newName && this.bundleList.status === newStatus) {
+        if (this.bundleList.name === newName && this.bundleList.archiveLabel === newArchiveLabel) {
             this.infoEditor.messageSuccess = 'No changes to be saved.';
             return;
         }
-        this.projectDataService.editBundle(this.database, this.bundleList.name, this.bundleList.status, newName, newStatus).subscribe(function (next) {
+        this.projectDataService.editBundleList(this.database, this.bundleList.name, this.bundleList.archiveLabel, newName, newArchiveLabel).subscribe(function (next) {
             _this.infoEditor.messageSuccess = 'Successfully edited.';
             _this.projectDataService.fetchData();
             if (_this.subBundleList) {
                 _this.subBundleList.unsubscribe();
             }
-            _this.subBundleList = _this.projectDataService.getBundleList(_this.database, newName, newStatus).subscribe(function (nextBundleList) {
+            _this.subBundleList = _this.projectDataService.getBundleList(_this.database, newName, newArchiveLabel).subscribe(function (nextBundleList) {
                 _this.setBundleList(nextBundleList);
             });
         }, function (error) {
@@ -91,7 +91,7 @@ var BundleListDetailComponent = (function () {
     BundleListDetailComponent.prototype.toggleEditInfo = function () {
         if (this.infoEditor.isEditing) {
             this.infoEditor.newName = this.bundleList.name;
-            this.infoEditor.newStatus = this.bundleList.status;
+            this.infoEditor.newArchiveLabel = this.bundleList.archiveLabel;
             this.infoEditor.isEditing = false;
         }
         else {
@@ -120,4 +120,4 @@ var BundleListDetailComponent = (function () {
     return BundleListDetailComponent;
 }());
 exports.BundleListDetailComponent = BundleListDetailComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-KJgFj9nx.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-6gU2OLNd.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.js.map
