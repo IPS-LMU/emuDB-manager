@@ -27,7 +27,7 @@ class BundleListItem {
 
 class BundleList {
 	public $name;
-	public $status;
+	public $archiveLabel;
 	public $items;
 }
 

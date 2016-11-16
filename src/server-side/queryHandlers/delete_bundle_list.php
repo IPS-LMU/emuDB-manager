@@ -15,16 +15,16 @@ require_once 'helpers/result_helper.php';
  *        been authorized.
  * @param $database string The database in which the bundle list is located.
  * @param $name string The name of the bundle list to be deleted.
- * @param $status string The status of the bundle list to be deleted.
+ * @param $archiveLabel string The archive label of the bundle list to be deleted.
  * @return Result
  */
-function delete_bundle_list ($projectDir, $database, $name, $status) {
+function delete_bundle_list ($projectDir, $database, $name, $archiveLabel) {
 	$dbDir = $projectDir . '/databases/' . $database . '_emuDB';
 
 	$bundleListPath = $dbDir . '/bundleLists';
 
-	if ($status !== '') {
-		$bundleListPath .= '/' . $status . '_status';
+	if ($archiveLabel !== '') {
+		$bundleListPath .= '/' . $archiveLabel . '_archiveLabel';
 	}
 
 	$bundleListPath .= '/' . $name . '_bundleList.json';
@@ -37,10 +37,10 @@ function delete_bundle_list ($projectDir, $database, $name, $status) {
 	}
 
 	$message = 	'Deleted bundle list: ' . $name;
-	if ($status === '') {
-		$message .= ' (no status)';
+	if ($archiveLabel === '') {
+		$message .= ' (no archive label)';
 	} else {
-		$message .= ' (status: ' . $status . ')';
+		$message .= ' (archive label: ' . $archiveLabel . ')';
 	}
 
 	return gitCommitEverything(
