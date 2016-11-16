@@ -101,14 +101,16 @@ export class ProjectDataService {
 			});
 	}
 
-	private serverQueryWithDefaultSubscription(params, observer: Observer<any>) {
-		this.serverQuery(params).subscribe((next: any) => {
-			if (next.success === true) {
-				observer.next(next.data);
-				observer.complete();
-			} else {
-				observer.error(next);
-			}
+	private serverQueryWithDefaultSubscription(params): Observable<any> {
+		return Observable.create(observer => {
+			this.serverQuery(params).subscribe((next: any) => {
+				if (next.success === true) {
+					observer.next(next.data);
+					observer.complete();
+				} else {
+					observer.error(next);
+				}
+			});
 		});
 	}
 
@@ -222,40 +224,28 @@ export class ProjectDataService {
 	}
 
 	public renameDatabase(oldName: string, newName: string): Observable<void> {
-		return Observable.create(observer => {
-			let params = {
-				query: 'rename_db',
-				old_name: oldName,
-				new_name: newName
-			};
-
-			this.serverQueryWithDefaultSubscription(params, observer);
+		return this.serverQueryWithDefaultSubscription({
+			query: 'rename_db',
+			old_name: oldName,
+			new_name: newName
 		});
 	}
 
 	public setDatabaseConfiguration(database: string, bundleComments: boolean, bundleFinishedEditing: boolean): Observable<void> {
-		return Observable.create(observer => {
-			let params = {
-				query: 'set_database_configuration',
-				database: database,
-				bundleComments: bundleComments,
-				bundleFinishedEditing: bundleFinishedEditing
-			};
-
-			this.serverQueryWithDefaultSubscription(params, observer);
+		return this.serverQueryWithDefaultSubscription({
+			query: 'set_database_configuration',
+			database: database,
+			bundleComments: bundleComments,
+			bundleFinishedEditing: bundleFinishedEditing
 		});
 	}
 
 	public addTag(database: string, commit: string, label: string): Observable<void> {
-		return Observable.create(observer => {
-			let params = {
-				query: 'add_tag',
-				database: database,
-				commit: commit,
-				label: label
-			};
-
-			this.serverQueryWithDefaultSubscription(params, observer);
+		return this.serverQueryWithDefaultSubscription({
+			query: 'add_tag',
+			database: database,
+			commit: commit,
+			label: label
 		});
 	}
 
@@ -264,17 +254,13 @@ export class ProjectDataService {
 	                      archiveLabel: string,
 	                      newName: string,
 	                      newArchiveLabel: string): Observable<void> {
-		return Observable.create(observer => {
-			let params = {
-				'query': 'edit_bundle_list',
-				'database': database,
-				'old_name': name,
-				'old_archive_label': archiveLabel,
-				'new_name': newName,
-				'new_archive_label': newArchiveLabel
-			};
-
-			this.serverQueryWithDefaultSubscription(params, observer);
+		return this.serverQueryWithDefaultSubscription({
+			'query': 'edit_bundle_list',
+			'database': database,
+			'old_name': name,
+			'old_archive_label': archiveLabel,
+			'new_name': newName,
+			'new_archive_label': newArchiveLabel
 		});
 	}
 
@@ -299,38 +285,26 @@ export class ProjectDataService {
 	}
 
 	public deleteUpload(identifier: string) {
-		return Observable.create(observer => {
-			let params = {
-				'query': 'delete_upload',
-				'uuid': identifier
-			};
-
-			this.serverQueryWithDefaultSubscription(params, observer);
+		return this.serverQueryWithDefaultSubscription({
+			'query': 'delete_upload',
+			'uuid': identifier
 		});
 	}
 
 	public deleteBundleList(database: string, bundleList: BundleList) {
-		return Observable.create(observer => {
-			let params = {
-				query: 'delete_bundle_list',
-				database: database,
-				name: bundleList.name,
-				archive_label: bundleList.archiveLabel
-			};
-
-			this.serverQueryWithDefaultSubscription(params, observer);
+		return this.serverQueryWithDefaultSubscription({
+			query: 'delete_bundle_list',
+			database: database,
+			name: bundleList.name,
+			archive_label: bundleList.archiveLabel
 		});
 	}
 
 	public saveUpload(identifier: string, name: string): Observable<ServerResponse> {
-		return Observable.create(observer => {
-			let params = {
-				'query': 'save_upload',
-				'uuid': identifier,
-				'name': name
-			};
-
-			this.serverQueryWithDefaultSubscription(params, observer);
+		return this.serverQueryWithDefaultSubscription({
+			'query': 'save_upload',
+			'uuid': identifier,
+			'name': name
 		});
 	}
 
@@ -338,39 +312,36 @@ export class ProjectDataService {
 	                           bundleList: BundleList,
 	                           newName: string,
 	                           commentedOnly: boolean) {
-		return Observable.create(observer => {
-			//
-			// Create a modified copy of `bundleList`
-			let newBundleList: BundleList = {
-				name: bundleList.name,
-				archiveLabel: bundleList.archiveLabel,
-				items: []
-			};
 
-			// Copy the items from `bundleList` to `newBundleList`
-			for (let i = 0; i < bundleList.items.length; ++i) {
-				if (commentedOnly && !bundleList.items[i].comment) {
-					continue;
-				}
+		//
+		// Create a modified copy of `bundleList`
+		let newBundleList: BundleList = {
+			name: bundleList.name,
+			archiveLabel: bundleList.archiveLabel,
+			items: []
+		};
 
-				newBundleList.items.push({
-					name: bundleList.items[i].name,
-					session: bundleList.items[i].session,
-					comment: bundleList.items[i].comment,
-					finishedEditing: false
-				});
+		// Copy the items from `bundleList` to `newBundleList`
+		for (let i = 0; i < bundleList.items.length; ++i) {
+			if (commentedOnly && !bundleList.items[i].comment) {
+				continue;
 			}
 
-			//
-			// Send query to server
-			let params = {
-				query: 'save_bundle_list',
-				database: database,
-				name: newName,
-				list: JSON.stringify(newBundleList.items)
-			};
+			newBundleList.items.push({
+				name: bundleList.items[i].name,
+				session: bundleList.items[i].session,
+				comment: bundleList.items[i].comment,
+				finishedEditing: false
+			});
+		}
 
-			this.serverQueryWithDefaultSubscription(params, observer);
+		//
+		// Send query to server
+		return this.serverQueryWithDefaultSubscription({
+			query: 'save_bundle_list',
+			database: database,
+			name: newName,
+			list: JSON.stringify(newBundleList.items)
 		});
 	}
 
@@ -600,13 +571,9 @@ export class ProjectDataService {
 	}
 
 	public getTagList(database: string): Observable<string[]> {
-		return Observable.create(observer => {
-			let params = {
+		return this.serverQueryWithDefaultSubscription({
 				query: 'list_tags',
 				database: database
-			};
-
-			this.serverQueryWithDefaultSubscription(params, observer);
 		});
 	}
 
