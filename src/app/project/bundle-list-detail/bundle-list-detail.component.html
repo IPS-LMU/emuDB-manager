@@ -40,13 +40,13 @@
 						</td>
 					</tr>
 					<tr>
-						<td>Status</td>
+						<td>Archive label</td>
 						<td>
-							<span *ngIf="!infoEditor.isEditing">{{bundleList?.status}}</span>
+							<span *ngIf="!infoEditor.isEditing">{{bundleList?.archiveLabel}}</span>
 							<input *ngIf="infoEditor.isEditing" class="form-control"
-							       placeholder="New status"
-							       [(ngModel)]="infoEditor.newStatus"
-							       name="newStatus">
+							       placeholder="New archive label"
+							       [(ngModel)]="infoEditor.newArchiveLabel"
+							       name="newArchiveLabel">
 						</td>
 					</tr>
 					</tbody>

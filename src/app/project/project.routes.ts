@@ -17,7 +17,7 @@ export const projectRoutes:Routes = [{
 		{path: 'databases/:name', component: DatabaseDetailComponent},
 		{path: 'bundle-lists', component: BundleListsDashboardComponent},
 		{path: 'bundle-lists/:database/:name', component: BundleListDetailComponent},
-		{path: 'bundle-lists/:database/:name/:status', component: BundleListDetailComponent},
+		{path: 'bundle-lists/:database/:name/:archiveLabel', component: BundleListDetailComponent},
 		{path: 'uploads', component: UploadsDashboardComponent},
 		{path: 'uploads/:uuid', component: UploadDetailComponent},
 		{path: 'progress', component: DashboardComponent},

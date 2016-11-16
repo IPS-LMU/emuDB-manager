@@ -4,7 +4,7 @@
 		<tr>
 			<th *ngIf="!database">Database</th>
 			<th>Editor</th>
-			<th>Status</th>
+			<th>Archive label</th>
 			<th>Bundles</th>
 			<th>Finished</th>
 			<th>Comments</th>
@@ -20,7 +20,7 @@
 					<td *ngIf="!database"><a [routerLink]="['/project/databases', db.name]">{{db.name}}</a>
 					</td>
 					<td>{{bundleList.name}}</td>
-					<td>{{bundleList.status}}</td>
+					<td>{{bundleList.archiveLabel}}</td>
 					<td>{{bundleList.items.length}}</td>
 					<td>{{countFinishedItems(bundleList)}} ({{percentageFinishedItems(bundleList)}}
 						%)
@@ -30,7 +30,7 @@
 					</td>
 					<td>
 						<button
-							[routerLink]="['/project/bundle-lists', db.name, bundleList.name, bundleList.status]"
+							[routerLink]="['/project/bundle-lists', db.name, bundleList.name, bundleList.archiveLabel]"
 							class="btn btn-default">
 							View &amp; edit
 						</button>

@@ -2,6 +2,6 @@ import {BundleListItem} from "./bundle-list-item";
 
 export interface BundleList {
 	name:string;
-	status:string;
+	archiveLabel:string;
 	items:BundleListItem[];
 }

@@ -24,7 +24,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 		messageError: '',
 		messageSuccess: '',
 		newName: '',
-		newStatus: ''
+		newArchiveLabel: ''
 	};
 	private reallyDelete:boolean = false;
 	private state:State = 'Info';
@@ -38,14 +38,14 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 
 	ngOnInit() {
 		this.subParams = this.route.params.subscribe(nextParams => {
-			if (typeof nextParams['status'] === 'undefined') {
-				nextParams['status'] = '';
+			if (typeof nextParams['archiveLabel'] === 'undefined') {
+				nextParams['archiveLabel'] = '';
 			}
 
 			this.subBundleList = this.projectDataService.getBundleList(
 				nextParams['database'],
 				nextParams['name'],
-				nextParams['status']
+				nextParams['archiveLabel']
 			).subscribe(nextBundleList => {
 				this.database = nextParams['database'];
 				this.setBundleList(nextBundleList);
@@ -68,7 +68,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 		} else {
 			this.bundleList = bundleList;
 			this.infoEditor.newName = bundleList.name;
-			this.infoEditor.newStatus = bundleList.status;
+			this.infoEditor.newArchiveLabel = bundleList.archiveLabel;
 
 			this.allBundles = bundleList.items;
 			this.commentedBundles = bundleList.items.filter(element => {
@@ -79,23 +79,23 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 
 	private saveEditedInfo () {
 		let newName = this.infoEditor.newName;
-		let newStatus = this.infoEditor.newStatus;
+		let newArchiveLabel = this.infoEditor.newArchiveLabel;
 		this.toggleEditInfo(); // that will reset this.infoEditor.newName
-		// and .newStatus
+		// and .newArchiveLabel
 
 		this.infoEditor.messageError = '';
 		this.infoEditor.messageSuccess = '';
 
-		if (this.bundleList.name === newName && this.bundleList.status === newStatus) {
+		if (this.bundleList.name === newName && this.bundleList.archiveLabel === newArchiveLabel) {
 			this.infoEditor.messageSuccess = 'No changes to be saved.';
 			return;
 		}
 
-		this.projectDataService.editBundle(
+		this.projectDataService.editBundleList(
 			this.database,
 			this.bundleList.name,
-			this.bundleList.status,
-			newName, newStatus
+			this.bundleList.archiveLabel,
+			newName, newArchiveLabel
 		).subscribe (next => {
 			this.infoEditor.messageSuccess = 'Successfully edited.';
 			this.projectDataService.fetchData();
@@ -106,7 +106,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 			this.subBundleList = this.projectDataService.getBundleList(
 				this.database,
 				newName,
-				newStatus
+				newArchiveLabel
 			).subscribe(nextBundleList => {
 				this.setBundleList(nextBundleList)
 			});
@@ -118,7 +118,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 	private toggleEditInfo () {
 		if (this.infoEditor.isEditing) {
 			this.infoEditor.newName = this.bundleList.name;
-			this.infoEditor.newStatus = this.bundleList.status;
+			this.infoEditor.newArchiveLabel = this.bundleList.archiveLabel;
 			this.infoEditor.isEditing = false;
 		} else {
 			this.infoEditor.isEditing = true;

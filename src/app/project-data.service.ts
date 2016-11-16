@@ -143,14 +143,14 @@ export class ProjectDataService {
 		});
 	}
 
-	public getBundleList(database: string, name: string, status: string): Observable<BundleList> {
+	public getBundleList(database: string, name: string, archiveLabel: string): Observable<BundleList> {
 		return this.infoObservable.map((x: ProjectInfo) => {
 			for (let i = 0; i < x.databases.length; ++i) {
 				if (x.databases[i].name === database) {
 					for (let j = 0; j < x.databases[i].bundleLists.length; ++j) {
 						if (
 							x.databases[i].bundleLists[j].name === name
-							&& x.databases[i].bundleLists[j].status === status
+							&& x.databases[i].bundleLists[j].archiveLabel === archiveLabel
 						) {
 							return x.databases[i].bundleLists[j];
 						}
@@ -269,19 +269,19 @@ export class ProjectDataService {
 		});
 	}
 
-	public editBundle(database: string,
-	                  name: string,
-	                  status: string,
-	                  newName: string,
-	                  newStatus: string): Observable<void> {
+	public editBundleList(database: string,
+	                      name: string,
+	                      archiveLabel: string,
+	                      newName: string,
+	                      newArchiveLabel: string): Observable<void> {
 		return Observable.create(observer => {
 			let params = {
 				'query': 'edit_bundle_list',
 				'database': database,
 				'old_name': name,
-				'old_status': status,
+				'old_archive_label': archiveLabel,
 				'new_name': newName,
-				'new_status': newStatus
+				'new_archive_label': newArchiveLabel
 			};
 
 			this.serverQuery(params).subscribe((next: any) => {
@@ -339,7 +339,7 @@ export class ProjectDataService {
 				query: 'delete_bundle_list',
 				database: database,
 				name: bundleList.name,
-				status: bundleList.status
+				archive_label: bundleList.archiveLabel
 			};
 
 			this.serverQuery(params).subscribe((next: any) => {
@@ -401,7 +401,7 @@ export class ProjectDataService {
 
 				for (let i = 0; i < editors.length; ++i) {
 					for (let j = 0; j < dbInfo.bundleLists.length; ++j) {
-						if (editors[i] === dbInfo.bundleLists[j].name && dbInfo.bundleLists[j].status === '') {
+						if (editors[i] === dbInfo.bundleLists[j].name && dbInfo.bundleLists[j].archiveLabel === '') {
 							observer.error({
 								message: 'Editor already has a' + ' non-archived bundle list: ' + editors[i]
 							});
@@ -459,7 +459,7 @@ export class ProjectDataService {
 				for (let i = 0; i < editors.length; ++i) {
 					resultBundleLists.push({
 						name: editors[i],
-						status: '',
+						archiveLabel: '',
 						items: []
 					});
 				}
