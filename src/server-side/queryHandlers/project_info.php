@@ -245,7 +245,7 @@ function readBundleLists ($directory) {
 			}
 
 			$bundleLists[] = $bundleList;
-		} else if (substr($entry, -7) === '_archiveLabel') {
+		} else if (substr($entry, -13) === '_archiveLabel') {
 			$subdirHandle = dir($directory . '/' . $entry);
 
 			if ($subdirHandle === false || is_null($subdirHandle)) {
@@ -259,7 +259,7 @@ function readBundleLists ($directory) {
 				if (substr($subdirEntry, -16) === '_bundleList.json') {
 					$bundleList = new BundleList();
 					$bundleList->name = substr($subdirEntry, 0, -16);
-					$bundleList->archiveLabel = substr($entry, 0, -7);
+					$bundleList->archiveLabel = substr($entry, 0, -13);
 
 					$itemsStat = load_json_file(
 						$directory . '/' . $entry . '/' . $subdirEntry
