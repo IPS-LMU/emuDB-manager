@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../../../../home/markus/code/emuDB-manager/tmp/broccoli_type_script_compiler-input_base_path-LSvAMGsH.tmp/0/src/app/emudbmanager-table/index.ts"],"names":[],"mappings":";AAAA,6CAAyC,gCAAgC,CAAC;AAAlE,+FAAkE","sourcesContent":["export {EmudbmanagerTableComponent} from './emudbmanager-table.component';\n"]}

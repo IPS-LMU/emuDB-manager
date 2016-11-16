@@ -35,6 +35,12 @@ var BundleListDetailComponent = (function () {
         };
         this.reallyDelete = false;
         this.state = 'Info';
+        this.tableFormat = [
+            { type: 'string', heading: 'Session', value: function (x) { return x.session; } },
+            { type: 'string', heading: 'Bundle', value: function (x) { return x.name; } },
+            { type: 'boolean', heading: 'Finished editing', value: function (x) { return x.finishedEditing; } },
+            { type: 'string', heading: 'Comment', value: function (x) { return x.comment; } }
+        ];
     }
     BundleListDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -142,4 +148,4 @@ var BundleListDetailComponent = (function () {
     return BundleListDetailComponent;
 }());
 exports.BundleListDetailComponent = BundleListDetailComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-pbsVkT0w.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-LSvAMGsH.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.js.map

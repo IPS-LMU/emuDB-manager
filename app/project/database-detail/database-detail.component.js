@@ -22,6 +22,10 @@ var DatabaseDetailComponent = (function () {
         this.saveConfigError = '';
         this.saveConfigSuccess = '';
         this.state = 'BundleLists';
+        this.tableFormat = [
+            { type: 'string', heading: 'Name', value: function (x) { return x.name; } },
+            { type: 'string', heading: 'Bundles', value: function (x) { return x.bundles.length; } }
+        ];
         this.tagList = [];
         this.webAppLink = '';
     }
@@ -170,4 +174,4 @@ var DatabaseDetailComponent = (function () {
     return DatabaseDetailComponent;
 }());
 exports.DatabaseDetailComponent = DatabaseDetailComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-pbsVkT0w.tmp/0/src/app/project/database-detail/database-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-LSvAMGsH.tmp/0/src/app/project/database-detail/database-detail.component.js.map

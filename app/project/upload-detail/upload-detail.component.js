@@ -26,6 +26,10 @@ var UploadDetailComponent = (function () {
         };
         this.reallyDelete = false;
         this.state = 'Sessions';
+        this.tableFormat = [
+            { type: 'string', heading: 'Name', value: function (x) { return x.name; } },
+            { type: 'string', heading: 'Bundles', value: function (x) { return x.bundles.length; } }
+        ];
     }
     UploadDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -107,4 +111,4 @@ var UploadDetailComponent = (function () {
     return UploadDetailComponent;
 }());
 exports.UploadDetailComponent = UploadDetailComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-pbsVkT0w.tmp/0/src/app/project/upload-detail/upload-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-LSvAMGsH.tmp/0/src/app/project/upload-detail/upload-detail.component.js.map
