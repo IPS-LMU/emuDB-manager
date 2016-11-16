@@ -114,13 +114,13 @@ var ProjectDataService = (function () {
             return result;
         });
     };
-    ProjectDataService.prototype.getBundleList = function (database, name, status) {
+    ProjectDataService.prototype.getBundleList = function (database, name, archiveLabel) {
         return this.infoObservable.map(function (x) {
             for (var i = 0; i < x.databases.length; ++i) {
                 if (x.databases[i].name === database) {
                     for (var j = 0; j < x.databases[i].bundleLists.length; ++j) {
                         if (x.databases[i].bundleLists[j].name === name
-                            && x.databases[i].bundleLists[j].status === status) {
+                            && x.databases[i].bundleLists[j].archiveLabel === archiveLabel) {
                             return x.databases[i].bundleLists[j];
                         }
                     }
@@ -231,16 +231,16 @@ var ProjectDataService = (function () {
             });
         });
     };
-    ProjectDataService.prototype.editBundle = function (database, name, status, newName, newStatus) {
+    ProjectDataService.prototype.editBundleList = function (database, name, archiveLabel, newName, newArchiveLabel) {
         var _this = this;
         return Rx_1.Observable.create(function (observer) {
             var params = {
                 'query': 'edit_bundle_list',
                 'database': database,
                 'old_name': name,
-                'old_status': status,
+                'old_archive_label': archiveLabel,
                 'new_name': newName,
-                'new_status': newStatus
+                'new_archive_label': newArchiveLabel
             };
             _this.serverQuery(params).subscribe(function (next) {
                 if (next.success === true) {
@@ -296,7 +296,7 @@ var ProjectDataService = (function () {
                 query: 'delete_bundle_list',
                 database: database,
                 name: bundleList.name,
-                status: bundleList.status
+                archive_label: bundleList.archiveLabel
             };
             _this.serverQuery(params).subscribe(function (next) {
                 if (next.success === true) {
@@ -349,7 +349,7 @@ var ProjectDataService = (function () {
                 }
                 for (var i = 0; i < editors.length; ++i) {
                     for (var j = 0; j < dbInfo.bundleLists.length; ++j) {
-                        if (editors[i] === dbInfo.bundleLists[j].name && dbInfo.bundleLists[j].status === '') {
+                        if (editors[i] === dbInfo.bundleLists[j].name && dbInfo.bundleLists[j].archiveLabel === '') {
                             observer.error({
                                 message: 'Editor already has a' + ' non-archived bundle list: ' + editors[i]
                             });
@@ -394,7 +394,7 @@ var ProjectDataService = (function () {
                 for (var i = 0; i < editors.length; ++i) {
                     resultBundleLists.push({
                         name: editors[i],
-                        status: '',
+                        archiveLabel: '',
                         items: []
                     });
                 }
@@ -555,4 +555,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-KJgFj9nx.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-6gU2OLNd.tmp/0/src/app/project-data.service.js.map

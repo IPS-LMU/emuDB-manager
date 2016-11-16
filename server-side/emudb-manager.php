@@ -162,7 +162,7 @@ function executeQuery (AuthToken $authToken) {
 				return $result;
 			}
 
-			$result = validateStatus($_POST['status']);
+			$result = validateArchiveLabel($_POST['archive_label']);
 			if ($result->success !== true) {
 				return $result;
 			}
@@ -171,7 +171,7 @@ function executeQuery (AuthToken $authToken) {
 				$authToken->projectDir,
 				$_POST['database'],
 				$_POST['name'],
-				$_POST['status']
+				$_POST['archive_label']
 			);
 			break;
 
@@ -213,12 +213,12 @@ function executeQuery (AuthToken $authToken) {
 				return $result;
 			}
 
-			$result = validateStatus($_POST['old_status']);
+			$result = validateArchiveLabel($_POST['old_archive_label']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateStatus($_POST['new_status']);
+			$result = validateArchiveLabel($_POST['new_archive_label']);
 			if ($result->success !== true) {
 				return $result;
 			}
@@ -236,9 +236,9 @@ function executeQuery (AuthToken $authToken) {
 			return edit_bundle_list(
 				$authToken->projectDir,
 				$_POST['database'],
-				$_POST['old_status'],
+				$_POST['old_archive_label'],
 				$_POST['old_name'],
-				$_POST['new_status'],
+				$_POST['new_archive_label'],
 				$_POST['new_name']
 			);
 			break;

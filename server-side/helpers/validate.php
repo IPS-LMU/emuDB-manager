@@ -43,17 +43,17 @@ function validateDatabaseName ($name) {
 }
 
 /**
- * Check whether a given name is a valid status identifier (see also
+ * Check whether a given name is a valid archive label (see also
  * validatePlainString()).
  *
  * @param $name string The name to validate.
  * @return Result
  */
-function validateStatus ($name) {
+function validateArchiveLabel ($name) {
 	if (!is_string($name)) {
 		return negativeResult(
-			'INVALID_STATUS',
-			'The specified status is invalid.'
+			'INVALID_ARCHIVE_LABEL',
+			'The specified archive label is invalid.'
 		);
 	}
 
@@ -62,14 +62,14 @@ function validateStatus ($name) {
 	if ($result === false) {
 		return negativeResult(
 			'REGEX_FAILED',
-			'Failed to check whether a given status is valid.'
+			'Failed to check whether a given archive label is valid.'
 		);
 	}
 
 	if ($result === 1) {
 		return negativeResult(
-			'INVALID_STATUS',
-			'The specified status is invalid.'
+			'INVALID_ARCHIVE_LABEL',
+			'The specified archive label is invalid.'
 		);
 	}
 

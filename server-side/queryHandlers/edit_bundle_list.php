@@ -11,40 +11,40 @@ require_once 'helpers/result_helper.php';
 require_once 'helpers/json_file.php';
 
 /**
- * Edits a bundle list's name and status.
+ * Edits a bundle list's name and archive label.
  *
  * The name is changed by renaming the file.
- * The status is changed by moving it to another directory.
+ * The archive label is changed by moving it to another directory.
  *
  * @param $projectDir string The project directory for which the client has
  *        been authorized.
  * @param $db string The name of the database in which to operate.
- * @param $oldStatus string Together with $oldName, identifies the bundle to edit.
- * @param $oldName string Together with $oldStatus, identifies the bundle to edit.
- * @param $newStatus string The new status for the edited bundle.
+ * @param $oldArchiveLabel string Together with $oldName, identifies the bundle to edit.
+ * @param $oldName string Together with $oldArchiveLabel, identifies the bundle to edit.
+ * @param $newArchiveLabel string The new archive label for the edited bundle.
  * @param $newName string The new name for the edited bundle.
  * @return Result
  */
 function edit_bundle_list (
 	$projectDir,
 	$db,
-	$oldStatus,
+	$oldArchiveLabel,
 	$oldName,
-	$newStatus,
+	$newArchiveLabel,
 	$newName) {
 	$dbDir = $projectDir . '/databases/' . $db . '_emuDB';
 	$bundleListsDir = $dbDir . '/bundleLists';
 
-	if ($oldStatus === '') {
+	if ($oldArchiveLabel === '') {
 		$oldDirectory = $bundleListsDir;
 	} else {
-		$oldDirectory = $bundleListsDir . '/' . $oldStatus . '_status';
+		$oldDirectory = $bundleListsDir . '/' . $oldArchiveLabel . '_archiveLabel';
 	}
 
-	if ($newStatus === '') {
+	if ($newArchiveLabel === '') {
 		$newDirectory = $bundleListsDir;
 	} else {
-		$newDirectory = $bundleListsDir . '/' . $newStatus . '_status';
+		$newDirectory = $bundleListsDir . '/' . $newArchiveLabel . '_archiveLabel';
 	}
 
 	$oldName = $oldName . '_bundleList.json';
@@ -62,7 +62,7 @@ function edit_bundle_list (
 	if (file_exists($newDirectory . '/' . $newName)) {
 		return negativeResult(
 			'NAME_ALREADY_TAKEN',
-			'The name/status combination for the bundle list ist already taken.'
+			'The name/archive label combination for the bundle list ist already taken.'
 		);
 	}
 
@@ -70,8 +70,8 @@ function edit_bundle_list (
 		// @todo set mode explicitly
 		if (!mkdir($newDirectory)) {
 			return negativeResult(
-				'CREATING_STATUS_DIR_FAILED',
-				'The directory for the new status could not be created.'
+				'CREATING_ARCHIVE_LABEL_DIR_FAILED',
+				'The directory for the new archive label could not be created.'
 			);
 		}
 	}
@@ -86,7 +86,7 @@ function edit_bundle_list (
 
 	return gitCommitEverything(
 		$dbDir,
-		'Moved bundle list from ' . $oldStatus . '/' . $oldName . ' to ' .
-		$newStatus . '/' . $newName
+		'Moved bundle list from ' . $oldArchiveLabel . '/' . $oldName . ' to ' .
+		$newArchiveLabel . '/' . $newName
 	);
 }

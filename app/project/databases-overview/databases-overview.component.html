@@ -19,7 +19,7 @@
 				<ul>
 					<li *ngFor="let bundleList of database.bundleLists">
 						{{bundleList.name}}
-						<span *ngIf="bundleList.status">({{bundleList.status}})</span>
+						<span *ngIf="bundleList.archiveLabel">({{bundleList.archiveLabel}})</span>
 					</li>
 				</ul>
 			</td>

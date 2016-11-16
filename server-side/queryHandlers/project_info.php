@@ -214,7 +214,7 @@ function readDatabase ($directory) {
 
 /**
  * Read a bundle list dir and look for bundle lists inside it and
- * inside subdirs named *_status. An array of BundleList objects is returned.
+ * inside subdirs named *_archiveLabel. An array of BundleList objects is returned.
  *
  * @param $directory string The directory to traverse.
  * @returns Result An object with 'data' set to an array of BundleList objects.
@@ -235,7 +235,7 @@ function readBundleLists ($directory) {
 		if (substr($entry, -16) === '_bundleList.json') {
 			$bundleList = new BundleList();
 			$bundleList->name = substr($entry, 0, -16);
-			$bundleList->status = '';
+			$bundleList->archiveLabel = '';
 
 			$itemsStat = load_json_file($directory . '/' . $entry);
 			if ($itemsStat->success === true) {
@@ -245,7 +245,7 @@ function readBundleLists ($directory) {
 			}
 
 			$bundleLists[] = $bundleList;
-		} else if (substr($entry, -7) === '_status') {
+		} else if (substr($entry, -13) === '_archiveLabel') {
 			$subdirHandle = dir($directory . '/' . $entry);
 
 			if ($subdirHandle === false || is_null($subdirHandle)) {
@@ -259,7 +259,7 @@ function readBundleLists ($directory) {
 				if (substr($subdirEntry, -16) === '_bundleList.json') {
 					$bundleList = new BundleList();
 					$bundleList->name = substr($subdirEntry, 0, -16);
-					$bundleList->status = substr($entry, 0, -7);
+					$bundleList->archiveLabel = substr($entry, 0, -13);
 
 					$itemsStat = load_json_file(
 						$directory . '/' . $entry . '/' . $subdirEntry
