@@ -328,6 +328,47 @@ var ProjectDataService = (function () {
             });
         });
     };
+    ProjectDataService.prototype.duplicateBundleList = function (database, bundleList, newName, commentedOnly) {
+        var _this = this;
+        return Rx_1.Observable.create(function (observer) {
+            //
+            // Create a modified copy of `bundleList`
+            var newBundleList = {
+                name: bundleList.name,
+                archiveLabel: bundleList.archiveLabel,
+                items: []
+            };
+            // Copy the items from `bundleList` to `newBundleList`
+            for (var i = 0; i < bundleList.items.length; ++i) {
+                if (commentedOnly && !bundleList.items[i].comment) {
+                    continue;
+                }
+                newBundleList.items.push({
+                    name: bundleList.items[i].name,
+                    session: bundleList.items[i].session,
+                    comment: bundleList.items[i].comment,
+                    finishedEditing: false
+                });
+            }
+            //
+            // Send query to server
+            var params = {
+                query: 'save_bundle_list',
+                database: database,
+                name: newName,
+                list: JSON.stringify(newBundleList.items)
+            };
+            _this.serverQuery(params).subscribe(function (next) {
+                if (next.success === true) {
+                    observer.next(null);
+                    observer.complete();
+                }
+                else {
+                    observer.error(next);
+                }
+            });
+        });
+    };
     ProjectDataService.prototype.generateBundleList = function (database, sessionPattern, bundlePattern, editors, personsPerBundle, shuffled) {
         var _this = this;
         return Rx_1.Observable.create(function (observer) {
@@ -555,4 +596,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-6gU2OLNd.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-pbsVkT0w.tmp/0/src/app/project-data.service.js.map
