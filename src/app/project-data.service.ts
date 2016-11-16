@@ -101,6 +101,17 @@ export class ProjectDataService {
 			});
 	}
 
+	private serverQueryWithDefaultSubscription(params, observer: Observer<any>) {
+		this.serverQuery(params).subscribe((next: any) => {
+			if (next.success === true) {
+				observer.next(next.data);
+				observer.complete();
+			} else {
+				observer.error(next);
+			}
+		});
+	}
+
 	public login(username: string, password: string): Observable<void> {
 		return Observable.create(observer => {
 			this.username = username;
@@ -218,14 +229,7 @@ export class ProjectDataService {
 				new_name: newName
 			};
 
-			this.serverQuery(params).subscribe((next: any) => {
-				if (next.success === true) {
-					observer.next(null);
-					observer.complete();
-				} else {
-					observer.error(next);
-				}
-			});
+			this.serverQueryWithDefaultSubscription(params, observer);
 		});
 	}
 
@@ -238,14 +242,7 @@ export class ProjectDataService {
 				bundleFinishedEditing: bundleFinishedEditing
 			};
 
-			this.serverQuery(params).subscribe((next: any) => {
-				if (next.success === true) {
-					observer.next(null);
-					observer.complete();
-				} else {
-					observer.error(next);
-				}
-			});
+			this.serverQueryWithDefaultSubscription(params, observer);
 		});
 	}
 
@@ -258,14 +255,7 @@ export class ProjectDataService {
 				label: label
 			};
 
-			this.serverQuery(params).subscribe((next: any) => {
-				if (next.success === true) {
-					observer.next(null);
-					observer.complete();
-				} else {
-					observer.error(next);
-				}
-			});
+			this.serverQueryWithDefaultSubscription(params, observer);
 		});
 	}
 
@@ -284,14 +274,7 @@ export class ProjectDataService {
 				'new_archive_label': newArchiveLabel
 			};
 
-			this.serverQuery(params).subscribe((next: any) => {
-				if (next.success === true) {
-					observer.next(null);
-					observer.complete();
-				} else {
-					observer.error(next);
-				}
-			});
+			this.serverQueryWithDefaultSubscription(params, observer);
 		});
 	}
 
@@ -322,14 +305,7 @@ export class ProjectDataService {
 				'uuid': identifier
 			};
 
-			this.serverQuery(params).subscribe((next: any) => {
-				if (next.success === true) {
-					observer.next(null);
-					observer.complete();
-				} else {
-					observer.error(next);
-				}
-			});
+			this.serverQueryWithDefaultSubscription(params, observer);
 		});
 	}
 
@@ -342,14 +318,7 @@ export class ProjectDataService {
 				archive_label: bundleList.archiveLabel
 			};
 
-			this.serverQuery(params).subscribe((next: any) => {
-				if (next.success === true) {
-					observer.next(null);
-					observer.complete();
-				} else {
-					observer.error(next);
-				}
-			});
+			this.serverQueryWithDefaultSubscription(params, observer);
 		});
 	}
 
@@ -361,14 +330,7 @@ export class ProjectDataService {
 				'name': name
 			};
 
-			this.serverQuery(params).subscribe((next: any) => {
-				if (next.success === true) {
-					observer.next(null);
-					observer.complete();
-				} else {
-					observer.error(next);
-				}
-			});
+			this.serverQueryWithDefaultSubscription(params, observer);
 		});
 	}
 
@@ -408,14 +370,7 @@ export class ProjectDataService {
 				list: JSON.stringify(newBundleList.items)
 			};
 
-			this.serverQuery(params).subscribe((next: any) => {
-				if (next.success === true) {
-					observer.next(null);
-					observer.complete();
-				} else {
-					observer.error(next);
-				}
-			});
+			this.serverQueryWithDefaultSubscription(params, observer);
 		});
 	}
 
@@ -651,14 +606,7 @@ export class ProjectDataService {
 				database: database
 			};
 
-			this.serverQuery(params).subscribe((next: any) => {
-				if (next.success === true) {
-					observer.next(next.data);
-					observer.complete();
-				} else {
-					observer.error(next);
-				}
-			});
+			this.serverQueryWithDefaultSubscription(params, observer);
 		});
 	}
 
