@@ -20,6 +20,12 @@ var BundleListDetailComponent = (function () {
         this.commentedBundles = [];
         this.database = '';
         this.deleteError = '';
+        this.duplicationEditor = {
+            commentedOnly: false,
+            editorName: '',
+            messageError: '',
+            messageSuccess: ''
+        };
         this.infoEditor = {
             isEditing: false,
             messageError: '',
@@ -108,6 +114,22 @@ var BundleListDetailComponent = (function () {
             _this.deleteError = error.message;
         });
     };
+    BundleListDetailComponent.prototype.duplicateBundleList = function () {
+        var _this = this;
+        this.duplicationEditor.messageError = '';
+        this.duplicationEditor.messageSuccess = '';
+        // Reset editorName but keep commentedOnly.
+        // This way the user won't be able to click twice without typing again
+        var editorName = this.duplicationEditor.editorName;
+        this.duplicationEditor.editorName = '';
+        this.projectDataService.duplicateBundleList(this.database, this.bundleList, editorName, this.duplicationEditor.commentedOnly).subscribe(function (next) {
+            _this.duplicationEditor.messageSuccess = 'Successfully duplicated' +
+                ' bundle list.';
+            _this.projectDataService.fetchData();
+        }, function (error) {
+            _this.duplicationEditor.messageError = error.message;
+        });
+    };
     BundleListDetailComponent = __decorate([
         core_1.Component({
             moduleId: module.id,
@@ -120,4 +142,4 @@ var BundleListDetailComponent = (function () {
     return BundleListDetailComponent;
 }());
 exports.BundleListDetailComponent = BundleListDetailComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-6gU2OLNd.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-pbsVkT0w.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.js.map

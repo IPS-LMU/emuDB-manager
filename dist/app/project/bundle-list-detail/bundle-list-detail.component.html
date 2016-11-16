@@ -27,7 +27,7 @@
 					<tbody>
 					<tr>
 						<td>Database</td>
-						<td>{{database}}</td>
+						<td><a [routerLink]="['/project/databases', database]">{{database}}</a></td>
 					</tr>
 					<tr>
 						<td>Editor</td>
@@ -55,9 +55,8 @@
 
 			<div class="panel-body">
 				<p>
-					<button type="button" class="btn btn-default" [ngClass]="{active:
-					infoEditor.isEditing}"
-					        (click)="toggleEditInfo()">
+					<button type="button" class="btn btn-default" (click)="toggleEditInfo()"
+					        [ngClass]="{active: infoEditor.isEditing}">
 						Edit
 					</button>
 
@@ -86,6 +85,60 @@
 				</p>
 			</div>
 		</form>
+
+		<hr>
+
+		<div class="panel-body">
+			<p>
+				Bundle lists can be duplicated. The copy will be assigned to a different editor but
+				it will share the same comments. All “finished editing” ticks will be reset.
+			</p>
+
+			<p>
+				This is useful to review the comments in the EMU-webApp, along with the signal and
+				annotation data.
+			</p>
+
+			<form (ngSubmit)="duplicateBundleList()">
+				<p>
+					<input class="form-control" placeholder="Choose editor for duplicate"
+					       [(ngModel)]="duplicationEditor.editorName" name="editorName">
+				</p>
+
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" [(ngModel)]="duplicationEditor.commentedOnly"
+						       name="commentedOnly">
+						Only duplicate commented bundles
+					</label>
+				</div>
+
+				<p *ngIf="duplicationEditor.messageError" class="alert alert-danger">
+					<button type="button" class="close" aria-label="Close"
+					        (click)="duplicationEditor.messageError = ''">
+						<span aria-hidden="true">&times;</span>
+					</button>
+
+					{{duplicationEditor.messageError}}
+				</p>
+
+				<p *ngIf="duplicationEditor.messageSuccess" class="alert alert-success">
+					<button type="button" class="close" aria-label="Close"
+					        (click)="duplicationEditor.messageSuccess = ''">
+						<span aria-hidden="true">&times;</span>
+					</button>
+
+					{{duplicationEditor.messageSuccess}}
+				</p>
+
+
+				<p>
+					<button class="btn btn-primary" [disabled]="!duplicationEditor.editorName">
+						Duplicate
+					</button>
+				</p>
+			</form>
+		</div>
 
 		<hr>
 

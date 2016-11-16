@@ -170,4 +170,4 @@ var DatabaseDetailComponent = (function () {
     return DatabaseDetailComponent;
 }());
 exports.DatabaseDetailComponent = DatabaseDetailComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-6gU2OLNd.tmp/0/src/app/project/database-detail/database-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-pbsVkT0w.tmp/0/src/app/project/database-detail/database-detail.component.js.map
