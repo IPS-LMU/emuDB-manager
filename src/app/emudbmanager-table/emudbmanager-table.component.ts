@@ -15,10 +15,11 @@ export class EmudbmanagerTableComponent implements OnInit {
 	}[];
 	private _data: Array<any>;
 
-	get data ():Array<any> {
+	get data(): Array<any> {
 		return this._data;
 	}
-	@Input() set data (a:Array<any>) {
+
+	@Input() set data(a: Array<any>) {
 		if (!Array.isArray(a)) {
 			this._data = [];
 		} else {
@@ -114,18 +115,18 @@ export class EmudbmanagerTableComponent implements OnInit {
 	ngOnInit() {
 	}
 
-	private isBoolean (test) {
+	private isBoolean(test) {
 		return typeof test === 'boolean';
 	}
 
-	private percentage():number {
+	private percentage(): number {
 		if (this.data.length === 0) {
 			return 0;
 		}
 		return Math.round(100 * this.visibleCount / this.data.length);
 	}
 
-	private sort (column) {
+	private sort(column) {
 		if (this.sortColumn === column) {
 			this.reverseSort = !this.reverseSort;
 		} else {
