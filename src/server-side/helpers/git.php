@@ -114,12 +114,9 @@ function gitTag ($path, $tag, $commit) {
 	);
 }
 
-function gitArchive ($path, $dbName, $treeish) {
-	$tmpFileName = tempnam(sys_get_temp_dir(),
-		'emuDBmanager-download-archive-');
-
+function gitArchive ($path, $dbName, $treeish, $filename) {
 	execGit(
-		'archive --format=zip -o ' . $tmpFileName . ' --prefix=' . $dbName .
+		'archive --format=zip -o ' . $filename . ' --prefix=' . $dbName .
 		'_emuDB/ -0 ' . $treeish,
 		$path,
 		$output,
@@ -133,7 +130,7 @@ function gitArchive ($path, $dbName, $treeish) {
 		);
 	}
 
-	return positiveResult($tmpFileName);
+	return positiveResult($filename);
 }
 
 function gitHeadRevision ($path) {
