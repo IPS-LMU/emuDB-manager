@@ -50,12 +50,12 @@ function getUploadDataDirectory ($projectDir, $uploadUUID) {
 	return getUploadDirectory($projectDir, $uploadUUID) . '/data';
 }
 
-function getDownloadFile ($projectDir, $db, $head, $revision) {
-	if ($head) {
-		return $projectDir . '/downloads/' . $db . '_repository_' . $revision
+function getDownloadFile ($projectDir, $db, $includeGitDirectory, $treeish) {
+	if ($includeGitDirectory) {
+		return $projectDir . '/downloads/' . $db . '_repository_' . $treeish
 		. '.zip';
 	} else {
-		return $projectDir . '/downloads/' . $db . '_snapshot_' . $revision
+		return $projectDir . '/downloads/' . $db . '_snapshot_' . $treeish
 		. '.zip';
 	}
 }
