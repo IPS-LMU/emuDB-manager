@@ -18,6 +18,9 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private configFinishedEditing: boolean;
 	private database: DatabaseInfo;
 	private downloadTarget = this.projectDataService.getDownloadTarget();
+	private _email: string = '';
+	private emailRegex = /.+@.+\..*/;
+	private emailValid: boolean = false;
 	private newName: string = '';
 	private renameError: string = '';
 	private renameSuccess: string = '';
@@ -37,6 +40,20 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private webAppLink: string = '';
 
 	constructor(private projectDataService: ProjectDataService, private route: ActivatedRoute) {
+	}
+
+	private set email(s: string) {
+		this._email = s;
+
+		if (this._email.match(this.emailRegex) !== null) {
+			this.emailValid = true;
+		} else {
+			this.emailValid = false;
+		}
+	}
+
+	private get email(): string {
+		return this._email;
 	}
 
 	ngOnInit() {
