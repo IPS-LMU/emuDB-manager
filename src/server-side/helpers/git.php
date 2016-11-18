@@ -135,3 +135,18 @@ function gitArchive ($path, $dbName, $treeish) {
 
 	return positiveResult($tmpFileName);
 }
+
+function gitHeadRevision ($path) {
+	execGit('show-ref -s refs/heads/master', $path, $output, $result);
+
+	if ($result !== 0) {
+		return negativeResult(
+			'GIT_LOG_FAILED',
+			'Failed to list git commits in database.'
+		);
+	}
+
+	return positiveResult(
+		$output
+	);
+}
