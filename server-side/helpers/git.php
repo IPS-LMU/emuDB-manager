@@ -8,22 +8,31 @@
 
 require_once 'helpers/result_helper.php';
 
+$gitExecutable = '/usr/bin/git';
+
+
 /**
- * Concatenates strings to form a git command.
+ * Form a command line string and and execute it
  *
- * @param $command
- * @param $path
- * @return string
+ * @param $command string The git command to execute (e.g. commit, status, …)
+ * @param $repoPath string The path to the repository (not to the .git
+ *                         directory)
+ * @param &$output string[] The output of the command (see exec())
+ *                          (pass-by-reference)
+ * @param &$result int The return code of the git process
+ *                     (pass-by-reference)
  */
-function gitCommand ($command, $path) {
-	$executable = '/usr/bin/git';
-	return $executable . ' -C "' . $path . '" ' . $command;
+function execGit ($command, $repoPath, &$output, &$result) {
+	global $gitExecutable;
+
+	$output = array();
+	$commandLine = $gitExecutable . ' -C "' . $repoPath . '" ' . $command;
+
+	exec($commandLine, $output, $result);
 }
 
 function gitInit ($path) {
-	$output = array();
-
-	exec (gitCommand('init', $path), $output, $result);
+	execGit('init', $path, $output, $result);
 
 	if ($result !== 0) {
 		return negativeResult(
@@ -36,9 +45,7 @@ function gitInit ($path) {
 }
 
 function gitCommitEverything ($path, $commitMessage) {
-	$output = array();
-
-	exec (gitCommand('add', $path) . ' --all .', $output, $result);
+	execGit('add --all .', $path, $output, $result);
 
 	if ($result !== 0) {
 		return negativeResult(
@@ -47,12 +54,8 @@ function gitCommitEverything ($path, $commitMessage) {
 		);
 	}
 
-	exec (
-		gitCommand('commit', $path) . ' --allow-empty '
-		 . '--message "' . $commitMessage . '"',
-		$output,
-		$result
-	);
+	execGit('commit --allow-empty --message "' . $commitMessage . '"', $path,
+		$output, $result);
 
 	if ($result !== 0) {
 		return negativeResult(
@@ -65,12 +68,8 @@ function gitCommitEverything ($path, $commitMessage) {
 }
 
 function gitLog ($path) {
-	$output = array();
-	exec (
-		gitCommand('log "--pretty=format:%H/%ad/%s" --date=iso', $path),
-		$output,
-		$result
-	);
+	execGit('log "--pretty=format:%H/%ad/%s" --date=iso', $path, $output,
+	$result);
 
 	if ($result !== 0) {
 		return negativeResult(
@@ -85,12 +84,7 @@ function gitLog ($path) {
 }
 
 function gitShowRefTags ($path) {
-	$output = array();
-	exec (
-		gitCommand('show-ref --tags', $path),
-		$output,
-		$result
-	);
+	execGit('show-ref --tags', $path, $output, $result);
 
 	if ($result !== 0 && $result !== 1) {
 		return negativeResult(
@@ -105,15 +99,8 @@ function gitShowRefTags ($path) {
 }
 
 function gitTag ($path, $tag, $commit) {
-	$output = array();
-	exec (
-		gitCommand(
-			'tag -am "Created by emuDB Manager" ' . $tag . ' ' . $commit,
-			$path
-		),
-		$output,
-		$result
-	);
+	execGit('tag -am "Created by emuDB Manager" ' . $tag . ' ' . $commit,
+		$path, $output, $result);
 
 	if ($result !== 0) {
 		return negativeResult(
@@ -127,17 +114,11 @@ function gitTag ($path, $tag, $commit) {
 	);
 }
 
-function gitArchive ($path, $dbName, $treeish) {
-	$tmpFileName = tempnam(sys_get_temp_dir(),
-		'emuDBmanager-download-archive-');
-
-	$output = array();
-	exec(
-		gitCommand(
-			'archive --format=zip -o ' . $tmpFileName . ' --prefix=' .
-			$dbName . '_emuDB/ -0 ' . $treeish,
-			$path
-		),
+function gitArchive ($path, $dbName, $treeish, $filename) {
+	execGit(
+		'archive --format=zip -o ' . $filename . ' --prefix=' . $dbName .
+		'_emuDB/ -0 ' . $treeish,
+		$path,
 		$output,
 		$result
 	);
@@ -149,5 +130,20 @@ function gitArchive ($path, $dbName, $treeish) {
 		);
 	}
 
-	return positiveResult($tmpFileName);
+	return positiveResult($filename);
+}
+
+function gitHeadRevision ($path) {
+	execGit('show-ref -s refs/heads/master', $path, $output, $result);
+
+	if ($result !== 0) {
+		return negativeResult(
+			'GIT_LOG_FAILED',
+			'Failed to list git commits in database.'
+		);
+	}
+
+	return positiveResult(
+		$output
+	);
 }

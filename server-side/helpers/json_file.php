@@ -9,6 +9,8 @@
 require_once 'type_definitions.php';
 require_once 'result_helper.php';
 
+define("DEFAULT_JSON_ENCODE_OPTIONS", JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
 /**
  * Opens a file, decodes the JSON contained in it and returns the decoded
  * object.
@@ -63,7 +65,7 @@ function load_json_file ($filename) {
  * @param $options int Options to pass to json_encode()
  * @returns Result
  */
-function save_json_file ($object, $filename, $options = JSON_PRETTY_PRINT) {
+function save_json_file ($object, $filename, $options = DEFAULT_JSON_ENCODE_OPTIONS) {
 	$json = json_encode($object, $options);
 
 	if ($json === false) {
