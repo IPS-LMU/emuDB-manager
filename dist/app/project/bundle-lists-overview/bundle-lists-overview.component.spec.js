@@ -5,4 +5,4 @@ describe('Component: BundleListsOverview', function () {
         //expect(component).toBeTruthy();
     });
 });
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-LSvAMGsH.tmp/0/src/app/project/bundle-lists-overview/bundle-lists-overview.component.spec.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-vBa7VSOU.tmp/0/src/app/project/bundle-lists-overview/bundle-lists-overview.component.spec.js.map

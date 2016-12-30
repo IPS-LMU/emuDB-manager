@@ -148,4 +148,4 @@ var BundleListDetailComponent = (function () {
     return BundleListDetailComponent;
 }());
 exports.BundleListDetailComponent = BundleListDetailComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-LSvAMGsH.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-vBa7VSOU.tmp/0/src/app/project/bundle-list-detail/bundle-list-detail.component.js.map

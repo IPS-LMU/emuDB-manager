@@ -16,6 +16,9 @@ var DatabaseDetailComponent = (function () {
         this.projectDataService = projectDataService;
         this.route = route;
         this.downloadTarget = this.projectDataService.getDownloadTarget();
+        this._email = '';
+        this.emailRegex = /.+@.+\..*/;
+        this.emailValid = false;
         this.newName = '';
         this.renameError = '';
         this.renameSuccess = '';
@@ -29,6 +32,22 @@ var DatabaseDetailComponent = (function () {
         this.tagList = [];
         this.webAppLink = '';
     }
+    Object.defineProperty(DatabaseDetailComponent.prototype, "email", {
+        get: function () {
+            return this._email;
+        },
+        set: function (s) {
+            this._email = s;
+            if (this._email.match(this.emailRegex) !== null) {
+                this.emailValid = true;
+            }
+            else {
+                this.emailValid = false;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     DatabaseDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.subParams = this.route.params.subscribe(function (params) {
@@ -174,4 +193,4 @@ var DatabaseDetailComponent = (function () {
     return DatabaseDetailComponent;
 }());
 exports.DatabaseDetailComponent = DatabaseDetailComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-LSvAMGsH.tmp/0/src/app/project/database-detail/database-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-vBa7VSOU.tmp/0/src/app/project/database-detail/database-detail.component.js.map

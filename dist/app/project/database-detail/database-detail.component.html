@@ -27,7 +27,7 @@
 		</li>
 		<li role="presentation" [ngClass]="{active: state === 'Download'}">
 			<a (click)="state = 'Download'">
-				Download database
+				Download + Version history
 			</a>
 		</li>
 		<li role="presentation" [ngClass]="{active: state === 'Config'}">
@@ -54,14 +54,33 @@
 	</div>
 
 	<div *ngIf="state === 'Download'" class="panel-body">
+		<p>
+			<input class="form-control" placeholder="Email address" [(ngModel)]="email"
+			       type="email">
+		</p>
+		<p class="alert alert-warning" *ngIf="!emailValid">
+			As long as you do not specify an email address, the download buttons remain disabled.
+		</p>
+		<p>
+			When you download the database, the server creates a zip archive containing all
+			files. This takes some time.
+		</p>
+		<p>
+			For technical reasons, you have to specify an email address. You will be sent a link
+			once the archiving process is finished.
+		</p>
+
+		<hr>
+
 		<form method="post" [action]="downloadTarget.url" target="_blank" ngNoForm>
 			<input type="hidden" name="query" [value]="downloadTarget.query">
 			<input type="hidden" name="user" [value]="downloadTarget.user">
 			<input type="hidden" name="password" [value]="downloadTarget.password">
 			<input type="hidden" name="database" [value]="this.database?.name">
 			<input type="hidden" name="treeish" value="HEAD">
+			<input type="hidden" name="email" [value]="email">
 
-			<button class="btn btn-primary">
+			<button class="btn btn-primary" [disabled]="!emailValid">
 				Download current version
 			</button>
 		</form>
@@ -99,8 +118,9 @@
 					<input type="hidden" name="password" [value]="downloadTarget.password">
 					<input type="hidden" name="database" [value]="this.database?.name">
 					<input type="hidden" name="treeish" [value]="tag">
+					<input type="hidden" name="email" [value]="email">
 
-					<button class="btn btn-primary btn-xs">
+					<button class="btn btn-primary btn-xs" [disabled]="!emailValid">
 						Download
 					</button>
 				</form>
@@ -151,8 +171,9 @@
 									<input type="hidden" name="database"
 									       [value]="this.database?.name">
 									<input type="hidden" name="treeish" [value]="commit.commitID">
+									<input type="hidden" name="email" [value]="email">
 
-									<button class="btn btn-primary btn-xs">
+									<button class="btn btn-primary btn-xs" [disabled]="!emailValid">
 										Download
 									</button>
 								</form>
