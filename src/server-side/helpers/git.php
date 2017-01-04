@@ -144,6 +144,6 @@ function gitHeadRevision ($path) {
 	}
 
 	return positiveResult(
-		$output
+		$output[0]
 	);
 }
