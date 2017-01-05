@@ -12,6 +12,11 @@ class Upload {
 	public $name;
 	public $sessions;
 }
+class Download {
+	public $database;
+	public $treeish;
+	public $date;
+}
 
 class Session {
 	public $name;

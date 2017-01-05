@@ -110,6 +110,65 @@ function readDirOfUploads ($directory) {
 	return positiveResult($result);
 }
 
+function readDirOfDownloads ($directory) {
+	$dirHandle = dir($directory);
+
+	if ($dirHandle === false || is_null($dirHandle)) {
+		return negativeResult(
+			'LIST_DIR_FAILED',
+			'Failed to read directory of downloads.'
+		);
+	}
+
+	$result = array();
+
+	// Each zip file in $dirHandle corresponds to one download. The file names
+	// are made up of three components (database name, tree-ish, extension)
+	while (false !== ($entry = $dirHandle->read())) {
+		if ($entry === '.' || $entry === '..') {
+			continue;
+		}
+
+		// as per validateDatabaseName(), the database name cannot contain a dot.
+		// the other expected components cannot contain a dot anyway
+		$nameComponents = explode(".", $entry);
+
+		if (count($nameComponents) !== 3) {
+			continue;
+		}
+
+		if ($nameComponents[count($nameComponents) - 1] !== 'zip') {
+			continue;
+		}
+		$dbName = $nameComponents[0];
+
+		if (substr($dbName, strlen($dbName) - 6) !== '_emuDB') {
+			continue;
+		}
+
+		$download = new Download();
+
+		$download->database = substr($dbName, 0, strlen($dbName) - 6);
+
+		// Read modification time
+		$stat = stat($directory . '/' . $entry);
+		if ($stat === false) {
+			return negativeResult(
+				'STAT_DOWNLOAD_FAILED',
+				'Failed to read a download zip file.'
+			);
+		}
+
+		$download->date = date("M d, Y H:i T", $stat['mtime']);
+
+		$download->treeish = $nameComponents[1];
+
+		$result[] = $download;
+	}
+
+	return positiveResult($result);
+}
+
 
 /**
  * Read the project databases dir and look for emuDBs inside it. Every emuDB is
