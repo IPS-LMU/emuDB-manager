@@ -50,12 +50,6 @@ function getUploadDataDirectory ($projectDir, $uploadUUID) {
 	return getUploadDirectory($projectDir, $uploadUUID) . '/data';
 }
 
-function getDownloadFile ($projectDir, $db, $includeGitDirectory, $treeish) {
-	if ($includeGitDirectory) {
-		return $projectDir . '/downloads/' . $db . '_repository_' . $treeish
-		. '.zip';
-	} else {
-		return $projectDir . '/downloads/' . $db . '_snapshot_' . $treeish
-		. '.zip';
-	}
+function getDownloadFile ($projectDir, $db, $treeish) {
+	return $projectDir . '/downloads/' . $db . '_emuDB.' . $treeish . '.zip';
 }
