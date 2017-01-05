@@ -25,6 +25,7 @@ function project_info ($authToken) {
 
 	$dbDir = $authToken->projectDir . '/databases';
 	$uploadDir = $authToken->projectDir . '/uploads';
+	$downloadDir = $authToken->projectDir . '/downloads';
 
 	// Project name
 	$result->data->name = $authToken->projectName;
@@ -43,6 +44,14 @@ function project_info ($authToken) {
 		$result->data->uploads = $uploadsStat->data;
 	} else {
 		return $uploadsStat;
+	}
+
+	// Find downloads available on the project
+	$downloadsStat = readDirOfDownloads($downloadDir);
+	if ($downloadsStat->success === true) {
+		$result->data->downloads = $downloadsStat->data;
+	} else {
+		return $downloadsStat;
 	}
 
 	$result->success = true;

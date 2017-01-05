@@ -12,6 +12,7 @@ class Upload {
 	public $name;
 	public $sessions;
 }
+
 class Download {
 	public $database;
 	public $treeish;
@@ -51,6 +52,7 @@ class DataSet {
 	public $name;
 	public $databases;
 	public $uploads;
+	public $downloads;
 }
 
 class Result {
