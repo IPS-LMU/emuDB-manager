@@ -25,8 +25,6 @@ require_once 'helpers/result_helper.php';
  * @return Result
  */
 function create_archive ($projectDir, $db, $treeish) {
-	$dbDir = $projectDir . '/databases/' . $db . '_emuDB';
-
 	$dbPath = getDatabaseDirectory($projectDir, $db);
 
 	if ($treeish === 'HEAD') {
@@ -49,5 +47,5 @@ function create_archive ($projectDir, $db, $treeish) {
 		$null
 	));
 
-	return positiveResult();
+	return positiveResult(null);
 }

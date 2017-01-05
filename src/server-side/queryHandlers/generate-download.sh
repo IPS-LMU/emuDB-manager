@@ -14,7 +14,7 @@
 ## generate-download.sh <projectDirectory> <repoPath> <tree-ish>
 ##
 ## IMPORTANT: The parameters are not escaped - DO NOT pass arguments from
-##            untrusted sources (such as a browser) witout validating them.
+##            untrusted sources (such as a browser) without validating them.
 ##
 
 projectDirectory="$1"
