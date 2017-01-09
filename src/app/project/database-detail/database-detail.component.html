@@ -104,8 +104,27 @@
 				</thead>
 
 				<tbody>
-				<template ngFor let-db [ngForOf]="databases">
-				</template>
+				<tr *ngFor="let download of downloadList">
+					<td>
+						{{download.treeish}}
+					</td>
+					<td>{{download.date}}</td>
+					<td>
+						<form method="post" [action]="downloadTarget(download.treeish).url"
+						      target="_blank" ngNoForm>
+							<input
+									*ngFor="let option of downloadOptions(download.treeish)"
+									type="hidden"
+									name="{{option}}"
+									value="{{downloadTarget(download.treeish).options[option]}}"
+							>
+
+							<button class="btn btn-primary">
+								Download
+							</button>
+						</form>
+					</td>
+				</tr>
 				</tbody>
 			</table>
 		</div>
