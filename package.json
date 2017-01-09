@@ -39,7 +39,7 @@
     "lite-server": "^2.2.2",
     "typescript": "^2.0.9",
 
-    "angular-cli": "^1.0.0-beta.10",
+    "angular-cli": "1.0.0-beta.10",
     "ember-cli-inject-live-reload": "^1.4.1"
   }
 }
