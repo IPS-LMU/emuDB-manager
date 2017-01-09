@@ -8,22 +8,9 @@ import {SessionInfo} from "./types/session-info";
 import {UploadInfo} from "./types/upload-info";
 import {ServerResponse} from "./types/server-response";
 import {BundleListItem} from "./types/bundle-list-item";
-
-interface UploadTarget {
-	url: string,
-	params: {
-		user: string,
-		password: string,
-		query: string
-	}
-}
-
-interface DownloadTarget {
-	url: string;
-	query: string;
-	user: string;
-	password: string;
-}
+import {DownloadInfo} from "./types/download-info";
+import {DownloadTarget} from "./types/download-target";
+import {UploadTarget} from "./types/upload-target";
 
 @Injectable()
 export class ProjectDataService {
@@ -198,6 +185,14 @@ export class ProjectDataService {
 		});
 	}
 
+	public getDownloads(database: string): Observable<DownloadInfo[]> {
+		return this.infoObservable.map((x: ProjectInfo) => {
+			return x.downloads.filter(value => {
+				return (value.database == database);
+			});
+		});
+	}
+
 	public getAllUploads(): Observable<UploadInfo[]> {
 		return this.infoObservable.map((x: ProjectInfo) => {
 			return x.uploads;
@@ -275,12 +270,16 @@ export class ProjectDataService {
 		};
 	}
 
-	public getDownloadTarget(): DownloadTarget {
+	public getDownloadTarget(database: string, treeish: string): DownloadTarget {
 		return {
 			url: this.url,
-			query: 'download_database',
-			user: this.username,
-			password: this.password
+			options: {
+				query: 'download_database',
+				user: this.username,
+				password: this.password,
+				database: database,
+				treeish: treeish
+			}
 		};
 	}
 
