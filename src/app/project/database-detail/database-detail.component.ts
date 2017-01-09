@@ -18,6 +18,8 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private commitList; //@todo add type
 	private configComments: boolean;
 	private configFinishedEditing: boolean;
+	private createArchiveCurrent: string = '';
+	private createArchiveError: string = '';
 	private database: DatabaseInfo;
 	private downloadList: DownloadInfo[] = [];
 	private newName: string = '';
@@ -123,6 +125,14 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 		}
 
 		return count;
+	}
+
+	private createArchive(treeish: string) {
+		this.projectDataService.createArchive(this.database.name, treeish).subscribe(next => {
+			this.createArchiveCurrent = treeish;
+		}, error => {
+			this.createArchiveError = 'Error while preparing';
+		});
 	}
 
 	private saveTag(commit) {

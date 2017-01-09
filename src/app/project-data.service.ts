@@ -307,6 +307,14 @@ export class ProjectDataService {
 		});
 	}
 
+	public createArchive(databaseName: string, treeish: string): Observable<ServerResponse> {
+		return this.serverQueryWithDefaultSubscription({
+			'query': 'create_archive',
+			'database': databaseName,
+			'treeish': treeish
+		});
+	}
+
 	public duplicateBundleList(database: string,
 	                           bundleList: BundleList,
 	                           newName: string,

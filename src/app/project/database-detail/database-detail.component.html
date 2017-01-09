@@ -133,8 +133,12 @@
 			<em>No version of this database has been prepared for download so far.</em>
 		</p>
 
-		<button class="btn btn-primary btn-sm">
-			Prepare current version for download
+		<button class="btn btn-primary btn-sm" (click)="createArchive('HEAD')"
+		        [disabled]="createArchiveCurrent">
+			<span *ngIf="createArchiveCurrent === 'HEAD'">Preparing</span>
+			<span *ngIf="createArchiveCurrent !== 'HEAD'">
+				Prepare current version for download
+			</span>
 		</button>
 
 		<hr>
@@ -150,8 +154,12 @@
 
 		<ul>
 			<li *ngFor="let tag of tagList">
-				<button class="btn btn-primary btn-xs">
-					Prepare for download
+				<button class="btn btn-primary btn-xs" (click)="createArchive(tag)"
+				        [disabled]="createArchiveCurrent">
+					<span *ngIf="createArchiveCurrent === tag">Preparing</span>
+					<span *ngIf="createArchiveCurrent !== tag">
+						Prepare for download
+					</span>
 				</button>
 
 				{{tag}}
@@ -190,8 +198,12 @@
 							<li *ngFor="let commit of day.commits">
 								<hr *ngIf="commit.editingTag || commit.saveTagSuccess">
 
-								<button class="btn btn-primary btn-xs">
-									Prepare for download
+								<button class="btn btn-primary btn-xs" [disabled]="createArchiveCurrent"
+								        (click)="createArchive(commit.commitID)">
+									<span *ngIf="createArchiveCurrent === commit.commitID">Preparing</span>
+									<span *ngIf="createArchiveCurrent !== commit.commitID">
+										Prepare current version for download
+									</span>
 								</button>
 
 								<button class="btn btn-primary btn-xs" (click)="editTag(commit)"
