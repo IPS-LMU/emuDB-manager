@@ -54,50 +54,69 @@
 	</div>
 
 	<div *ngIf="state === 'Download'" class="panel-body">
-		<p>
-			<input class="form-control" placeholder="Email address" [(ngModel)]="email"
-			       type="email">
-		</p>
-		<p class="alert alert-warning" *ngIf="!emailValid">
-			As long as you do not specify an email address, the download buttons remain disabled.
-		</p>
-		<p>
-			When you download the database, the server creates a zip archive containing all
-			files. This takes some time.
-		</p>
-		<p>
-			For technical reasons, you have to specify an email address. You will be sent a link
-			once the archiving process is finished.
-		</p>
+		<div class="alert alert-warning">
+			<p>
+				<strong>
+					While your team is editing the database, every change is recorded (using git).
+				</strong>
+				This lets you go back to any previous version of your database. E.g., whenever you
+				delete or create a bundle list (in emuDB Manager), or when somebody changes the
+				annotation of a bundle (in EMU-webApp), the current state of the database is
+				recorded. This is called a <em>git commit</em>.
+			</p>
+
+			<hr>
+
+			<p>
+				<strong>
+					Downloading the database is a two-step process.
+				</strong>
+				First, pick a version and prepare it for download. Second (a few minutes later), you
+				can grab the zip file.
+			</p>
+
+			<hr>
+
+			<p>
+				<strong>
+					Tags can be used to mark important versions of your database.
+				</strong>
+				In the “all versions” view, you can select a version and “stick a tag to it”.
+				This way, you and your colleagues can easily find the version later. Technically,
+				this adds a <em>git tag</em> to your database.
+			</p>
+		</div>
 
 		<hr>
 
-		<form method="post" [action]="downloadTarget.url" target="_blank" ngNoForm>
-			<input type="hidden" name="query" [value]="downloadTarget.query">
-			<input type="hidden" name="user" [value]="downloadTarget.user">
-			<input type="hidden" name="password" [value]="downloadTarget.password">
-			<input type="hidden" name="database" [value]="this.database?.name">
-			<input type="hidden" name="treeish" value="HEAD">
-			<input type="hidden" name="email" [value]="email">
+		<h3 class="sub-header">
+			Versions prepared for download <span class="badge">{{countDownloads()}}</span>
+		</h3>
 
-			<button class="btn btn-primary" [disabled]="!emailValid">
-				Download current version
-			</button>
-		</form>
+		<div class="table-responsive">
+			<table class="table table-striped">
+				<thead>
+				<tr>
+					<th>Version</th>
+					<th>Date prepared for download</th>
+					<th>Actions</th>
+				</tr>
+				</thead>
 
-		<hr>
+				<tbody>
+				<template ngFor let-db [ngForOf]="databases">
+				</template>
+				</tbody>
+			</table>
+		</div>
 
-		<p>
-			Every change to a database is recorded (using the software git).
+		<p *ngIf="countDownloads() == 0">
+			<em>No version of this database has been prepared for download so far.</em>
 		</p>
-		<p>
-			It is possible to create and download a ZIP file containing the database’s state at any
-			point in time (i.e. any git commit).
-		</p>
-		<p>
-			It is also possible to tag certain points in time such that they are easier to find
-			(i.e. add a git tag).
-		</p>
+
+		<button class="btn btn-primary btn-sm">
+			Prepare current version for download
+		</button>
 
 		<hr>
 
@@ -112,18 +131,9 @@
 
 		<ul>
 			<li *ngFor="let tag of tagList">
-				<form method="post" [action]="downloadTarget.url" target="_blank" ngNoForm>
-					<input type="hidden" name="query" [value]="downloadTarget.query">
-					<input type="hidden" name="user" [value]="downloadTarget.user">
-					<input type="hidden" name="password" [value]="downloadTarget.password">
-					<input type="hidden" name="database" [value]="this.database?.name">
-					<input type="hidden" name="treeish" [value]="tag">
-					<input type="hidden" name="email" [value]="email">
-
-					<button class="btn btn-primary btn-xs" [disabled]="!emailValid">
-						Download
-					</button>
-				</form>
+				<button class="btn btn-primary btn-xs">
+					Prepare for download
+				</button>
 
 				{{tag}}
 			</li>
@@ -161,22 +171,9 @@
 							<li *ngFor="let commit of day.commits">
 								<hr *ngIf="commit.editingTag || commit.saveTagSuccess">
 
-								<form method="post" [action]="downloadTarget.url" target="_blank"
-								      ngNoForm>
-									<input type="hidden" name="query"
-									       [value]="downloadTarget.query">
-									<input type="hidden" name="user" [value]="downloadTarget.user">
-									<input type="hidden" name="password"
-									       [value]="downloadTarget.password">
-									<input type="hidden" name="database"
-									       [value]="this.database?.name">
-									<input type="hidden" name="treeish" [value]="commit.commitID">
-									<input type="hidden" name="email" [value]="email">
-
-									<button class="btn btn-primary btn-xs" [disabled]="!emailValid">
-										Download
-									</button>
-								</form>
+								<button class="btn btn-primary btn-xs">
+									Prepare for download
+								</button>
 
 								<button class="btn btn-primary btn-xs" (click)="editTag(commit)"
 								        [ngClass]="{active: commit.editingTag}">
