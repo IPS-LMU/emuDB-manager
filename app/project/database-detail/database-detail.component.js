@@ -15,10 +15,9 @@ var DatabaseDetailComponent = (function () {
     function DatabaseDetailComponent(projectDataService, route) {
         this.projectDataService = projectDataService;
         this.route = route;
-        this.downloadTarget = this.projectDataService.getDownloadTarget();
-        this._email = '';
-        this.emailRegex = /.+@.+\..*/;
-        this.emailValid = false;
+        this.createArchiveCurrent = '';
+        this.createArchiveError = '';
+        this.downloadList = [];
         this.newName = '';
         this.renameError = '';
         this.renameSuccess = '';
@@ -32,22 +31,6 @@ var DatabaseDetailComponent = (function () {
         this.tagList = [];
         this.webAppLink = '';
     }
-    Object.defineProperty(DatabaseDetailComponent.prototype, "email", {
-        get: function () {
-            return this._email;
-        },
-        set: function (s) {
-            this._email = s;
-            if (this._email.match(this.emailRegex) !== null) {
-                this.emailValid = true;
-            }
-            else {
-                this.emailValid = false;
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
     DatabaseDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.subParams = this.route.params.subscribe(function (params) {
@@ -68,6 +51,9 @@ var DatabaseDetailComponent = (function () {
         this.subCommitList = this.projectDataService.getCommitList(databaseName).subscribe(function (nextCommitList) {
             _this.commitList = nextCommitList;
         });
+        this.subDownloadList = this.projectDataService.getDownloads(databaseName).subscribe(function (nextDownloadList) {
+            _this.downloadList = nextDownloadList;
+        });
         this.subTagList = this.projectDataService.getTagList(databaseName).subscribe(function (nextTagList) {
             _this.tagList = nextTagList;
         });
@@ -80,6 +66,9 @@ var DatabaseDetailComponent = (function () {
             this.subParams.unsubscribe();
         }
         if (this.subDatabase) {
+            this.subDatabase.unsubscribe();
+        }
+        if (this.subDownloadList) {
             this.subDatabase.unsubscribe();
         }
         if (this.subCommitList) {
@@ -99,6 +88,10 @@ var DatabaseDetailComponent = (function () {
         var count = this.tagList.length;
         return count;
     };
+    DatabaseDetailComponent.prototype.countDownloads = function () {
+        var count = this.downloadList.length;
+        return count;
+    };
     DatabaseDetailComponent.prototype.countCommits = function () {
         var count = 0;
         if (this.commitList) {
@@ -109,6 +102,14 @@ var DatabaseDetailComponent = (function () {
             }
         }
         return count;
+    };
+    DatabaseDetailComponent.prototype.createArchive = function (treeish) {
+        var _this = this;
+        this.projectDataService.createArchive(this.database.name, treeish).subscribe(function (next) {
+            _this.createArchiveCurrent = treeish;
+        }, function (error) {
+            _this.createArchiveError = 'Error while preparing';
+        });
     };
     DatabaseDetailComponent.prototype.saveTag = function (commit) {
         var _this = this;
@@ -181,6 +182,12 @@ var DatabaseDetailComponent = (function () {
     DatabaseDetailComponent.prototype.savedConfigFinishedEditing = function () {
         return this.projectDataService.getConfigFinishedEditing(this.database);
     };
+    DatabaseDetailComponent.prototype.downloadTarget = function (treeish) {
+        return this.projectDataService.getDownloadTarget(this.database.name, treeish);
+    };
+    DatabaseDetailComponent.prototype.downloadOptions = function (treeish) {
+        return Object.keys(this.downloadTarget(treeish).options);
+    };
     DatabaseDetailComponent = __decorate([
         core_1.Component({
             moduleId: module.id,
@@ -193,4 +200,4 @@ var DatabaseDetailComponent = (function () {
     return DatabaseDetailComponent;
 }());
 exports.DatabaseDetailComponent = DatabaseDetailComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-vBa7VSOU.tmp/0/src/app/project/database-detail/database-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-FI8bgmIz.tmp/0/src/app/project/database-detail/database-detail.component.js.map
