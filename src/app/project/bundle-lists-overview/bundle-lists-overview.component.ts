@@ -5,10 +5,9 @@ import {DatabaseInfo} from "../../types/database-info";
 import {Subscription} from "rxjs/Rx";
 
 @Component({
-	moduleId: module.id,
 	selector: 'emudbmanager-bundle-lists-overview',
-	templateUrl: 'bundle-lists-overview.component.html',
-	styleUrls: ['bundle-lists-overview.component.css']
+	templateUrl: './bundle-lists-overview.component.html',
+	styleUrls: ['./bundle-lists-overview.component.css']
 })
 export class BundleListsOverviewComponent implements OnDestroy {
 	private _database:string;

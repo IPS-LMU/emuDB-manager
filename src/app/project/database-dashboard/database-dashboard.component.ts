@@ -4,10 +4,9 @@ import {ProjectDataService} from "../../project-data.service";
 import {Subscription} from "rxjs/Rx";
 
 @Component({
-	moduleId: module.id,
 	selector: 'emudbmanager-database-dashboard',
-	templateUrl: 'database-dashboard.component.html',
-	styleUrls: ['database-dashboard.component.css']
+	templateUrl: './database-dashboard.component.html',
+	styleUrls: ['./database-dashboard.component.css']
 })
 export class DatabaseDashboardComponent implements OnInit,OnDestroy {
 	private databases:DatabaseInfo[] = [];

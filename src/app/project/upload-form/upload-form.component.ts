@@ -2,10 +2,9 @@ import {Component, NgZone} from "@angular/core";
 import {ProjectDataService} from "../../project-data.service";
 
 @Component({
-	moduleId: module.id,
 	selector: 'emudbmanager-upload-form',
-	templateUrl: 'upload-form.component.html',
-	styleUrls: ['upload-form.component.css']
+	templateUrl: './upload-form.component.html',
+	styleUrls: ['./upload-form.component.css']
 })
 export class UploadFormComponent {
 	private errorMessage:string = '';

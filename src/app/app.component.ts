@@ -13,10 +13,9 @@ import "./rxjs-operators";
 
 
 @Component({
-	moduleId: module.id,
 	selector: 'emudbmanager-root',
-	templateUrl: 'app.component.html',
-	styleUrls: ['app.component.css'],
+	templateUrl: './app.component.html',
+	styleUrls: ['./app.component.css'],
 	animations: [
 		trigger('progressBar', [
 			transition('* => *', [

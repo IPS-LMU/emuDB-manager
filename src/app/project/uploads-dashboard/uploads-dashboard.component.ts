@@ -8,10 +8,9 @@ import {UploadFormComponent} from "../upload-form/upload-form.component";
 type State = 'Overview' | 'New';
 
 @Component({
-	moduleId: module.id,
 	selector: 'emudbmanager-uploads-dashboard',
-	templateUrl: 'uploads-dashboard.component.html',
-	styleUrls: ['uploads-dashboard.component.css'],
+	templateUrl: './uploads-dashboard.component.html',
+	styleUrls: ['./uploads-dashboard.component.css'],
 })
 export class UploadsDashboardComponent implements OnInit,OnDestroy {
 	private state:State = 'Overview';

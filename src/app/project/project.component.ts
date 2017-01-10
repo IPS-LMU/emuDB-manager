@@ -7,10 +7,9 @@ import {Subscription} from "rxjs/Rx";
 import {UploadInfo} from "../types/upload-info";
 
 @Component({
-	moduleId: module.id,
 	selector: 'emudbmanager-project',
-	templateUrl: 'project.component.html',
-	styleUrls: ['project.component.css']
+	templateUrl: './project.component.html',
+	styleUrls: ['./project.component.css']
 })
 export class ProjectComponent implements OnInit,OnDestroy {
 	private bundleLists:BundleList[] = [];

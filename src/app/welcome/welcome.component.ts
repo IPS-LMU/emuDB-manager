@@ -4,10 +4,9 @@ import {ProjectDataService} from "../project-data.service";
 import {Subscription} from "rxjs/Rx";
 
 @Component({
-	moduleId: module.id,
 	selector: 'emudbmanager-welcome',
-	templateUrl: 'welcome.component.html',
-	styleUrls: ['welcome.component.css']
+	templateUrl: './welcome.component.html',
+	styleUrls: ['./welcome.component.css']
 })
 export class WelcomeComponent implements OnInit {
 	private loginFailed:boolean = false;

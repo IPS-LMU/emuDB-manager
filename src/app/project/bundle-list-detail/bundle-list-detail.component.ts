@@ -8,10 +8,9 @@ import {BundleList} from "../../types/bundle-list";
 type State = 'Info' | 'AllBundles' | 'CommentedItems';
 
 @Component({
-	moduleId: module.id,
 	selector: 'emudbmanager-bundle-list-detail',
-	templateUrl: 'bundle-list-detail.component.html',
-	styleUrls: ['bundle-list-detail.component.css']
+	templateUrl: './bundle-list-detail.component.html',
+	styleUrls: ['./bundle-list-detail.component.css']
 })
 export class BundleListDetailComponent implements OnInit,OnDestroy {
 	private allBundles: BundleListItem[] = [];

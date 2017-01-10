@@ -9,10 +9,9 @@ import {DownloadTarget} from "../../types/download-target";
 type State = 'BundleLists' | 'Session' | 'Download' | 'Rename' | 'Config';
 
 @Component({
-	moduleId: module.id,
 	selector: 'emudbmanager-database-detail',
-	templateUrl: 'database-detail.component.html',
-	styleUrls: ['database-detail.component.css']
+	templateUrl: './database-detail.component.html',
+	styleUrls: ['./database-detail.component.css']
 })
 export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private commitList; //@todo add type

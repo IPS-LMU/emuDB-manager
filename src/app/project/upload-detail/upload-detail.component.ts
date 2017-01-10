@@ -8,10 +8,9 @@ import {DatabaseInfo} from "../../types/database-info";
 type State = 'Sessions' | 'Save' | 'Delete';
 
 @Component({
-	moduleId: module.id,
 	selector: 'emudbmanager-upload-detail',
-	templateUrl: 'upload-detail.component.html',
-	styleUrls: ['upload-detail.component.css']
+	templateUrl: './upload-detail.component.html',
+	styleUrls: ['./upload-detail.component.css']
 })
 export class UploadDetailComponent implements OnInit,OnDestroy {
 	private databaseList:DatabaseInfo[] = [];

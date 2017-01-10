@@ -6,10 +6,9 @@ import {Subscription} from "rxjs/Rx";
 import {UploadInfo} from "../../types/upload-info";
 
 @Component({
-	moduleId: module.id,
 	selector: 'emudbmanager-dashboard',
-	templateUrl: 'dashboard.component.html',
-	styleUrls: ['dashboard.component.css']
+	templateUrl: './dashboard.component.html',
+	styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit,OnDestroy {
 	private bundleLists:BundleList[] = [];

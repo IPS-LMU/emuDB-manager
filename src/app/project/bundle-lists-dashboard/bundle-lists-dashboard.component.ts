@@ -7,10 +7,9 @@ import {DatabaseInfo} from "../../types/database-info";
 type State = 'Overview' | 'Generator';
 
 @Component({
-	moduleId: module.id,
 	selector: 'emudbmanager-bundle-lists-dashboard',
-	templateUrl: 'bundle-lists-dashboard.component.html',
-	styleUrls: ['bundle-lists-dashboard.component.css']
+	templateUrl: './bundle-lists-dashboard.component.html',
+	styleUrls: ['./bundle-lists-dashboard.component.css']
 })
 export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 	private bundleLists:BundleList[];
