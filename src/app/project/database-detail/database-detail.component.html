@@ -104,6 +104,26 @@
 				</thead>
 
 				<tbody>
+				<tr *ngIf="createArchiveCurrent">
+					<td colspan="3">
+						<p class="alert alert-success">
+							<strong>
+								Another version is currently being prepared for download.
+							</strong>
+							Refresh this page in a few minutes to see if the download is already
+							available.<br>
+
+							<strong>If this green hint stays or disappears</strong> does not
+							indicate that preparation process has finished. It may or may not
+							coincide.<br>
+
+							<strong>Note also</strong> that in case the preparation process
+							actually fails, you cannot, at this time, be notified of it
+							automatically. Check with the system administrator if the preparation
+							seems to take too long (but 10 or 15 minutes are not unusual).
+						</p>
+					</td>
+				</tr>
 				<tr *ngFor="let download of downloadList">
 					<td>
 						{{download.treeish}}
@@ -196,13 +216,14 @@
 
 						<ul *ngIf="day.open">
 							<li *ngFor="let commit of day.commits">
+								{{commit.commitID}}
 								<hr *ngIf="commit.editingTag || commit.saveTagSuccess">
 
 								<button class="btn btn-primary btn-xs" [disabled]="createArchiveCurrent"
 								        (click)="createArchive(commit.commitID)">
 									<span *ngIf="createArchiveCurrent === commit.commitID">Preparing</span>
 									<span *ngIf="createArchiveCurrent !== commit.commitID">
-										Prepare current version for download
+										Prepare for download
 									</span>
 								</button>
 
