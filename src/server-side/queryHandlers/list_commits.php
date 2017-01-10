@@ -33,7 +33,7 @@ function list_commits ($projectDir, $db) {
 		$firstSeparator = strpos($commit, '/');
 		$secondSeparator = strpos($commit, '/', $firstSeparator + 1);
 
-		$commitObject->commitID = substr($commit, 0, $firstSeparator - 1);
+		$commitObject->commitID = substr($commit, 0, $firstSeparator);
 		$commitObject->date = substr($commit, $firstSeparator + 1,
 			$secondSeparator - $firstSeparator - 1);
 		$commitObject->message = substr($commit, $secondSeparator + 1);
