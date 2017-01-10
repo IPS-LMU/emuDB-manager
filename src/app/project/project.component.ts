@@ -49,6 +49,6 @@ export class ProjectComponent implements OnInit,OnDestroy {
 
 	private logout():void {
 		this.projectDataService.logout();
-		this.router.navigate(['/project']);
+		this.router.navigate(['/']);
 	}
 }

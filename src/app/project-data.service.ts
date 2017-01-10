@@ -123,6 +123,8 @@ export class ProjectDataService {
 	}
 
 	public logout(): void {
+		this.username = '';
+		this.password = '';
 		this.createHotObservable();
 	}
 
