@@ -216,7 +216,6 @@
 
 						<ul *ngIf="day.open">
 							<li *ngFor="let commit of day.commits">
-								{{commit.commitID}}
 								<hr *ngIf="commit.editingTag || commit.saveTagSuccess">
 
 								<button class="btn btn-primary btn-xs" [disabled]="createArchiveCurrent"
