@@ -36,7 +36,7 @@ function create_archive ($projectDir, $db, $treeish) {
 	}
 
 	proc_close(proc_open(
-		"./queryHandlers/generate-download.sh "
+		"./helpers/generate-download.sh "
 		. "\"" . $projectDir . "\""
 		. " "
 		. "\"" . $dbPath . "\""
