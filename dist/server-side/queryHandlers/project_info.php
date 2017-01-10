@@ -169,6 +169,7 @@ function readDirOfDownloads ($directory) {
 		}
 
 		$download->date = date("M d, Y H:i T", $stat['mtime']);
+		$download->size = $stat['size'];
 
 		$download->treeish = $nameComponents[1];
 
