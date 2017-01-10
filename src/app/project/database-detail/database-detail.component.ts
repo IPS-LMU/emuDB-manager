@@ -227,4 +227,17 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private downloadOptions(treeish: string): string[] {
 		return Object.keys(this.downloadTarget(treeish).options);
 	}
+
+	private transformCommitMessage(message: string):string {
+		let trigger = 'EMU-webApp auto save commit; ';
+
+		if (message.substr(0, trigger.length) === trigger) {
+			let matches = message.match(/User: ([^;]*);.*Bundle: (.*)/);
+			if (matches.length === 3) {
+				return 'Bundle ' + matches[2] + ' edited by ' + matches[1];
+			}
+		}
+
+		return message;
+	}
 }
