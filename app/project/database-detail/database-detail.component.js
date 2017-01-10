@@ -188,6 +188,43 @@ var DatabaseDetailComponent = (function () {
     DatabaseDetailComponent.prototype.downloadOptions = function (treeish) {
         return Object.keys(this.downloadTarget(treeish).options);
     };
+    DatabaseDetailComponent.prototype.transformCommitMessage = function (message) {
+        var trigger = 'EMU-webApp auto save commit; ';
+        if (message.substr(0, trigger.length) === trigger) {
+            var matches = message.match(/User: ([^;]*);.*Bundle: (.*)/);
+            if (matches.length === 3) {
+                return 'Bundle ' + matches[2] + ' edited by ' + matches[1];
+            }
+        }
+        return message;
+    };
+    /**
+     * Taken from MDN.
+     *
+     * The precision parameter works same way as PHP and Excel whereby a
+     * positive 1 would round to 1 decimal place and -1 would round to the tens.
+     */
+    DatabaseDetailComponent.prototype.round = function (number, precision) {
+        var factor = Math.pow(10, precision);
+        var tempNumber = number * factor;
+        var roundedTempNumber = Math.round(tempNumber);
+        return roundedTempNumber / factor;
+    };
+    ;
+    DatabaseDetailComponent.prototype.displaySize = function (size) {
+        if (size > Math.pow(1024, 3)) {
+            return this.round(size / Math.pow(1024, 3), 1) + ' GiB';
+        }
+        else if (size > Math.pow(1024, 2)) {
+            return this.round(size / Math.pow(1024, 2), 1) + ' MiB';
+        }
+        else if (size > 1024) {
+            return this.round(size / 1024, 1) + 'KiB';
+        }
+        else {
+            return size + ' B';
+        }
+    };
     DatabaseDetailComponent = __decorate([
         core_1.Component({
             moduleId: module.id,
@@ -200,4 +237,4 @@ var DatabaseDetailComponent = (function () {
     return DatabaseDetailComponent;
 }());
 exports.DatabaseDetailComponent = DatabaseDetailComponent;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-FI8bgmIz.tmp/0/src/app/project/database-detail/database-detail.component.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-UJZNJA0k.tmp/0/src/app/project/database-detail/database-detail.component.js.map
