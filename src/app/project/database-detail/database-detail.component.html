@@ -239,7 +239,7 @@
 									<td>
 										<button class="btn btn-primary btn-xs"
 										        [disabled]="createArchiveCurrent"
-										        (click)="createArchive(commit.commitID)">
+										        (click)="createArchive(commit.commitID.substr(0, 7))">
 											<span *ngIf="createArchiveCurrent === commit.commitID">Preparing</span>
 											<span *ngIf="createArchiveCurrent !== commit.commitID">
 												Prepare for download

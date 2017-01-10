@@ -27,12 +27,16 @@ require_once 'helpers/result_helper.php';
 function create_archive ($projectDir, $db, $treeish) {
 	$dbPath = getDatabaseDirectory($projectDir, $db);
 
+	// If the current HEAD is requested, we resolve it to the SHA-1 sum of
+	// the commit that HEAD currently points to (because it does not make
+	// much sense to store a version called 'HEAD' - it will be misleading
+	// very soon).
 	if ($treeish === 'HEAD') {
 		$result = gitHeadRevision ($dbPath);
 		if ($result->success !== true) {
 			return $result;
 		}
-		$treeish = $result->data;
+		$treeish = substr($result->data, 0, 7);
 	}
 
 	proc_close(proc_open(
