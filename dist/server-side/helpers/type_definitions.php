@@ -13,6 +13,12 @@ class Upload {
 	public $sessions;
 }
 
+class Download {
+	public $database;
+	public $treeish;
+	public $date;
+}
+
 class Session {
 	public $name;
 	public $bundles;
@@ -46,6 +52,7 @@ class DataSet {
 	public $name;
 	public $databases;
 	public $uploads;
+	public $downloads;
 }
 
 class Result {

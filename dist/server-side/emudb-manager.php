@@ -23,6 +23,7 @@ require_once 'helpers/type_definitions.php';
 require_once 'helpers/validate.php';
 
 require_once 'queryHandlers/add_tag.php';
+require_once 'queryHandlers/create_archive.php';
 require_once 'queryHandlers/delete_bundle_list.php';
 require_once 'queryHandlers/delete_upload.php';
 require_once 'queryHandlers/download_database.php';
@@ -147,6 +148,25 @@ function executeQuery (AuthToken $authToken) {
 				$_POST['database'],
 				$_POST['commit'],
 				$_POST['label']
+			);
+
+			break;
+
+		case 'create_archive':
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateTreeish($_POST['treeish']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return create_archive(
+				$authToken->projectDir,
+				$_POST['database'],
+				$_POST['treeish']
 			);
 
 			break;

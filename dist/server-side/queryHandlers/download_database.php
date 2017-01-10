@@ -9,13 +9,9 @@
 require_once 'helpers/result_helper.php';
 
 /**
- * Create a zip file from an archive at a given tree identifier and send it
- * to the client. If the file is sent, no positiveResult() is sent to
- * accompany it. If anything fails, however, a negativeResult() is sent.
+ * Output a zip file stored in the project's download directory.
  *
- * The zip file is stored in a tmp directory and removed after being sent. If
- * removing it fails, no warning is issued because that would break the
- * download.
+ * No positiveResult() is sent to accompany the zip file.
  *
  * @param $projectDir string The project directory for which the client has
  *        been authorized.
@@ -24,17 +20,12 @@ require_once 'helpers/result_helper.php';
  * @return Result
  */
 function download_database ($projectDir, $db, $treeish) {
-	$dbDir = $projectDir . '/databases/' . $db . '_emuDB';
-
-	$result = gitArchive($dbDir, $db, $treeish);
-
-	if ($result->success !== true) {
-		return $result;
-	}
-
-	header('Content-Disposition: attachment; filename="' . $db . '_emuDB.zip"');
-	header('Content-Length: ' . filesize($result->data));
-	readfile($result->data);
-	unlink($result->data);
+	$zipFile = getDownloadFile($projectDir, $db, $treeish);
+	header(
+		'Content-Disposition: attachment; '
+		. 'filename="' . $db . '_emuDB.' . $treeish . '.zip"'
+	);
+	header('Content-Length: ' . filesize($zipFile));
+	readfile($zipFile);
 	exit();
 }

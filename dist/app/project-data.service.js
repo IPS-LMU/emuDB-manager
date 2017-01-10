@@ -164,6 +164,13 @@ var ProjectDataService = (function () {
             return x.name;
         });
     };
+    ProjectDataService.prototype.getDownloads = function (database) {
+        return this.infoObservable.map(function (x) {
+            return x.downloads.filter(function (value) {
+                return (value.database == database);
+            });
+        });
+    };
     ProjectDataService.prototype.getAllUploads = function () {
         return this.infoObservable.map(function (x) {
             return x.uploads;
@@ -229,12 +236,16 @@ var ProjectDataService = (function () {
             }
         };
     };
-    ProjectDataService.prototype.getDownloadTarget = function () {
+    ProjectDataService.prototype.getDownloadTarget = function (database, treeish) {
         return {
             url: this.url,
-            query: 'download_database',
-            user: this.username,
-            password: this.password
+            options: {
+                query: 'download_database',
+                user: this.username,
+                password: this.password,
+                database: database,
+                treeish: treeish
+            }
         };
     };
     ProjectDataService.prototype.deleteUpload = function (identifier) {
@@ -256,6 +267,13 @@ var ProjectDataService = (function () {
             'query': 'save_upload',
             'uuid': identifier,
             'name': name
+        });
+    };
+    ProjectDataService.prototype.createArchive = function (databaseName, treeish) {
+        return this.serverQueryWithDefaultSubscription({
+            'query': 'create_archive',
+            'database': databaseName,
+            'treeish': treeish
         });
     };
     ProjectDataService.prototype.duplicateBundleList = function (database, bundleList, newName, commentedOnly) {
@@ -502,4 +520,4 @@ var ProjectDataService = (function () {
     return ProjectDataService;
 }());
 exports.ProjectDataService = ProjectDataService;
-//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-vBa7VSOU.tmp/0/src/app/project-data.service.js.map
+//# sourceMappingURL=/tmp/broccoli_type_script_compiler-input_base_path-FI8bgmIz.tmp/0/src/app/project-data.service.js.map
