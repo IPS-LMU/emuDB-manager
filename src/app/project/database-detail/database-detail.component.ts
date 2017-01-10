@@ -240,4 +240,29 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 
 		return message;
 	}
+
+	/**
+	 * Taken from MDN.
+	 *
+	 * The precision parameter works same way as PHP and Excel whereby a
+	 * positive 1 would round to 1 decimal place and -1 would round to the tens.
+	 */
+	private round (number:number, precision:number) {
+		var factor = Math.pow(10, precision);
+		var tempNumber = number * factor;
+		var roundedTempNumber = Math.round(tempNumber);
+		return roundedTempNumber / factor;
+	};
+
+	private displaySize (size: number): string {
+		if (size > 1024**3) {
+			return this.round(size/1024**3, 1) + ' GiB';
+		} else if (size > 1024**2) {
+			return this.round(size/1024**2, 1) + ' MiB';
+		} else if (size > 1024) {
+			return this.round(size/1024, 1) + 'KiB';
+		} else {
+			return size + ' B';
+		}
+	}
 }

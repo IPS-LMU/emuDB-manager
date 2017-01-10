@@ -99,6 +99,7 @@
 				<tr>
 					<th>Version</th>
 					<th>Date prepared for download</th>
+					<th>Size (hover for exact size)</th>
 					<th>Actions</th>
 				</tr>
 				</thead>
@@ -129,6 +130,7 @@
 						{{download.treeish}}
 					</td>
 					<td>{{download.date}}</td>
+					<td [title]="download.size + ' B'">{{displaySize(download.size)}}</td>
 					<td>
 						<form method="post" [action]="downloadTarget(download.treeish).url"
 						      target="_blank" ngNoForm>

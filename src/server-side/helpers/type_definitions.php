@@ -17,6 +17,8 @@ class Download {
 	public $database;
 	public $treeish;
 	public $date;
+	/** @var  Size in bytes */
+	public $size;
 }
 
 class Session {
