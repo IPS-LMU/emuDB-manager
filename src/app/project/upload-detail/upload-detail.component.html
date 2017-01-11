@@ -122,6 +122,10 @@
 				<li *ngFor="let database of databaseList"><a>{{database.name}}</a></li>
 			</ul>
 		</div>
+
+		<p class="alert alert-danger">
+			Warning: The merge feature has not yet been implemented.
+		</p>
 	</div>
 
 	<div *ngIf="state === 'Delete'" class="panel-body">
