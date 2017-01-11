@@ -49,12 +49,12 @@ git status
 
 # Clean and re-populate dist/
 rm -r dist
-ng build
+ng build --prod
 
 # Commit the new version to git repo.
 # The push is important for the following subtree push
 git add dist/
-git commit -m "new dev build" # 'dev build' because I have not started using the -prod flag for ng build
+git commit
 git push
 
 # Copy the contents of `dist` directory from master branch (as stored on origin)
