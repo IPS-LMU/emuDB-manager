@@ -4,7 +4,6 @@ import {DatabaseInfo} from "./types/database-info";
 import {BundleList} from "./types/bundle-list";
 import {Http, Headers, RequestOptions} from "@angular/http";
 import {Observable, Observer, ConnectableObservable} from "rxjs/Rx";
-import {SessionInfo} from "./types/session-info";
 import {UploadInfo} from "./types/upload-info";
 import {ServerResponse} from "./types/server-response";
 import {DownloadInfo} from "./types/download-info";
@@ -163,7 +162,6 @@ export class ProjectDataService {
 	}
 
 
-
 	/**************************************************************************\
 	 *
 	 *
@@ -295,41 +293,47 @@ export class ProjectDataService {
 		});
 	}
 
+	public getTagList(database: string): Observable<string[]> {
+		return this.serverQueryWithDefaultSubscription({
+			query: 'list_tags',
+			database: database
+		});
+	}
 
 
 	/**************************************************************************\
 	 *
 	 *
-	 * Simple API calls
+	 * Simple modifying API calls
 	 *
-	 * These functions basically pass their parameters through the server.
+	 * These functions basically pass their parameters through to the server.
 	 *
 	 *
 	 **************************************************************************/
 
 	public renameDatabase(oldName: string, newName: string): Observable<void> {
 		return this.serverQueryWithDefaultSubscription({
-			query: 'rename_db',
-			old_name: oldName,
-			new_name: newName
+			'query': 'rename_db',
+			'old_name': oldName,
+			'new_name': newName
 		});
 	}
 
 	public setDatabaseConfiguration(database: string, bundleComments: boolean, bundleFinishedEditing: boolean): Observable<void> {
 		return this.serverQueryWithDefaultSubscription({
-			query: 'set_database_configuration',
-			database: database,
-			bundleComments: bundleComments,
-			bundleFinishedEditing: bundleFinishedEditing
+			'query': 'set_database_configuration',
+			'database': database,
+			'bundleComments': bundleComments,
+			'bundleFinishedEditing': bundleFinishedEditing
 		});
 	}
 
 	public addTag(database: string, commit: string, label: string): Observable<void> {
 		return this.serverQueryWithDefaultSubscription({
-			query: 'add_tag',
-			database: database,
-			commit: commit,
-			label: label
+			'query': 'add_tag',
+			'database': database,
+			'commit': commit,
+			'label': label
 		});
 	}
 
@@ -357,10 +361,10 @@ export class ProjectDataService {
 
 	public deleteBundleList(database: string, bundleList: BundleList) {
 		return this.serverQueryWithDefaultSubscription({
-			query: 'delete_bundle_list',
-			database: database,
-			name: bundleList.name,
-			archive_label: bundleList.archiveLabel
+			'query': 'delete_bundle_list',
+			'database': database,
+			'name': bundleList.name,
+			'archive_label': bundleList.archiveLabel
 		});
 	}
 
@@ -388,20 +392,11 @@ export class ProjectDataService {
 		});
 	}
 
-	public getTagList(database: string): Observable<string[]> {
-		return this.serverQueryWithDefaultSubscription({
-			query: 'list_tags',
-			database: database
-		});
-	}
-
-
-
 
 	/**************************************************************************\
 	 *
 	 *
-	 * Advanced API calls
+	 * Advanced modifying API calls
 	 *
 	 * These functions do some work on the client-side before passing their
 	 * parameters on to the server.
