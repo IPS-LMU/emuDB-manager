@@ -5,6 +5,8 @@ import {ActivatedRoute} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 import {DownloadInfo} from "../../types/download-info";
 import {DownloadTarget} from "../../types/download-target";
+import {getConfigComments} from "../../core/get-config-comments.function";
+import {getConfigFinishedEditing} from "../../core/get-config-finished-editing.function";
 
 type State = 'BundleLists' | 'Session' | 'Download' | 'Rename' | 'Config';
 
@@ -212,11 +214,11 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	}
 
 	private savedConfigComments(): boolean {
-		return this.projectDataService.getConfigComments(this.database);
+		return getConfigComments(this.database);
 	}
 
 	private savedConfigFinishedEditing(): boolean {
-		return this.projectDataService.getConfigFinishedEditing(this.database);
+		return getConfigFinishedEditing(this.database);
 	}
 
 	private downloadTarget(treeish: string): DownloadTarget {

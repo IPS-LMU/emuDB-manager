@@ -3,6 +3,8 @@ import {BundleList} from "../../types/bundle-list";
 import {Subscription} from "rxjs/Rx";
 import {ProjectDataService} from "../../project-data.service";
 import {DatabaseInfo} from "../../types/database-info";
+import {getConfigFinishedEditing} from "../../core/get-config-finished-editing.function";
+import {getConfigComments} from "../../core/get-config-comments.function";
 
 type State = 'Overview' | 'Generator';
 
@@ -106,9 +108,9 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 
 	private checkDBConfig():boolean {
 		return (
-			this.projectDataService.getConfigComments(this.selectedDatabase)
+			getConfigComments(this.selectedDatabase)
 			&&
-			this.projectDataService.getConfigFinishedEditing(this.selectedDatabase)
+			getConfigFinishedEditing(this.selectedDatabase)
 		);
 	}
 }
