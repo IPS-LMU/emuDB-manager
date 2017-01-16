@@ -263,6 +263,24 @@ function executeQuery (AuthToken $authToken) {
 			);
 			break;
 
+		case 'fast_forward':
+			$result = validateUploadIdentifier($_POST['upload_uuid']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return fast_forward(
+				$authToken->projectDir,
+				$_POST['upload_uuid'],
+				$_POST['database']
+			);
+			break;
+
 		case 'list_commits':
 			$result = validateDatabaseName($_POST['database']);
 			if ($result->success !== true) {

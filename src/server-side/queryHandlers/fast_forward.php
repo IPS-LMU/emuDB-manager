@@ -12,7 +12,7 @@ require_once 'helpers/result_helper.php';
 
 /**
  * Fast-forward an existing database to the data given in an upload.
-  *
+ *
  * @param $projectDir string The project directory for which the client has
  *        been authorized.
  * @param $uploadUUID string The UUID of the upload that shall be copied
@@ -23,28 +23,21 @@ require_once 'helpers/result_helper.php';
  * @return Result
  */
 function fast_forward ($projectDir, $uploadUUID, $targetDB) {
-	$dbDir = getDatabaseDirectory($projectDir, $targetDB);
+	$targetDBDir = getDatabaseDirectory($projectDir, $targetDB);
+
 	$uploadDir = getUploadDataDirectory($projectDir, $uploadUUID);
+	$uploadedDBDir = findDatabaseInUpload($uploadDir);
 
-	/*
-
-	$result = gitShowRefTags($dbDir);
+	$result = gitFastForwardPull($uploadedDBDir, $targetDBDir);
 
 	if ($result->success !== true) {
-		return $result;
+		return negativeResult(
+			$result,
+			"Could not pull changes from upload into database repository.\n"
+			. "Upload UUID: " . $uploadUUID . "\n"
+			. "Database: " . $targetDB
+		);
 	}
 
-	$tagList = array();
-
-	foreach ($result->data as $tag) {
-		$position = strpos ($tag, 'refs/tags/');
-		$tagName = substr($tag, $position + 10);
-
-		$tagList[] = $tagName;
-	}
-
-	return positiveResult(
-		$tagList
-	);
-	*/
+	return positiveResult(null);
 }
