@@ -1,10 +1,22 @@
 <?php
 
-// (c) 2016 Markus Jochim <markusjochim@phonetik.uni-muenchen.de>
+// (c) 2016-2017 Markus Jochim <markusjochim@phonetik.uni-muenchen.de>
 
 // This script should be included and not called directly.
 // However, it is no security issue if it is called directly, because it only
 // contains functions (thus, no code is executed).
+
+//
+// ===================
+// Brief documentation
+// ===================
+//
+// This file offers functions for managing a git repository.
+// They all work by calling the git command-line tool.
+//
+// This is designed for and tested against git version 1.8.
+//
+
 
 require_once 'helpers/result_helper.php';
 
@@ -12,9 +24,13 @@ $gitExecutable = '/usr/bin/git';
 
 
 /**
- * Form a command line string and and execute it
+ * Form a git command line string and and execute it.
  *
- * @param $command string The git command to execute (e.g. commit, status, …)
+ * This is the base function for all other functions in this file. Do not
+ * call this function directly.
+ *
+ * @param $command string The git command to execute (e.g. commit, status, …),
+ *                        including the options to that command
  * @param $repoPath string The path to the repository (not to the .git
  *                         directory)
  * @param &$output string[] The output of the command (see exec())
@@ -69,7 +85,7 @@ function gitCommitEverything ($path, $commitMessage) {
 
 function gitLog ($path) {
 	execGit('log "--pretty=format:%H/%ad/%s" --date=iso', $path, $output,
-	$result);
+		$result);
 
 	if ($result !== 0) {
 		return negativeResult(
@@ -146,4 +162,25 @@ function gitHeadRevision ($path) {
 	return positiveResult(
 		$output[0]
 	);
+}
+
+/**
+ * Try copying changes from $srcDir to $targetDir by doing a fast-forward
+ * pull in $targetDir.
+ *
+ * @param $srcDir
+ * @param $targetDir
+ * @return Result An object to indicate failure or success.
+ */
+function gitFastForwardPull ($srcDir, $targetDir) {
+	execGit('pull --ff-only "' . $srcDir . '"', $targetDir, $output, $result);
+
+	if ($result !== 0) {
+		return negativeResult(
+			'GIT_PULL_FAILED',
+			'Failed to pull changes into the target repository.'
+		);
+	}
+
+	return positiveResult(null);
 }
