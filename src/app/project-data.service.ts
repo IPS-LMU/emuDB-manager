@@ -7,10 +7,10 @@ import {Observable, Observer, ConnectableObservable} from "rxjs/Rx";
 import {SessionInfo} from "./types/session-info";
 import {UploadInfo} from "./types/upload-info";
 import {ServerResponse} from "./types/server-response";
-import {BundleListItem} from "./types/bundle-list-item";
 import {DownloadInfo} from "./types/download-info";
 import {DownloadTarget} from "./types/download-target";
 import {UploadTarget} from "./types/upload-target";
+import {generateBundleLists} from "./core/generate-bundle-lists.function";
 
 @Injectable()
 export class ProjectDataService {
@@ -369,107 +369,27 @@ export class ProjectDataService {
 	                          personsPerBundle: number,
 	                          shuffled: boolean) {
 		return Observable.create(observer => {
-			//////////
-			// Check parameter constraints
-			//
-
-			if (editors.length < personsPerBundle) {
-				observer.error({
-					message: 'Invalid parameters.'
-				});
-				return;
-			}
-
-			//
-			//////////
-
 			this.getDatabase(database).map(dbInfo => {
 				if (dbInfo === null) {
 					observer.error('Invalid database specified');
 					return;
 				}
 
-				for (let i = 0; i < editors.length; ++i) {
-					for (let j = 0; j < dbInfo.bundleLists.length; ++j) {
-						if (editors[i] === dbInfo.bundleLists[j].name && dbInfo.bundleLists[j].archiveLabel === '') {
-							observer.error({
-								message: 'Editor already has a' + ' non-archived bundle list: ' + editors[i]
-							});
-							return;
-						}
-					}
-				}
+				let resultBundleLists = generateBundleLists(
+					dbInfo,
+					sessionPattern,
+					bundlePattern,
+					editors,
+					personsPerBundle,
+					shuffled
+				);
 
-				let sessionRegex = new RegExp(sessionPattern);
-				let bundleRegex = new RegExp(bundlePattern);
-
-				//////////
-				// Select the bundles to add to the newly generated bundle list(s)
-				//
-
-				let bundleListSource: BundleListItem[] = [];
-
-				for (let i = 0; i < dbInfo.sessions.length; ++i) {
-					if (sessionRegex.test(dbInfo.sessions[i].name)) {
-						for (let j = 0; j < dbInfo.sessions[i].bundles.length; ++j) {
-							if (bundleRegex.test(dbInfo.sessions[i].bundles[j])) {
-								bundleListSource.push({
-									session: dbInfo.sessions[i].name,
-									name: dbInfo.sessions[i].bundles[j],
-									comment: '',
-									finishedEditing: false
-								});
-							}
-						}
-					}
-				}
-
-				//
-				//////////
-
-				//////////
-				// Shuffle bundle list source if so requested
-				//
-
-				if (shuffled) {
-					// @todo shuffle
-				}
-
-				//
-				//////////
-
-				//////////
-				// Distribute bundles among editors
-				//
-
-				// Prepare a bundle list for each editor
-
-				let resultBundleLists: BundleList[] = [];
-
-				for (let i = 0; i < editors.length; ++i) {
-					resultBundleLists.push({
-						name: editors[i],
-						archiveLabel: '',
-						items: []
+				if (typeof resultBundleLists === 'string') {
+					observer.error({
+						message: resultBundleLists
 					});
+					return;
 				}
-
-				// The next editor who will receive a bundle
-				let nextEditor: number = -1;
-
-				for (let i = 0; i < bundleListSource.length; ++i) {
-					for (let j = 0; j < personsPerBundle; ++j) {
-						nextEditor += 1;
-						if (nextEditor >= editors.length) {
-							nextEditor = 0;
-						}
-
-						resultBundleLists[nextEditor].items.push(bundleListSource[i]);
-					}
-				}
-
-				//
-				//////////
 
 				let successCount: number = 0;
 
