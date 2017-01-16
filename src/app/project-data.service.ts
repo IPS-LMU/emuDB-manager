@@ -11,6 +11,7 @@ import {DownloadInfo} from "./types/download-info";
 import {DownloadTarget} from "./types/download-target";
 import {UploadTarget} from "./types/upload-target";
 import {generateBundleLists} from "./core/generate-bundle-lists.function";
+import {transformCommitList} from "./core/transform-commit-list.function";
 
 @Injectable()
 export class ProjectDataService {
@@ -285,52 +286,8 @@ export class ProjectDataService {
 
 			this.serverQuery(params).subscribe((next: any) => {
 				if (next.success === true) {
-					let sortedResult = [];
-
-					let currentMonth: string;
-					let currentDay: string;
-
-					for (let i = 0; i < next.data.length; ++i) {
-						let dateTime: string = next.data[i].date;
-
-						let month = dateTime.substring(0, 7);
-						let day = dateTime.substring(0, 10);
-						let time = dateTime.substring(11);
-
-						if (month !== currentMonth) {
-							sortedResult.push({
-								month: month,
-								open: false,
-								days: []
-							});
-						}
-
-						currentMonth = month;
-						let monthObject = sortedResult[sortedResult.length - 1];
-
-						if (day !== currentDay) {
-							monthObject.days.push({
-								day: day,
-								open: false,
-								commits: []
-							});
-						}
-
-						currentDay = day;
-						let dayObject = monthObject.days[monthObject.days.length - 1];
-
-						dayObject.commits.push({
-							commitID: next.data[i].commitID,
-							dateTime: time,
-							message: next.data[i].message,
-							tagLabel: ''
-						});
-					}
-
-					observer.next(sortedResult);
-
+					observer.next(transformCommitList(next.data));
 					observer.complete();
-
 				} else {
 					observer.error(next);
 				}
