@@ -1,6 +1,6 @@
 <?php
 
-// (c) 2016 Markus Jochim <markusjochim@phonetik.uni-muenchen.de>
+// (c) 2016-2017 Markus Jochim <markusjochim@phonetik.uni-muenchen.de>
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
