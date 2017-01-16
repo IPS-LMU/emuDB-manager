@@ -15,14 +15,18 @@ type State = 'Sessions' | 'Save' | 'Delete';
 export class UploadDetailComponent implements OnInit,OnDestroy {
 	private databaseList:DatabaseInfo[] = [];
 	private deleteError:string = '';
-	private mergeForm = {
-		duplicateName: false,
-		newName: '',
+	private duplicateName:boolean = false;
+	private fastForwardForm = {
 		messageError: '',
 		messageSuccess: '',
 	};
 	private reallyDelete:boolean = false;
-	private state:State = 'Sessions';
+	private saveForm = {
+		newName: '',
+		messageError: '',
+		messageSuccess: '',
+	};
+	private state:State = 'Save';
 	private subDatabase:Subscription;
 	private subDatabaseList:Subscription;
 	private subParams:Subscription;
@@ -49,9 +53,9 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 
 				this.subDatabase = this.projectDataService.getDatabase(this.upload.name).subscribe(nextDatabase => {
 					if (nextDatabase === null) {
-						this.mergeForm.duplicateName = false;
+						this.duplicateName = false;
 					} else {
-						this.mergeForm.duplicateName = true;
+						this.duplicateName = true;
 					}
 				});
 			});
@@ -94,22 +98,42 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 	}
 
 	private saveUpload () {
-		this.mergeForm.messageSuccess = '';
-		this.mergeForm.messageError = '';
+		this.saveForm.messageSuccess = '';
+		this.saveForm.messageError = '';
 
 		let name:string;
-		if (this.mergeForm.duplicateName) {
-			name = this.mergeForm.newName;
+		if (this.duplicateName) {
+			name = this.saveForm.newName;
 		} else {
 			name = this.upload.name;
 		}
 
 		this.projectDataService.saveUpload(this.upload.uuid, name).subscribe(next => {
 			this.projectDataService.fetchData();
-			this.mergeForm.messageSuccess = 'The database has been saved.';
+			this.saveForm.messageSuccess = 'The database has been saved.';
 		}, error => {
-			this.mergeForm.messageError = error.message;
+			this.saveForm.messageError = error.message;
 			console.log(error);
 		});
+	}
+
+	private fastForward () {
+		this.fastForwardForm.messageSuccess = '';
+		this.fastForwardForm.messageError = '';
+
+		this.projectDataService.fastForward(this.upload.uuid, this.upload.name).subscribe(next => {
+			this.projectDataService.fetchData();
+			this.fastForwardForm.messageSuccess = 'Database has been' +
+				' fast-forwarded. You can now delete this upload.';
+		}, error => {
+			this.fastForwardForm.messageError = error.message;
+			console.log(error);
+		});
+	}
+
+	private countBundles () {
+		if (this.upload) {
+			return this.projectDataService.countBundles(this.upload.sessions);
+		}
 	}
 }

@@ -6,20 +6,32 @@
 <p>
 	Upload date: {{upload?.date}}
 </p>
+<p>
+    Name: {{upload?.name}}
+</p>
+<p>
+    Size:
+
+    {{upload?.sessions?.length}}
+    session<span *ngIf="upload?.sessions?.length !== 1">s</span>,
+
+    {{countBundles()}}
+    bundle<span *ngIf="countBundles() !== 1">s</span>
+</p>
 
 <hr>
 
 <div class="panel panel-default">
 
 	<ul class="panel-body nav nav-pills nav-justified">
-		<li role="presentation" [ngClass]="{active: state === 'Sessions'}">
-			<a (click)="state = 'Sessions'">
-				Sessions <span class="badge">{{upload?.sessions?.length}}</span>
-			</a>
-		</li>
 		<li role="presentation" [ngClass]="{active: state === 'Save'}">
 			<a (click)="state = 'Save'">
 				Save
+			</a>
+		</li>
+		<li role="presentation" [ngClass]="{active: state === 'Sessions'}">
+			<a (click)="state = 'Sessions'">
+				Sessions <span class="badge">{{upload?.sessions?.length}}</span>
 			</a>
 		</li>
 		<li role="presentation" [ngClass]="{active: state === 'Delete'}">
@@ -29,30 +41,44 @@
 		</li>
 	</ul>
 
-	<div *ngIf="state === 'Sessions'" class="table-responsive">
-		<emudbmanager-table class="table table-striped"
-		                    [columns]="tableFormat" [data]="upload?.sessions">
-		</emudbmanager-table>
-	</div>
-
 	<div *ngIf="state === 'Save'" class="panel-body">
-		<p>
-			This upload contains an EMU speech database with
-			<strong>{{upload?.sessions?.length}}</strong>
-			<template [ngIf]="upload?.sessions?.length != 1">sessions</template>
-			<template [ngIf]="upload?.sessions?.length == 1">session</template>
-			that is named <strong>{{upload?.name}}</strong>.
-		</p>
+		<div class="alert alert-info">
+			<p>
+                <strong>Choose one out of three.</strong>
+                To work with the uploaded database, you can either save it as a
+                new database, or fast-forward an existing database to the
+                state of the uploaded one, or merge the uploaded database with
+                an existing one.
+			</p>
 
-		<p>
-			It can either be saved as a database of its own, or merged with an existing database.
-		</p>
+            <hr>
+
+            <p>
+                <strong>Fast-forwarding is helpful</strong>
+                when you have downloaded a database, made some modification
+                to it (be it a configuration change or newly added data) and
+                then re-uploaded the whole thing. Fast-forwarding is a term
+                introduced by git.
+            </p>
+
+			<hr>
+
+			<p>
+				<strong>For fast-forwarding to work,</strong>
+				you must make <em>git commits</em> before uploading. The
+				server can only store committed modifications.
+			</p>
+		</div>
 
 		<hr>
 
-		<div [ngSwitch]="mergeForm.duplicateName">
+        <h3 class="sub-header">
+            Save as a new database
+        </h3>
+
+		<div>
 			<form (ngSubmit)="saveUpload()">
-				<div *ngSwitchCase="true">
+				<div *ngIf="duplicateName">
 					<p>
 						The project already has a database named <strong>{{upload?.name}}</strong>.
 						If you want to save this upload as a database of its own, you have to
@@ -62,70 +88,127 @@
 
 					<p>
 						<input class="form-control" placeholder="New name"
-						       [(ngModel)]="mergeForm.newName" name="mergeNewName">
+						       [(ngModel)]="saveForm.newName" name="mergeNewName">
 					</p>
 
 					<p>
 						<button type="submit" class="btn btn-default"
-						        [disabled]="mergeForm.newName == ''">
-							Save <strong>{{upload?.name}}</strong> as a database named
+						        [disabled]="saveForm.newName == ''">
+							Save uploaded data as a database named
 
-							<strong *ngIf="mergeForm.newName">{{mergeForm.newName}}</strong>
-							<em *ngIf="!mergeForm.newName">[choose a name first]</em>
+							<strong *ngIf="saveForm.newName">{{saveForm.newName}}</strong>
+							<em *ngIf="!saveForm.newName">[choose a name first]</em>
 						</button>
 					</p>
 				</div>
 
-				<div *ngSwitchCase="false">
+				<div *ngIf="!duplicateName">
 					<button type="submit" class="btn btn-default">
-						Save <strong>{{upload?.name}}</strong> as a database of its own
+						Save <strong>{{upload?.name}}</strong> as a new database
 					</button>
 				</div>
 
-				<p *ngIf="mergeForm.messageSuccess" class="alert alert-success">
+				<p *ngIf="saveForm.messageSuccess" class="alert alert-success">
 					<button type="button" class="close" aria-label="Close"
-					        (click)="mergeForm.messageSuccess = ''">
+					        (click)="saveForm.messageSuccess = ''">
 						<span aria-hidden="true">&times;</span>
 					</button>
 
-					{{mergeForm.messageSuccess}}
+					{{saveForm.messageSuccess}}
 				</p>
 
-				<p *ngIf="mergeForm.messageError" class="alert alert-danger">
+				<p *ngIf="saveForm.messageError" class="alert alert-danger">
 					<button type="button" class="close" aria-label="Close"
-					        (click)="mergeForm.messageError = ''">
+					        (click)="saveForm.messageError = ''">
 						<span aria-hidden="true">&times;</span>
 					</button>
 
-					{{mergeForm.messageError}}
+					{{saveForm.messageError}}
 				</p>
 			</form>
 		</div>
 
-		<hr>
+        <hr>
 
-		<p>
-			If you would rather merge <strong>{{upload?.name}}</strong> with an existing
-			database, pick one. It will then be checked whether the two can be merged.
-		</p>
+        <h3 class="sub-header">
+            Fast-forward existing database
+        </h3>
 
-		<div class="dropdown">
-			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMerge"
-			        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-				Merge <strong>{{upload?.name}}</strong> with database
-				<span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu" aria-labelledby="dropdownMerge">
-				<li *ngIf="databaseList.length === 0">
-					<a><em>No database available</em></a>
-				</li>
-				<li *ngFor="let database of databaseList"><a>{{database.name}}</a></li>
-			</ul>
-		</div>
+        <div>
+            <form (ngSubmit)="fastForward()">
+                <div *ngIf="duplicateName">
+                    <p>
+                        The project already has a database named <strong>{{upload?.name}}</strong>.
+                        You can fast-forward the project’s database to the
+                        state of the one you have uploaded.
+                    </p>
 
-		<p class="alert alert-danger">
-			Warning: The merge feature has not yet been implemented.
-		</p>
+                    <p>
+                        <button type="submit" class="btn btn-default">
+                            Fast-forward database
+                            <strong>{{upload?.name}}</strong>
+                        </button>
+                    </p>
+                </div>
+
+                <div *ngIf="!duplicateName">
+                    The project does not yet have a database named <strong>{{upload?.name}}</strong>.
+                    You can only fast-forward an existing database that has
+                    the same name as the one you have uploaded.
+                </div>
+
+                <p *ngIf="fastForwardForm.messageSuccess"
+				   class="alert alert-success">
+                    <button type="button" class="close" aria-label="Close"
+                            (click)="fastForwardForm.messageSuccess = ''">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                    {{fastForwardForm.messageSuccess}}
+                </p>
+
+                <p *ngIf="fastForwardForm.messageError" class="alert alert-danger">
+                    <button type="button" class="close" aria-label="Close"
+                            (click)="fastForwardForm.messageError = ''">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                    {{fastForwardForm.messageError}}
+                </p>
+            </form>
+        </div>
+
+        <hr>
+
+        <h3 class="sub-header">
+            Merge with existing database
+        </h3>
+
+        <div>
+            <p class="alert alert-danger">
+                The merge feature has not yet been implemented.
+            </p>
+
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMerge"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Merge <strong>{{upload?.name}}</strong> with database
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMerge">
+                    <li *ngIf="databaseList.length === 0">
+                        <a><em>No database available</em></a>
+                    </li>
+                    <li *ngFor="let database of databaseList"><a>{{database.name}}</a></li>
+                </ul>
+            </div>
+        </div>
+	</div>
+
+	<div *ngIf="state === 'Sessions'" class="table-responsive">
+		<emudbmanager-table class="table table-striped"
+							[columns]="tableFormat" [data]="upload?.sessions">
+		</emudbmanager-table>
 	</div>
 
 	<div *ngIf="state === 'Delete'" class="panel-body">
