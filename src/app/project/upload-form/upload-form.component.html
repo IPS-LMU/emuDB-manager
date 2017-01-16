@@ -1,44 +1,43 @@
 <div class="panel-body">
-	<h2 class="sub-header">Instructions</h2>
+	<div class="alert alert-info">
+		<p>
+			<strong>Upload a zip file here.</strong>
+		</p>
 
-	<ul>
-		<li>
-			Upload a ZIP file here.
-		</li>
+		<hr>
 
-		<li>
-			The ZIP file must contain a valid EMU speech database: a directory called
-			<i>name</i>_emuDB, which in turn contains <i>name</i>_DBconfig.json and a number of
+		<p>
+			<strong>Make sure that the zip file</strong>
+			has a name like <em>greatSpeechDatabase</em>_emuDB.zip.
+		</p>
+
+		<hr>
+
+		<p>
+			<strong>Make sure that the zip file</strong>
+			contains a valid EMU speech database: a directory called
+			<em>greatSpeechDatabase</em>_emuDB, which in turn contains
+			<em>greatSpeechDatabase</em>_DBconfig.json and a number of
 			session directories.
-		</li>
+		</p>
 
-		<li>
-			The EMU speech database can then either be saved as a new database or merged with an
-			existing database.
-		</li>
+		<hr>
 
-		<li>
-			If you want to merge two databases, you have to make sure the new data and the old
-			data fit together.
+		<p>
+			<strong>If you plan to do a fast-forward</strong>
+			with the upload, make sure to <em>git commit</em> all your
+			modifications before creating the zip file.
+		</p>
 
-			<ul>
-				<li>
-					The new database must not contain sessions that are already there in the old
-					database.
-				</li>
+		<hr>
 
-				<li>
-					It is important, that the <em>annotation structure of both databases is the
-					same</em>. They must contain the same levels and the same types of links.
-				</li>
-			</ul>
-		</li>
-	</ul>
-</div>
-
-
-<div class="panel-body">
-	<h2 class="sub-header">Upload</h2>
+		<p>
+			<strong>If you plan to merge two databases,</strong>
+			make sure the new data and the existing data fit together. In
+			particular, they must contain the same annotation structure, i.e.
+			the same level and the same types of links.
+		</p>
+	</div>
 
 	<div>
 		<label for="file-pb">
