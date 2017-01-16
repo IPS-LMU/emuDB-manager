@@ -56,6 +56,14 @@ export class ProjectDataService {
 		});
 	}
 
+	get connectionCount(): number {
+		return this._connectionCount;
+	}
+
+	set connectionCount(value: number) {
+		this._connectionCount = value;
+	}
+
 	private serverQuery(params: any): Observable<ServerResponse> {
 		console.log('Querying server', params);
 
@@ -128,6 +136,43 @@ export class ProjectDataService {
 		this.createHotObservable();
 	}
 
+
+	public getUploadTarget(): UploadTarget {
+		return {
+			url: this.url,
+			params: {
+				'user': this.username,
+				'password': this.password,
+				'query': 'upload'
+			}
+		};
+	}
+
+	public getDownloadTarget(database: string, treeish: string): DownloadTarget {
+		return {
+			url: this.url,
+			options: {
+				query: 'download_database',
+				user: this.username,
+				password: this.password,
+				database: database,
+				treeish: treeish
+			}
+		};
+	}
+
+
+
+	/**************************************************************************\
+	 *
+	 *
+	 * Getter functions
+	 *
+	 * These functions return some portion of the project data object. Some
+	 * of them transform the data.
+	 *
+	 *
+	 **************************************************************************/
 
 	public getAllDatabases(): Observable<DatabaseInfo[]> {
 		return this.infoObservable.map((x: ProjectInfo) => {
@@ -212,6 +257,99 @@ export class ProjectDataService {
 		});
 	}
 
+	public getEmuWebAppURL(database: string): Observable<string> {
+		return this.getName().map(projectName => {
+			let url = this.emuWebAppURL;
+			url += '?autoConnect=true&serverUrl=';
+
+			let nodeJS = this.nodeJSServerURL;
+
+			// we should not use this.username here but rather something
+			// retrieved from the server (which doesnt exist yet;
+			// this.getName() isn't right either but it's used so the
+			// function is async already)
+			nodeJS += '/' + this.username + '/databases/' + database;
+
+			url += encodeURIComponent(nodeJS);
+
+			return url;
+		});
+	}
+
+	public getCommitList(database: string): Observable<Object> {
+		return Observable.create(observer => {
+			let params = {
+				query: 'list_commits',
+				database: database
+			};
+
+			this.serverQuery(params).subscribe((next: any) => {
+				if (next.success === true) {
+					let sortedResult = [];
+
+					let currentMonth: string;
+					let currentDay: string;
+
+					for (let i = 0; i < next.data.length; ++i) {
+						let dateTime: string = next.data[i].date;
+
+						let month = dateTime.substring(0, 7);
+						let day = dateTime.substring(0, 10);
+						let time = dateTime.substring(11);
+
+						if (month !== currentMonth) {
+							sortedResult.push({
+								month: month,
+								open: false,
+								days: []
+							});
+						}
+
+						currentMonth = month;
+						let monthObject = sortedResult[sortedResult.length - 1];
+
+						if (day !== currentDay) {
+							monthObject.days.push({
+								day: day,
+								open: false,
+								commits: []
+							});
+						}
+
+						currentDay = day;
+						let dayObject = monthObject.days[monthObject.days.length - 1];
+
+						dayObject.commits.push({
+							commitID: next.data[i].commitID,
+							dateTime: time,
+							message: next.data[i].message,
+							tagLabel: ''
+						});
+					}
+
+					observer.next(sortedResult);
+
+					observer.complete();
+
+				} else {
+					observer.error(next);
+				}
+			});
+		});
+	}
+
+
+
+	/**************************************************************************\
+	 *
+	 *
+	 * Simple API calls
+	 *
+	 * These functions basically pass their parameters through the server.
+	 *
+	 *
+	 **************************************************************************/
+
 	public renameDatabase(oldName: string, newName: string): Observable<void> {
 		return this.serverQueryWithDefaultSubscription({
 			query: 'rename_db',
@@ -253,30 +391,6 @@ export class ProjectDataService {
 		});
 	}
 
-	public getUploadTarget(): UploadTarget {
-		return {
-			url: this.url,
-			params: {
-				'user': this.username,
-				'password': this.password,
-				'query': 'upload'
-			}
-		};
-	}
-
-	public getDownloadTarget(database: string, treeish: string): DownloadTarget {
-		return {
-			url: this.url,
-			options: {
-				query: 'download_database',
-				user: this.username,
-				password: this.password,
-				database: database,
-				treeish: treeish
-			}
-		};
-	}
-
 	public deleteUpload(identifier: string) {
 		return this.serverQueryWithDefaultSubscription({
 			'query': 'delete_upload',
@@ -316,6 +430,28 @@ export class ProjectDataService {
 			'treeish': treeish
 		});
 	}
+
+	public getTagList(database: string): Observable<string[]> {
+		return this.serverQueryWithDefaultSubscription({
+			query: 'list_tags',
+			database: database
+		});
+	}
+
+
+
+
+	/**************************************************************************\
+	 *
+	 *
+	 * Advanced API calls
+	 *
+	 * These functions do some work on the client-side before passing their
+	 * parameters on to the server.
+	 *
+	 *
+	 **************************************************************************/
+
 
 	public duplicateBundleList(database: string,
 	                           bundleList: BundleList,
@@ -407,102 +543,6 @@ export class ProjectDataService {
 					});
 				}
 			}).subscribe().unsubscribe();
-		});
-	}
-
-	public getEmuWebAppURL(database: string): Observable<string> {
-		return this.getName().map(projectName => {
-			let url = this.emuWebAppURL;
-			url += '?autoConnect=true&serverUrl=';
-
-			let nodeJS = this.nodeJSServerURL;
-
-			// we should not use this.username here but rather something
-			// retrieved from the server (which doesnt exist yet;
-			// this.getName() isn't right either but it's used so the
-			// function is async already)
-			nodeJS += '/' + this.username + '/databases/' + database;
-
-			url += encodeURIComponent(nodeJS);
-
-			return url;
-		});
-	}
-
-	get connectionCount(): number {
-		return this._connectionCount;
-	}
-
-	set connectionCount(value: number) {
-		this._connectionCount = value;
-	}
-
-	public getCommitList(database: string): Observable<Object> {
-		return Observable.create(observer => {
-			let params = {
-				query: 'list_commits',
-				database: database
-			};
-
-			this.serverQuery(params).subscribe((next: any) => {
-				if (next.success === true) {
-					let sortedResult = [];
-
-					let currentMonth: string;
-					let currentDay: string;
-
-					for (let i = 0; i < next.data.length; ++i) {
-						let dateTime: string = next.data[i].date;
-
-						let month = dateTime.substring(0, 7);
-						let day = dateTime.substring(0, 10);
-						let time = dateTime.substring(11);
-
-						if (month !== currentMonth) {
-							sortedResult.push({
-								month: month,
-								open: false,
-								days: []
-							});
-						}
-
-						currentMonth = month;
-						let monthObject = sortedResult[sortedResult.length - 1];
-
-						if (day !== currentDay) {
-							monthObject.days.push({
-								day: day,
-								open: false,
-								commits: []
-							});
-						}
-
-						currentDay = day;
-						let dayObject = monthObject.days[monthObject.days.length - 1];
-
-						dayObject.commits.push({
-							commitID: next.data[i].commitID,
-							dateTime: time,
-							message: next.data[i].message,
-							tagLabel: ''
-						});
-					}
-
-					observer.next(sortedResult);
-
-					observer.complete();
-
-				} else {
-					observer.error(next);
-				}
-			});
-		});
-	}
-
-	public getTagList(database: string): Observable<string[]> {
-		return this.serverQueryWithDefaultSubscription({
-				query: 'list_tags',
-				database: database
 		});
 	}
 }
