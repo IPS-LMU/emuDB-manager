@@ -28,6 +28,7 @@ require_once 'queryHandlers/delete_bundle_list.php';
 require_once 'queryHandlers/delete_upload.php';
 require_once 'queryHandlers/download_database.php';
 require_once 'queryHandlers/edit_bundle_list.php';
+require_once 'queryHandlers/fast_forward.php';
 require_once 'queryHandlers/list_commits.php';
 require_once 'queryHandlers/list_tags.php';
 require_once 'queryHandlers/project_info.php';
