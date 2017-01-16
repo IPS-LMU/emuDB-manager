@@ -1,6 +1,6 @@
 <?php
 
-// (c) 2016 Markus Jochim <markusjochim@phonetik.uni-muenchen.de>
+// (c) 2016-2017 Markus Jochim <markusjochim@phonetik.uni-muenchen.de>
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: content-type");
@@ -28,6 +28,7 @@ require_once 'queryHandlers/delete_bundle_list.php';
 require_once 'queryHandlers/delete_upload.php';
 require_once 'queryHandlers/download_database.php';
 require_once 'queryHandlers/edit_bundle_list.php';
+require_once 'queryHandlers/fast_forward.php';
 require_once 'queryHandlers/list_commits.php';
 require_once 'queryHandlers/list_tags.php';
 require_once 'queryHandlers/project_info.php';
@@ -260,6 +261,24 @@ function executeQuery (AuthToken $authToken) {
 				$_POST['old_name'],
 				$_POST['new_archive_label'],
 				$_POST['new_name']
+			);
+			break;
+
+		case 'fast_forward':
+			$result = validateUploadIdentifier($_POST['upload_uuid']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return fast_forward(
+				$authToken->projectDir,
+				$_POST['upload_uuid'],
+				$_POST['database']
 			);
 			break;
 
