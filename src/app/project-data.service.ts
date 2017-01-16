@@ -309,6 +309,14 @@ export class ProjectDataService {
 		});
 	}
 
+	public fastForward(upload_uuid: string, database: string): Observable<ServerResponse> {
+		return this.serverQueryWithDefaultSubscription({
+			'query': 'fast_forward',
+			'upload_uuid': upload_uuid,
+			'database': database
+		});
+	}
+
 	public createArchive(databaseName: string, treeish: string): Observable<ServerResponse> {
 		return this.serverQueryWithDefaultSubscription({
 			'query': 'create_archive',
