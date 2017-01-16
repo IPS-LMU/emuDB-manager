@@ -25,8 +25,12 @@ require_once 'helpers/result_helper.php';
 function fast_forward ($projectDir, $uploadUUID, $targetDB) {
 	$targetDBDir = getDatabaseDirectory($projectDir, $targetDB);
 
-	$uploadDir = getUploadDataDirectory($projectDir, $uploadUUID);
-	$uploadedDBDir = findDatabaseInUpload($uploadDir);
+	$uploadDir = getUploadDirectory($projectDir, $uploadUUID);
+	$result = findDatabaseInUpload($uploadDir);
+	if ($result->success !== true) {
+		return $result;
+	}
+	$uploadedDBDir = $uploadDir . '/data/' . $result->data . '_emuDB';
 
 	$result = gitFastForwardPull($uploadedDBDir, $targetDBDir);
 

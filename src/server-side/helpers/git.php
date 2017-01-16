@@ -173,7 +173,7 @@ function gitHeadRevision ($path) {
  * @return Result An object to indicate failure or success.
  */
 function gitFastForwardPull ($srcDir, $targetDir) {
-	execGit('pull --ff-only "' . $srcDir . "''", $targetDir, $output, $result);
+	execGit('pull --ff-only "' . $srcDir . '"', $targetDir, $output, $result);
 
 	if ($result !== 0) {
 		return negativeResult(
