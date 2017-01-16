@@ -2,6 +2,7 @@ import {Component, OnInit, OnDestroy} from "@angular/core";
 import {UploadInfo} from "../../types/upload-info";
 import {Subscription} from "rxjs/Rx";
 import {ProjectDataService} from "../../project-data.service";
+import {countBundles} from "../../core/count-bundles.function";
 
 @Component({
 	selector: 'emudbmanager-uploads-overview',
@@ -9,6 +10,7 @@ import {ProjectDataService} from "../../project-data.service";
 	styleUrls: ['./uploads-overview.component.css']
 })
 export class UploadsOverviewComponent implements OnInit,OnDestroy {
+	private countBundles = countBundles;
 	private uploads:UploadInfo[];
 	private subUploads:Subscription;
 

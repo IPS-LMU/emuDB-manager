@@ -2,6 +2,7 @@ import {Component, OnInit, OnDestroy} from "@angular/core";
 import {ProjectDataService} from "../../project-data.service";
 import {DatabaseInfo} from "../../types/database-info";
 import {Subscription} from "rxjs/Rx";
+import {countBundles} from "../../core/count-bundles.function";
 
 @Component({
 	selector: 'emudbmanager-databases-overview',
@@ -9,6 +10,7 @@ import {Subscription} from "rxjs/Rx";
 	styleUrls: ['./databases-overview.component.css']
 })
 export class DatabasesOverviewComponent implements OnInit,OnDestroy {
+	private countBundles = countBundles;
 	private databases:DatabaseInfo[];
 	private sub:Subscription;
 

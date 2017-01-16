@@ -212,14 +212,6 @@ export class ProjectDataService {
 		});
 	}
 
-	public countBundles(sessions: SessionInfo[]): number {
-		let result = 0;
-		for (let i = 0; i < sessions.length; ++i) {
-			result += sessions[i].bundles.length;
-		}
-		return result;
-	}
-
 	public renameDatabase(oldName: string, newName: string): Observable<void> {
 		return this.serverQueryWithDefaultSubscription({
 			query: 'rename_db',

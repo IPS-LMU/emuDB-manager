@@ -4,6 +4,7 @@ import {Subscription} from "rxjs/Rx";
 import {ProjectDataService} from "../../project-data.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DatabaseInfo} from "../../types/database-info";
+import {countBundles} from "../../core/count-bundles.function";
 
 type State = 'Sessions' | 'Save' | 'Delete';
 
@@ -133,7 +134,7 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 
 	private countBundles () {
 		if (this.upload) {
-			return this.projectDataService.countBundles(this.upload.sessions);
+			return countBundles(this.upload.sessions);
 		}
 	}
 }

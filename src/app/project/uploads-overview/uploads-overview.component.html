@@ -17,7 +17,7 @@
 			<td>{{upload.name}}</td>
 			<td>{{upload.date}}</td>
 			<td>{{upload.sessions.length}}</td>
-			<td>{{projectDataService.countBundles(upload.sessions)}}</td>
+			<td>{{countBundles(upload.sessions)}}</td>
 			<td>
 				<button [routerLink]="['/project/uploads', upload.uuid]" class="btn btn-default">
 					View &amp; edit
