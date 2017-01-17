@@ -15,6 +15,17 @@ changes and comments)
 * Keeping a history of changes to the database (using git)
 * Managing a small portion of DBconfig options
 
+## How to use the manager
+
+@IPS-LMU aims to offer speech database hosting as a service for the 
+scientific community in the long run. If you are interested in such a service
+right now, get in touch with the authors and we might be able to offer you an 
+option.
+  
+You are of course free to use your own hosting resources to install the emuDB
+Manager. It is best to install the [EMU-WebSocket-Server](https://github.com/IPS-LMU/IPS-EMUprot-nodeWSserver)
+along with it.
+
 ## Authors
 
 The main author of the emuDB Manager is Markus Jochim (<markusjochim@phonetik.uni-muenchen.de>).
