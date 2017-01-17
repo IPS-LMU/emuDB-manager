@@ -1,6 +1,7 @@
 import {DatabaseInfo} from "../types/database-info";
 import {BundleList} from "../types/bundle-list";
 import {BundleListItem} from "../types/bundle-list-item";
+import {shuffleArray} from "./shuffle-array.function";
 
 export function generateBundleLists(dbInfo: DatabaseInfo,
                                     sessionPattern: string,
@@ -59,7 +60,7 @@ export function generateBundleLists(dbInfo: DatabaseInfo,
 	//
 
 	if (shuffled) {
-		// @todo shuffle
+		shuffleArray(bundleListSource);
 	}
 
 	//

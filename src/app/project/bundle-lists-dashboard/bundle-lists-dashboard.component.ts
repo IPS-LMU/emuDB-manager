@@ -28,7 +28,7 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 	private personsPerBundle:number = 1;
 	private selectedDatabase:DatabaseInfo = null;
 	private sessionPattern:string = '.*';
-	private shuffle:boolean = false;
+	private shuffle:boolean = true;
 
 	constructor(private projectDataService:ProjectDataService) {
 	}
