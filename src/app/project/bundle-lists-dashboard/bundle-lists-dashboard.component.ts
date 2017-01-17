@@ -26,6 +26,7 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 	private generatorSuccess:string = '';
 	private newEditor:string = '';
 	private personsPerBundle:number = 1;
+	private preview: 'none'|'sessions'|'complete' = 'none';
 	private selectedDatabase:DatabaseInfo = null;
 	private sessionPattern:string = '.*';
 	private shuffle:boolean = true;
@@ -51,6 +52,40 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 		if (this.subDatabases) {
 			this.subDatabases.unsubscribe();
 		}
+	}
+
+	private previewPattern(includeBundles:boolean) {
+		let result = [];
+
+		if (this.selectedDatabase !== null) {
+			var sessionRegex = new RegExp(this.sessionPattern);
+			var bundleRegex = new RegExp(this.bundlePattern);
+
+			for (let i = 0; i < this.selectedDatabase.sessions.length; ++i) {
+				let currentSession = this.selectedDatabase.sessions[i];
+				let matched = sessionRegex.test(currentSession.name)
+
+				result.push({
+					name: currentSession.name,
+					matched: matched,
+					bundles: []
+				});
+
+				if (includeBundles && matched) {
+					for (let j = 0; j < currentSession.bundles.length; ++j) {
+						let currentBundle = currentSession.bundles[j];
+						let matched = bundleRegex.test(currentBundle);
+
+						result[result.length - 1].bundles.push({
+							name: currentBundle,
+							matched: matched
+						});
+					}
+				}
+			}
+		}
+
+		return result;
 	}
 
 	private generateLists() {
