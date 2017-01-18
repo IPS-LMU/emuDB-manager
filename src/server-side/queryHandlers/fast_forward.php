@@ -16,8 +16,7 @@ require_once 'helpers/result_helper.php';
  * @param $projectDir string The project directory for which the client has
  *        been authorized.
  * @param $uploadUUID string The UUID of the upload that shall be copied
- * into an
- *        existing database.
+ *        into an existing database.
  * @param $targetDB string The name of the target database for the uploaded
  *        data.
  * @return Result
