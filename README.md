@@ -88,7 +88,6 @@ chmod go+rX -R .
 
 # The config file will be protected by means of ACL
 chmod 600 server-side/emudb-manager.config.php
-setfacl -m mask:r server-side/emudb-manager.config.php
 setfacl -m u:wwwrun:r server-side/emudb-manager.config.php
 ```
 
@@ -96,6 +95,6 @@ setfacl -m u:wwwrun:r server-side/emudb-manager.config.php
 
 The first time you deploy emuDB Manager on your web server, you do a `git clone` and then a `git checkout build`.
 
-Edit the config file (server-side/emudb-manager.config.php; insert your SQL credentials) and index.html (insert the correct <base> tag).
+Edit the config file (server-side/emudb-manager.config.php; insert your SQL credentials) and index.html (insert the correct &lt;base> tag).
 
 Protect the config file (server-side/emudb-manager.config.php; see Build & Deploy above).
