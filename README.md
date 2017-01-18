@@ -62,11 +62,16 @@ git status
 rm -r dist
 ng build --prod
 
+# Set execution permission for helper shell script
+chmod 755 dist/server-side/helpers/generate-download.sh
+
 # Commit the new version to git repo.
 # The push is important for the following subtree push
 git add dist/
 git commit
+git tag "x.x.x" -m "Version x.x.x"
 git push
+git push --tags
 
 # Copy the contents of `dist` directory from master branch (as stored on origin)
 # to the root directory of build branch on origin
@@ -74,15 +79,9 @@ git subtree push --prefix dist origin build
 
 ###### On the web server
 
-# Download current version of build branch
-git fetch
-
-# This will tell you if the web server’s local branch can be fast-forwarded,
-# which should always be the case.
-git status
-
-# Do the fast-forward
-git pull
+# Pull the changes. The rebase keeps the changes to index.html and
+# emudb-manager.config.php intact.
+git pull --rebase
 
 # Make sure the web server can read all files
 chmod go+rX -R .
@@ -90,10 +89,13 @@ chmod go+rX -R .
 # The config file will be protected by means of ACL
 chmod 600 server-side/emudb-manager.config.php
 setfacl -m mask:r server-side/emudb-manager.config.php
+setfacl -m u:wwwrun:r server-side/emudb-manager.config.php
 ```
 
 ### Initial deploy
 
 The first time you deploy emuDB Manager on your web server, you do a `git clone` and then a `git checkout build`.
 
-Protect the config file (server-side/emudb-manager.config.php) by means of ACL.
+Edit the config file (server-side/emudb-manager.config.php; insert your SQL credentials) and index.html (insert the correct <base> tag).
+
+Protect the config file (server-side/emudb-manager.config.php; see Build & Deploy above).
