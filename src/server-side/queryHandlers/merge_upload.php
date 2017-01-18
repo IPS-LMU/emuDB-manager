@@ -9,6 +9,7 @@
 require_once 'helpers/filenames.php';
 require_once 'helpers/git.php';
 require_once 'helpers/json_file.php';
+require_once 'helpers/read_directories.php';
 require_once 'helpers/result_helper.php';
 
 /**
@@ -21,16 +22,24 @@ require_once 'helpers/result_helper.php';
  *        been authorized.
  * @param $uploadUUID string The UUID of the upload that shall be merged
  *        into an existing database.
- * @param $targetDB string The name of the target database for the uploaded
+ * @param $targetDBName string The name of the target database for the uploaded
  *        data.
  * @return Result
  */
-function merge_upload ($projectDir, $uploadUUID, $targetDB) {
+function merge_upload ($projectDir, $uploadUUID, $targetDBName) {
 
 	///////////////
 	// Find the required file names
 	//
-	$targetDBConfigFile = getDatabaseConfigFile($projectDir, $targetDB);
+
+	//
+	//
+	// Easy for target DB
+	$targetDBDir = getDatabaseDirectory($projectDir, $targetDBName);
+
+	//
+	//
+	// Takes some more for uploaded DB
 
 	// Find config file in upload
 	$uploadDirectory = getUploadDirectory($projectDir, $uploadUUID);
@@ -41,7 +50,7 @@ function merge_upload ($projectDir, $uploadUUID, $targetDB) {
 	}
 	$uploadDBName = $result->data;
 
-	$uploadDBConfigFile = getUploadDatabaseConfigFile(
+	$uploadDBDir = getUploadDatabaseDirectory(
 		$projectDir, $uploadUUID, $uploadDBName
 	);
 
@@ -50,26 +59,21 @@ function merge_upload ($projectDir, $uploadUUID, $targetDB) {
 
 
 	///////////////
-	// Load the configuration files
+	// Read the databases
 	//
-	$result = load_json_file($targetDBConfigFile);
+	$result = readDatabase($uploadDBDir);
 	if ($result->success !== true) {
-		return negativeResult(
-			'TARGET_DB_CONFIG_NOT_READABLE',
-			'Could not read target database’s config file.'
-		);
+		return $result;
 	}
-	$targetConfig = $result->data;
+	/** @var $uploadDB Database */
+	$uploadDB = $result->data;
 
-	$result = load_json_file($uploadDBConfigFile);
+	$result = readDatabase($targetDBDir);
 	if ($result->success !== true) {
-		return negativeResult(
-			'UPLOAD_DB_CONFIG_NOT_READABLE',
-			'Could not read uploaded database’s config file.'
-		);
+		return $result;
 	}
-	$uploadConfig = $result->data;
-
+	/** @var $targetDB Database */
+	$targetDB = $result->data;
 	//
 	///////////////
 
@@ -83,8 +87,8 @@ function merge_upload ($projectDir, $uploadUUID, $targetDB) {
 
 	// ssffTrackDefinitions is an array of objects
 	// != compares it recursively
-	if ($targetConfig->ssffTrackDefinitions !=
-		$uploadConfig->ssffTrackDefinitions
+	if ($targetDB->dbConfig->ssffTrackDefinitions !=
+		$uploadDB->dbConfig->ssffTrackDefinitions
 	) {
 		return negativeResult(
 			'CONFIGURATION_MISMATCH',
@@ -95,8 +99,8 @@ function merge_upload ($projectDir, $uploadUUID, $targetDB) {
 
 	// levelDefinitions is an array of objects
 	// != compares it recursively
-	if ($targetConfig->levelDefinitions !=
-		$uploadConfig->levelDefinitions
+	if ($targetDB->dbConfig->levelDefinitions !=
+		$uploadDB->dbConfig->levelDefinitions
 	) {
 		return negativeResult(
 			'CONFIGURATION_MISMATCH',
@@ -107,8 +111,8 @@ function merge_upload ($projectDir, $uploadUUID, $targetDB) {
 
 	// linkDefinitions is an array of objects
 	// != compares it recursively
-	if ($targetConfig->linkDefinitions !=
-		$uploadConfig->linkDefinitions
+	if ($targetDB->dbConfig->linkDefinitions !=
+		$uploadDB->dbConfig->linkDefinitions
 	) {
 		return negativeResult(
 			'CONFIGURATION_MISMATCH',
@@ -119,7 +123,9 @@ function merge_upload ($projectDir, $uploadUUID, $targetDB) {
 
 	// mediaFileExtension is supposed to be a string and can be compared with
 	// !==
-	if ($targetConfig->mediaFileExtension !== $uploadConfig->mediaFileExtension) {
+	if ($targetDB->dbConfig->mediaFileExtension !==
+		$uploadDB->dbConfig->mediaFileExtension
+	) {
 		return negativeResult(
 			'CONFIGURATION_MISMATCH',
 			'The configuration of the uploaded database differs from the ' .
@@ -132,11 +138,77 @@ function merge_upload ($projectDir, $uploadUUID, $targetDB) {
 
 
 	///////////////
-	// Copy new sessions and bundles over to the existing database
+	// Find sessions and bundles that are part of the uploaded DB but not of
+	// the existing one
 	//
+
+	/**
+	 * @var $dataToCopy Session[]
+	 *
+	 * Hold all sessions/bundles that are not yet in the target database
+	 */
+	$dataToCopy = array();
+
+
+	// $targetDB->sessions is an array of Session objects.
+	// Make a string array containing only the sessions’ names.
+	/** @var $sessionsInTargetDB string[] */
+	$sessionsInTargetDB = array_map(function ($value) {
+		return $value->name;
+	}, $targetDB->sessions);
+
+
+	// Walk through all the sessions in $uploadDB.
+	//
+	// Determine which are completely missing and which are partially missing in
+	// $targetDB.
+	foreach ($uploadDB->sessions as $currentUploadSession) {
+		if (!in_array($currentUploadSession->name, $sessionsInTargetDB)) {
+			// Session is missing completely in $targetDB. Copy it.
+			$dataToCopy[] = $currentUploadSession;
+		} else {
+			// Session does already exist in $targetDB, but it may be
+			// incomplete.
+			//
+			// Determine which bundles are missing.
+			//
+
+			$partialSession = new Session();
+			$partialSession->name = $currentUploadSession->name;
+			$partialSession->bundles = array();
+
+			// Get bundle list of the appropriate session in $targetDB
+			//
+			// We already know that the $currentUploadSession->name is the
+			// same as some $targetDB->sessions[$unknown_index]>->name
+
+			$existingBundles = array();
+			for ($i = 0; $i < $targetDB->sessions; ++$i) {
+				if ($targetDB->sessions[$i]->name ===
+					$currentUploadSession->name
+				) {
+					$existingBundles = $targetDB->sessions[$i]->bundles;
+					break;
+				}
+			}
+
+
+			foreach ($currentUploadSession->bundles as $currentUploadBundle) {
+				if (!in_array($currentUploadBundle, $existingBundles)) {
+					$partialSession->bundles[] = $currentUploadBundle;
+				}
+			}
+
+			$dataToCopy[] = $partialSession;
+		}
+	}
 
 	//
 	///////////////
 
-	return positiveResult(null);
+	///////////////
+	// Copy new sessions and bundles over to the existing database
+	//
+
+	return positiveResult($dataToCopy);
 }
