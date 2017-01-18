@@ -30,7 +30,7 @@ function fast_forward ($projectDir, $uploadUUID, $targetDB) {
 	if ($result->success !== true) {
 		return $result;
 	}
-	$uploadedDBDir = $uploadDir . '/data/' . $result->data . '_emuDB';
+	$uploadedDBDir = getUploadDatabaseDirectory($projectDir, $uploadUUID, $result->data);
 
 	$result = gitFastForwardPull($uploadedDBDir, $targetDBDir);
 

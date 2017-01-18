@@ -1,6 +1,6 @@
 <?php
 
-// (c) 2016 Markus Jochim <markusjochim@phonetik.uni-muenchen.de>
+// (c) 2016-2017 Markus Jochim <markusjochim@phonetik.uni-muenchen.de>
 
 // This script should be included and not called directly.
 // However, it is no security issue if it is called directly, because it only
@@ -14,7 +14,7 @@ require_once 'result_helper.php';
  * Search an upload directory looking for an EMU speech database within it.
  *
  * @param $dir string The upload directory to search through.
- * @return Result
+ * @return Result The name of the database found
  */
 function findDatabaseInUpload ($dir) {
 
