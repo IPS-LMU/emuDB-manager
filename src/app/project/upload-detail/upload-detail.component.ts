@@ -21,6 +21,11 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 		messageError: '',
 		messageSuccess: '',
 	};
+	private mergeForm = {
+		selectedDatabase: null,
+		messageError: '',
+		messageSuccess: '',
+	};
 	private reallyDelete:boolean = false;
 	private saveForm = {
 		newName: '',
@@ -128,6 +133,20 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 				' fast-forwarded. You can now delete this upload.';
 		}, error => {
 			this.fastForwardForm.messageError = error.message;
+			console.log(error);
+		});
+	}
+
+	private mergeUpload() {
+		this.mergeForm.messageSuccess = '';
+		this.mergeForm.messageError = '';
+
+		this.projectDataService.mergeUpload(this.upload.uuid, this.mergeForm.selectedDatabase.name).subscribe(next => {
+			this.projectDataService.fetchData();
+			this.mergeForm.messageSuccess = 'Databases have been merged.' +
+				' You can now delete this upload.';
+		}, error => {
+			this.mergeForm.messageError = error.message;
 			console.log(error);
 		});
 	}

@@ -185,23 +185,47 @@
 		</h3>
 
 		<div>
-			<p class="alert alert-danger">
-				The merge feature has not yet been implemented.
-			</p>
+			<form (ngSubmit)="mergeUpload()">
+				<p>
+					Select a database to merge the upload with.
+				</p>
+				<p>
+					<select class="form-control"
+					        [(ngModel)]="mergeForm.selectedDatabase"
+					        [ngModelOptions]="{standalone: true}">
+						<option *ngFor="let database of databaseList"
+						        [ngValue]="database">
+							{{database.name}}
+						</option>
+					</select>
+				</p>
+				<p>
+					<button class="btn btn-default" [disabled]="!mergeForm.selectedDatabase">
+						Merge <strong>{{upload?.name}}</strong> with database
 
-			<div class="dropdown">
-				<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMerge"
-				        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-					Merge <strong>{{upload?.name}}</strong> with database
-					<span class="caret"></span>
-				</button>
-				<ul class="dropdown-menu" aria-labelledby="dropdownMerge">
-					<li *ngIf="databaseList.length === 0">
-						<a><em>No database available</em></a>
-					</li>
-					<li *ngFor="let database of databaseList"><a>{{database.name}}</a></li>
-				</ul>
-			</div>
+						<strong *ngIf="mergeForm.selectedDatabase">{{mergeForm.selectedDatabase?.name}}</strong>
+						<em *ngIf="!mergeForm.selectedDatabase">[choose one]</em>
+					</button>
+				</p>
+				<p *ngIf="mergeForm.messageSuccess"
+				   class="alert alert-success">
+					<button type="button" class="close" aria-label="Close"
+					        (click)="mergeForm.messageSuccess = ''">
+						<span aria-hidden="true">&times;</span>
+					</button>
+
+					{{mergeForm.messageSuccess}}
+				</p>
+
+				<p *ngIf="mergeForm.messageError" class="alert alert-danger">
+					<button type="button" class="close" aria-label="Close"
+					        (click)="mergeForm.messageError = ''">
+						<span aria-hidden="true">&times;</span>
+					</button>
+
+					{{mergeForm.messageError}}
+				</p>
+			</form>
 		</div>
 	</div>
 

@@ -384,6 +384,14 @@ export class ProjectDataService {
 		});
 	}
 
+	public mergeUpload(upload_uuid: string, database: string): Observable<ServerResponse> {
+		return this.serverQueryWithDefaultSubscription({
+			'query': 'merge_upload',
+			'upload_uuid': upload_uuid,
+			'database': database
+		});
+	}
+
 	public createArchive(databaseName: string, treeish: string): Observable<ServerResponse> {
 		return this.serverQueryWithDefaultSubscription({
 			'query': 'create_archive',
