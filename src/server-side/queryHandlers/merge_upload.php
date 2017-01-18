@@ -10,6 +10,7 @@ require_once 'helpers/filenames.php';
 require_once 'helpers/git.php';
 require_once 'helpers/json_file.php';
 require_once 'helpers/read_directories.php';
+require_once 'helpers/recursiveCopy.php';
 require_once 'helpers/result_helper.php';
 
 /**
@@ -210,5 +211,69 @@ function merge_upload ($projectDir, $uploadUUID, $targetDBName) {
 	// Copy new sessions and bundles over to the existing database
 	//
 
-	return positiveResult($dataToCopy);
+	$complete = true;
+
+	foreach ($dataToCopy as $currentSession) {
+		if (count($currentSession->bundles) > 0) {
+			$sourceSessionDir = $uploadDBDir . '/' . $currentSession->name . '_ses';
+			$targetSessionDir = $targetDBDir . '/' . $currentSession->name . '_ses';
+
+			// Try to create the target directory. If that fails, skip the
+			// current session.
+			if (!is_dir($targetSessionDir)) {
+				if (!mkdir($targetSessionDir)) {
+					$complete = false;
+					break;
+				}
+			}
+
+			foreach ($currentSession->bundles as $currentBundle) {
+				$result = recursiveCopy(
+					$sourceSessionDir . '/' . $currentBundle . '_bndl',
+					$targetSessionDir . '/' . $currentBundle . '_bndl'
+				);
+
+				if ($result->success !== true) {
+					$complete = false;
+				}
+			}
+		}
+	}
+
+	if ($complete) {
+		$message = 'Completely merged uploaded database ' . $uploadDBName
+			. ' (' . $uploadUUID . ') into this database';
+	} else {
+		$message = 'PARTIALLY merged uploaded database ' . $uploadDBName
+			. ' (' . $uploadUUID . ') into this database (failed to merge completely)';
+	}
+
+	$git = gitCommitEverything(
+		$targetDBDir,
+		$message
+	);
+
+	if (!$complete) {
+		if ($git->success === true) {
+			return negativeResult(
+				'MERGE_INCOMPLETE',
+				'The merge could not be completed. Check the consistency of your data.'
+			);
+		} else {
+			return negativeResult(
+				'MERGE_INCOMPLETE_GIT_FAIL',
+				'The merge could not be completed. Check the consistency of your data.'
+				. 'Moreover, the new state of the database could not be committed to git.'
+			);
+		}
+	}
+
+	if ($git->success !== true) {
+		return negativeResult(
+			'GIT_FAIL',
+			'The merge was completed, but the new state of the database could not be committed to git.'
+		);
+	}
+
+	return positiveResult(null);
 }
