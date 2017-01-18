@@ -310,6 +310,24 @@ function executeQuery (AuthToken $authToken) {
 			return positiveResult(null);
 			break;
 
+		case 'merge_upload':
+			$result = validateUploadIdentifier($_POST['upload_uuid']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return merge_upload(
+				$authToken->projectDir,
+				$_POST['upload_uuid'],
+				$_POST['database']
+			);
+			break;
+
 		case 'rename_db':
 			$result = validateDatabaseName($_POST['old_name']);
 			if ($result->success !== true) {
