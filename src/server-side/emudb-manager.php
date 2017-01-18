@@ -76,7 +76,7 @@ function authorize () {
 	// to authenticate as
 
 	$dbh = new PDO(
-		'pgsql:host='.$dbHost.';dbname='.$dbDatabaseName,
+		'pgsql:host=' . $dbHost . ';dbname=' . $dbDatabaseName,
 		$dbUser,
 		$dbPassword
 	);
