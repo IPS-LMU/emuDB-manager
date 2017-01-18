@@ -6,61 +6,131 @@
 // However, it is no security issue if it is called directly, because it only
 // contains type definitions (thus, no code is executed).
 
-class Upload {
+class Upload
+{
+	/** @var string The UUID identifying this upload */
 	public $uuid;
+	/** @var string Formatted date of the upload (mtime as reported by the
+	 * file system */
 	public $date;
+	/** @var string Name of the database in this upload (without _emuDB
+	 * suffix). In the current implementation, this can also be a string
+	 * starting with 'INVALID_', indicating a problem in this upload. */
 	public $name;
+	/** @var Session[] The sessions contained in the database contained in
+	 * this upload */
 	public $sessions;
 }
 
-class Download {
+/**
+ * Class Download
+ *
+ * Represents an Emu speech database packed in a zip file for download.
+ */
+class Download
+{
+	/** @var string Name of the zipped database */
 	public $database;
+	/** @var string The HEAD revision or tag (see git docs for "treeish")
+	 * inside the zip file
+	 */
 	public $treeish;
+	/** @var string Formatted date of the zip file (mtime as reported by the
+	 * file system) */
 	public $date;
-	/** @var  Size in bytes */
+	/** @var int Size of the zip file in bytes */
 	public $size;
 }
 
-class Session {
+/**
+ * Class Session
+ *
+ * Represents one session inside an Emu speech database.
+ */
+class Session
+{
+	/** @var string Name of the session */
 	public $name;
+	/** @var string[] Names of the bundles contained in this session */
 	public $bundles;
 }
 
-class BundleListItem {
+/**
+ * Class BundleListItem
+ *
+ * Represents one item of a bundle list (see class BundleList).
+ */
+class BundleListItem
+{
+	/** @var string The name of the bundle this item refers to */
 	public $name;
+	/** @var string The name of the session that the bundle $name is part of */
 	public $session;
+	/** @var boolean Whether or not the bundle list's editor has finished this item */
 	public $finishedEditing;
+	/** @var string A comment written by the bundle list's editor */
 	public $comment;
 }
 
-class BundleList {
+/**
+ * Class BundleList
+ *
+ * Represents one bundle list inside an Emu speech database.
+ */
+class BundleList
+{
+	/** @var string Username of the editor this bundle list is assigned to */
 	public $name;
+	/** @var string Archive label assigned to this bundle list */
 	public $archiveLabel;
+	/** @var BundleListItem[] The items that make up this bundle list */
 	public $items;
 }
 
-class Database {
+/**
+ * Class Database
+ *
+ * Represents one Emu speech database.
+ */
+class Database
+{
+	/** @var string The name of this database */
 	public $name;
-
-	/**
-	 * @var EmuDBConfig Configuration object
-	 */
+	/** @var EmuDBConfig Configuration object (as read from the _DBconfig .json) */
 	public $dbConfig;
+	/** @var BundleList[] The bundle lists associated with this database */
 	public $bundleLists;
+	/** @var Session[] The sessions that make up this database */
 	public $sessions;
 }
 
-class DataSet {
+/**
+ * Class DataSet
+ *
+ * An object that is passed from the server to the client in response to a
+ * project_info query.
+ */
+class DataSet
+{
+	/** @var string The description of the project */
 	public $name;
+	/** @var Database[] The database that belong to this project */
 	public $databases;
+	/** @var Upload[] The uploads that belong to this project */
 	public $uploads;
+	/** @var Download[] The downloads that belong to this project */
 	public $downloads;
 }
 
-class Result {
-	/**
-	 * @var bool Indicator of success or error
-	 */
+/**
+ * Class Result
+ *
+ * Object type that is used as return value in many functions. Combines a
+ * boolean indicator of success with a data field.
+ */
+class Result
+{
+	/** @var bool Indicator of success or error */
 	public $success;
 
 	/**
@@ -81,37 +151,70 @@ class Result {
 	public $message;
 }
 
-class AuthToken {
+/**
+ * Class AuthToken
+ *
+ * Is returned by a function that checks credentials. Indicates that a client
+ * is allowed read+write access to the project in a certain directory. The
+ * $projectName field is purely informative, giving the client a
+ * database-stored description of the project.
+ */
+class AuthToken
+{
+	/** @var string Description (not name) of the project */
 	public $projectName;
+	/** @var string Path to the project the client is authorized to access */
 	public $projectDir;
 }
 
-class GitCommit {
+/**
+ * Class GitCommit
+ *
+ * Represents a single git commit
+ */
+class GitCommit
+{
+	/** @var string The SHA1 sum that identifies the commit */
 	public $commitID;
+	/** @var string Formatted author date */
 	public $date;
+	/** @var string Commit message/description */
 	public $message;
 }
 
 /**
  * Class EmuDBConfig
  *
- * This is an *extremely and intentionally incomplete definition of an Emu
+ * This is an *extremely and intentionally* incomplete definition of an Emu
  * database configuration. It has only those values that need to be
  * manipulated by set_database_configuration.
  */
-class EmuDBConfig {
+class EmuDBConfig
+{
 	/**
 	 * @var EMUwebAppConfig
 	 */
 	public $EMUwebAppConfig;
 }
 
-class EMUwebAppConfig {
+/**
+ * Class EMUwebAppConfig
+ *
+ * See class EmuDBConfig
+ */
+class EMUwebAppConfig
+{
 	/** @var  Restrictions */
 	public $restrictions;
 }
 
-class Restrictions {
+/**
+ * Class Restrictions
+ *
+ * See class EmuDBConfig
+ */
+class Restrictions
+{
 	/**
 	 * @var bool
 	 */

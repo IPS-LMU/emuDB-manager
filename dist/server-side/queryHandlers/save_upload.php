@@ -1,6 +1,6 @@
 <?php
 
-// (c) 2016 Markus Jochim <markusjochim@phonetik.uni-muenchen.de>
+// (c) 2016-2017 Markus Jochim <markusjochim@phonetik.uni-muenchen.de>
 
 // This script should be included and not called directly.
 // However, it is no security issue if it is called directly, because it only
@@ -31,11 +31,15 @@ function save_upload ($projectDir, $uuid, $name) {
 		);
 	}
 
-	$uploadDir = $projectDir . '/uploads/' . $uuid;
-	$uploadDataDir = $uploadDir . '/data/';
-
+	$uploadDir = getUploadDirectory($projectDir, $uuid);
 	$dbName = findDatabaseInUpload($uploadDir);
-	$databaseDir = $uploadDataDir . '/' . $dbName->data . '_emuDB';
+	if ($dbName->success !== true) {
+		return negativeResult(
+			'INVALID_UPLOAD',
+			'Could not find specified upload database.'
+		);
+	}
+	$databaseDir = getUploadDatabaseDirectory($projectDir, $uuid, $dbName->data);
 
 	$result = moveDatabase($databaseDir, $name, $targetDir);
 	if ($result->success !== true) {

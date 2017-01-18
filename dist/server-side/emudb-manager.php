@@ -31,6 +31,7 @@ require_once 'queryHandlers/edit_bundle_list.php';
 require_once 'queryHandlers/fast_forward.php';
 require_once 'queryHandlers/list_commits.php';
 require_once 'queryHandlers/list_tags.php';
+require_once 'queryHandlers/merge_upload.php';
 require_once 'queryHandlers/project_info.php';
 require_once 'queryHandlers/rename_db.php';
 require_once 'queryHandlers/save_bundle_list.php';
@@ -76,7 +77,7 @@ function authorize () {
 	// to authenticate as
 
 	$dbh = new PDO(
-		'pgsql:host='.$dbHost.';dbname='.$dbDatabaseName,
+		'pgsql:host=' . $dbHost . ';dbname=' . $dbDatabaseName,
 		$dbUser,
 		$dbPassword
 	);
@@ -308,6 +309,24 @@ function executeQuery (AuthToken $authToken) {
 
 		case 'login':
 			return positiveResult(null);
+			break;
+
+		case 'merge_upload':
+			$result = validateUploadIdentifier($_POST['upload_uuid']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateDatabaseName($_POST['database']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return merge_upload(
+				$authToken->projectDir,
+				$_POST['upload_uuid'],
+				$_POST['database']
+			);
 			break;
 
 		case 'rename_db':
