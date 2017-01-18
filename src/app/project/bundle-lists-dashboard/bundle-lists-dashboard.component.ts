@@ -58,8 +58,12 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 		let result = [];
 
 		if (this.selectedDatabase !== null) {
-			var sessionRegex = new RegExp(this.sessionPattern);
-			var bundleRegex = new RegExp(this.bundlePattern);
+			try {
+				var sessionRegex = new RegExp(this.sessionPattern);
+				var bundleRegex = new RegExp(this.bundlePattern);
+			} catch (e) {
+				return result;
+			}
 
 			for (let i = 0; i < this.selectedDatabase.sessions.length; ++i) {
 				let currentSession = this.selectedDatabase.sessions[i];
@@ -147,5 +151,23 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 			&&
 			getConfigFinishedEditing(this.selectedDatabase)
 		);
+	}
+
+	private validBundlePattern():boolean {
+		try {
+			new RegExp(this.bundlePattern);
+		} catch (e) {
+			return false;
+		}
+		return true;
+	}
+
+	private validSessionPattern():boolean {
+		try {
+			new RegExp(this.sessionPattern);
+		} catch (e) {
+			return false;
+		}
+		return true;
 	}
 }

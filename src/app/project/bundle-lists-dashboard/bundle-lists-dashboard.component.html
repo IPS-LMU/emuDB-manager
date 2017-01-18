@@ -52,7 +52,8 @@
 
             <hr>
 
-            <div class="row">
+            <div class="row" [ngClass]="{'has-success': validBundlePattern(),
+	                                     'has-error': !validBundlePattern()}" >
                 <p class="col-md-4">
                     What bundles from what sessions shall be included?
                 </p>
@@ -61,14 +62,20 @@
                     Bundle pattern:
                 </p>
 
-                <p class="col-md-6">
-                    <input [ngModelOptions]="{standalone: true}"
-                           [(ngModel)]="bundlePattern"
-                           class="form-control">
-                </p>
+                <div class="col-md-6">
+	                <p>
+		                <input [ngModelOptions]="{standalone: true}"
+		                       [(ngModel)]="bundlePattern"
+		                       class="form-control">
+	                </p>
+	                <p class="alert alert-danger" *ngIf="!validBundlePattern()">
+		                Invalid regular expression
+	                </p>
+                </div>
             </div>
 
-            <div class="row">
+	        <div class="row" [ngClass]="{'has-success': validSessionPattern(),
+	                                     'has-error': !validSessionPattern()}">
                 <p class="col-md-4">
                 </p>
 
@@ -76,11 +83,16 @@
                     Session pattern:
                 </p>
 
-                <p class="col-md-6">
-                    <input [ngModelOptions]="{standalone: true}"
-                           [(ngModel)]="sessionPattern"
-                           class="form-control">
-                </p>
+                <div class="col-md-6">
+	                <p>
+		                <input [ngModelOptions]="{standalone: true}"
+		                       [(ngModel)]="sessionPattern"
+		                       class="form-control">
+	                </p>
+	                <p class="alert alert-danger" *ngIf="!validSessionPattern()">
+		                Invalid regular expression
+	                </p>
+                </div>
             </div>
 
             <div class="row">
@@ -93,15 +105,18 @@
 
                 <p class="col-md-6">
                     <button class="btn btn-default" type="button"
-                            (click)="preview = 'none'">
+                            (click)="preview = 'none'"
+                            [ngClass]="{active: preview == 'none'}">
                         None
                     </button>
                     <button class="btn btn-default" type="button"
-                            (click)="preview = 'sessions'">
+                            (click)="preview = 'sessions'"
+                            [ngClass]="{active: preview == 'sessions'}">
                         Sessions only
                     </button>
                     <button class="btn btn-default" type="button"
-                            (click)="preview = 'complete'">
+                            (click)="preview = 'complete'"
+                            [ngClass]="{active: preview == 'complete'}">
                         Complete
                     </button>
                 </p>
@@ -114,18 +129,18 @@
                 <div class="alert col-md-8">
                     <ul>
                         <li *ngFor="let session of previewPattern(preview==='complete')">
-                            <s *ngIf="!session.matched">{{session.name}}</s>
+                            <s *ngIf="!session.matched" class="text-danger">{{session.name}}</s>
 
-                            <span *ngIf="session.matched">
+                            <span *ngIf="session.matched" class="text-success">
 								{{session.name}}
 							</span>
 
                             <ul *ngIf="session.matched">
                                 <li *ngFor="let bundle of session.bundles">
-                                    <s *ngIf="!bundle.matched">
+                                    <s *ngIf="!bundle.matched" class="text-danger">
                                         {{bundle.name}}
                                     </s>
-                                    <span *ngIf="bundle.matched">
+                                    <span *ngIf="bundle.matched" class="text-success">
 										{{bundle.name}}
 									</span>
                                 </li>
@@ -200,7 +215,8 @@
                 <div class="col-md-12">
                     <p>
                         <button type="button" class="btn btn-default"
-                                (click)="generateLists()">
+                                (click)="generateLists()"
+                                [disabled]="!(validBundlePattern() && validSessionPattern())">
                             Generate
                         </button>
                     </p>
