@@ -20,12 +20,14 @@ export class ProjectDataService {
 	private infoObserver: Observer<ProjectInfo>;
 	private nodeJSServerURL = 'wss://webapp2.phonetik.uni-muenchen.de:17890/manager';
 	private password: string;
+	private project: string;
 	private url = 'https://www.phonetik.uni-muenchen.de/apps/emuDB-manager/server-side/emudb-manager.php';
 	private username: string;
 
 	constructor(private http: Http) {
 		this.username = '';
 		this.password = '';
+		this.project = '';
 		this.createHotObservable();
 	}
 
@@ -38,7 +40,7 @@ export class ProjectDataService {
 
 	public fetchData(): void {
 		let params = {
-			query: 'project_info'
+			query: 'projectInfo'
 		};
 
 		this.serverQuery(params).subscribe((next: any) => {
@@ -70,8 +72,9 @@ export class ProjectDataService {
 		let headers = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
 		let options = new RequestOptions({headers: headers});
 
-		params.user = this.username;
+		params.username = this.username;
 		params.password = this.password;
+		params.project = this.project;
 
 		let body = '';
 		for (let i in params) {
@@ -109,10 +112,11 @@ export class ProjectDataService {
 		});
 	}
 
-	public login(username: string, password: string): Observable<void> {
+	public login(username: string, password: string, project: string): Observable<void> {
 		return Observable.create(observer => {
 			this.username = username;
 			this.password = password;
+			this.project = project;
 
 			let params = {
 				query: 'login'
@@ -133,6 +137,7 @@ export class ProjectDataService {
 	public logout(): void {
 		this.username = '';
 		this.password = '';
+		this.project = '';
 		this.createHotObservable();
 	}
 
@@ -143,6 +148,7 @@ export class ProjectDataService {
 			params: {
 				'user': this.username,
 				'password': this.password,
+				'project': this.project,
 				'query': 'upload'
 			}
 		};
@@ -152,11 +158,12 @@ export class ProjectDataService {
 		return {
 			url: this.url,
 			options: {
-				query: 'download_database',
+				query: 'downloadDatabase',
 				user: this.username,
 				password: this.password,
-				database: database,
-				treeish: treeish
+				project: this.project,
+				databaseName: database,
+				gitTreeish: treeish
 			}
 		};
 	}
@@ -257,17 +264,14 @@ export class ProjectDataService {
 	}
 
 	public getEmuWebAppURL(database: string): Observable<string> {
+		// does this function still need to be async?
 		return this.getName().map(projectName => {
 			let url = this.emuWebAppURL;
 			url += '?autoConnect=true&serverUrl=';
 
 			let nodeJS = this.nodeJSServerURL;
 
-			// we should not use this.username here but rather something
-			// retrieved from the server (which doesnt exist yet;
-			// this.getName() isn't right either but it's used so the
-			// function is async already)
-			nodeJS += '/' + this.username + '/databases/' + database;
+			nodeJS += '/' + this.project + '/databases/' + database;
 
 			url += encodeURIComponent(nodeJS);
 
@@ -278,8 +282,8 @@ export class ProjectDataService {
 	public getCommitList(database: string): Observable<Object> {
 		return Observable.create(observer => {
 			let params = {
-				query: 'list_commits',
-				database: database
+				query: 'listCommits',
+				databaseName: database
 			};
 
 			this.serverQuery(params).subscribe((next: any) => {
@@ -295,8 +299,8 @@ export class ProjectDataService {
 
 	public getTagList(database: string): Observable<string[]> {
 		return this.serverQueryWithDefaultSubscription({
-			query: 'list_tags',
-			database: database
+			query: 'listTags',
+			databaseName: database
 		});
 	}
 
@@ -313,16 +317,16 @@ export class ProjectDataService {
 
 	public renameDatabase(oldName: string, newName: string): Observable<void> {
 		return this.serverQueryWithDefaultSubscription({
-			'query': 'rename_db',
-			'old_name': oldName,
-			'new_name': newName
+			'query': 'renameDatabase',
+			'oldDatabaseName': oldName,
+			'newDatabaseName': newName
 		});
 	}
 
 	public setDatabaseConfiguration(database: string, bundleComments: boolean, bundleFinishedEditing: boolean): Observable<void> {
 		return this.serverQueryWithDefaultSubscription({
-			'query': 'set_database_configuration',
-			'database': database,
+			'query': 'setDatabaseConfiguration',
+			'databaseName': database,
 			'bundleComments': bundleComments,
 			'bundleFinishedEditing': bundleFinishedEditing
 		});
@@ -330,10 +334,10 @@ export class ProjectDataService {
 
 	public addTag(database: string, commit: string, label: string): Observable<void> {
 		return this.serverQueryWithDefaultSubscription({
-			'query': 'add_tag',
-			'database': database,
-			'commit': commit,
-			'label': label
+			'query': 'addTag',
+			'databaseName': database,
+			'gitCommitID': commit,
+			'gitTagLabel': label
 		});
 	}
 
@@ -343,44 +347,44 @@ export class ProjectDataService {
 	                      newName: string,
 	                      newArchiveLabel: string): Observable<void> {
 		return this.serverQueryWithDefaultSubscription({
-			'query': 'edit_bundle_list',
-			'database': database,
-			'old_name': name,
-			'old_archive_label': archiveLabel,
-			'new_name': newName,
-			'new_archive_label': newArchiveLabel
+			'query': 'editBundleList',
+			'databaseName': database,
+			'oldDatabaseName': name,
+			'oldArchiveLabel': archiveLabel,
+			'newDatabaseName': newName,
+			'newArchiveLabel': newArchiveLabel
 		});
 	}
 
 	public deleteUpload(identifier: string) {
 		return this.serverQueryWithDefaultSubscription({
-			'query': 'delete_upload',
-			'uuid': identifier
+			'query': 'deleteUpload',
+			'uploadUUID': identifier
 		});
 	}
 
 	public deleteBundleList(database: string, bundleList: BundleList) {
 		return this.serverQueryWithDefaultSubscription({
-			'query': 'delete_bundle_list',
-			'database': database,
-			'name': bundleList.name,
-			'archive_label': bundleList.archiveLabel
+			'query': 'deleteBundleList',
+			'databaseName': database,
+			'bundleListName': bundleList.name,
+			'archiveLabel': bundleList.archiveLabel
 		});
 	}
 
 	public saveUpload(identifier: string, name: string): Observable<ServerResponse> {
 		return this.serverQueryWithDefaultSubscription({
-			'query': 'save_upload',
-			'uuid': identifier,
-			'name': name
+			'query': 'saveUpload',
+			'uploadUUID': identifier,
+			'databaseName': name
 		});
 	}
 
 	public fastForward(upload_uuid: string, database: string): Observable<ServerResponse> {
 		return this.serverQueryWithDefaultSubscription({
-			'query': 'fast_forward',
-			'upload_uuid': upload_uuid,
-			'database': database
+			'query': 'fastForward',
+			'uploadUUID': upload_uuid,
+			'databaseName': database
 		});
 	}
 
@@ -394,9 +398,9 @@ export class ProjectDataService {
 
 	public createArchive(databaseName: string, treeish: string): Observable<ServerResponse> {
 		return this.serverQueryWithDefaultSubscription({
-			'query': 'create_archive',
-			'database': databaseName,
-			'treeish': treeish
+			'query': 'createArchive',
+			'databaseName': databaseName,
+			'gitTreeish': treeish
 		});
 	}
 
@@ -443,10 +447,10 @@ export class ProjectDataService {
 		//
 		// Send query to server
 		return this.serverQueryWithDefaultSubscription({
-			query: 'save_bundle_list',
-			database: database,
-			name: newName,
-			list: JSON.stringify(newBundleList.items)
+			query: 'saveBundleList',
+			databaseName: database,
+			bundleListName: newName,
+			bundleListObject: JSON.stringify(newBundleList.items)
 		});
 	}
 
@@ -483,10 +487,10 @@ export class ProjectDataService {
 
 				for (let i = 0; i < resultBundleLists.length; ++i) {
 					let params = {
-						query: 'save_bundle_list',
-						database: database,
-						name: resultBundleLists[i].name,
-						list: JSON.stringify(resultBundleLists[i].items)
+						query: 'saveBundleList',
+						databaseName: database,
+						bundleListName: resultBundleLists[i].name,
+						bundleListObject: JSON.stringify(resultBundleLists[i].items)
 					};
 
 					this.serverQuery(params).subscribe((next: any) => {
