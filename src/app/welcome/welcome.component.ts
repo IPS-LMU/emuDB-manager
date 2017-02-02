@@ -11,6 +11,7 @@ import {Subscription} from "rxjs/Rx";
 export class WelcomeComponent implements OnInit {
 	private loginFailed:boolean = false;
 	private password:string;
+	private project:string;
 	private sub:Subscription;
 	private unknownError:boolean = false;
 	private unknownErrorMessage:string = '';
@@ -31,10 +32,10 @@ export class WelcomeComponent implements OnInit {
 			return;
 		}
 
-		this.sub = this.projectDataService.login(this.username, this.password).subscribe(next => {
+		this.sub = this.projectDataService.login(this.username, this.password, this.project).subscribe(next => {
 			this.router.navigate(['/project/overview']);
 		}, error => {
-			if (error.data === 'BAD_LOGIN') {
+			if (error.data === 'E_AUTHENTICATION' || error.data === 'E_AUTHORIZATION') {
 				this.loginFailed = true;
 			} else {
 				this.unknownError = true;
