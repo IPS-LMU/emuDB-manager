@@ -1,7 +1,8 @@
 export interface DownloadOptions {
-	query: 'download_database';
+	query: 'downloadDatabase';
 	user: string;
 	password: string;
-	database: string;
-	treeish: string;
+	project: string;
+	databaseName: string;
+	gitTreeish: string;
 }

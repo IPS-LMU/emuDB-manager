@@ -3,6 +3,7 @@ export interface UploadTarget {
 	params: {
 		user: string,
 		password: string,
+		project: string,
 		query: string
 	}
 }
