@@ -5,12 +5,7 @@
 	<div class="panel-body">
 		<form (ngSubmit)="checkLogin()">
 			<p>
-				<input autofocus class="form-control" placeholder="Project" [(ngModel)]="project"
-				       name="project">
-			</p>
-
-			<p>
-				<input class="form-control" placeholder="Username" [(ngModel)]="username"
+				<input autofocus class="form-control" placeholder="Username" [(ngModel)]="username"
 				       name="username">
 			</p>
 
@@ -24,6 +19,24 @@
 					Login
 				</button>
 			</p>
+			
+			<p *ngIf="projectList">
+				<select class="form-control" [(ngModel)]="selectedProject"
+				        name="selectedProject">
+					<option *ngFor="let project of projectList" [value]="project.name">
+						{{project.name}}
+						<span *ngIf="project.level === 'ro'">(read-only)</span>
+					</option>
+				</select>
+
+				<br>
+
+				<button type="button" class="btn btn-default"
+				        (click)="chooseProject(selectedProject)">
+					Choose project
+				</button>
+			</p>
+
 			<p *ngIf="loginFailed" class="alert alert-danger" role="alert">
 				Invalid login credentials supplied.
 				<button type="button" class="close" aria-label="Close" (click)="loginFailed = false">

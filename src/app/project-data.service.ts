@@ -74,7 +74,9 @@ export class ProjectDataService {
 
 		params.username = this.username;
 		params.password = this.password;
-		params.project = this.project;
+		if (this.project !== '') {
+			params.project = this.project;
+		}
 
 		let body = '';
 		for (let i in params) {
@@ -112,26 +114,29 @@ export class ProjectDataService {
 		});
 	}
 
-	public login(username: string, password: string, project: string): Observable<void> {
+	public getProjectList(username: string, password: string): Observable<{name:string, level:string}[]> {
 		return Observable.create(observer => {
 			this.username = username;
 			this.password = password;
-			this.project = project;
 
 			let params = {
-				query: 'login'
+				query: 'listProjects'
 			};
 
 			this.serverQuery(params).subscribe((next: any) => {
 				if (next.success === true) {
-					observer.next(null);
+					observer.next(next.data);
 					observer.complete();
-					this.fetchData();
 				} else {
 					observer.error(next);
 				}
 			});
 		});
+	}
+
+	public setProject(project: string): void {
+			this.project = project;
+			this.fetchData();
 	}
 
 	public logout(): void {
