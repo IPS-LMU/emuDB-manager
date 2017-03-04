@@ -44,16 +44,18 @@ export class ProjectDataService {
 			query: 'projectInfo'
 		};
 
-		this.serverQuery(params).subscribe((next: any) => {
+		this.serverQuery(params).subscribe((next: ServerResponse) => {
 			if (next.success === true) {
 				this.infoObserver.next(next.data);
 			} else {
-				if (next.data === 'BAD_LOGIN') {
-					this.infoObserver.error('BAD_LOGIN');
+				if (next.error.code === 'E_AUTHENTICATION') {
+					this.infoObserver.error(next.error);
 					this.createHotObservable();
 				} else {
 					console.log('Unknown error in server response');
-					//this.infoObserver.error('UNKNOWN ERROR');
+					//this.infoObserver.error(next.error); // this creates
+					// an exception that is never handled (yet) - first
+					// adapt the calling code before uncommenting this
 				}
 			}
 		});
@@ -113,7 +115,7 @@ export class ProjectDataService {
 					observer.next(next.data);
 					observer.complete();
 				} else {
-					observer.error(next);
+					observer.error(next.error);
 				}
 			});
 		});
@@ -130,7 +132,7 @@ export class ProjectDataService {
 					observer.next(next.data);
 					observer.complete();
 				} else {
-					observer.error(next);
+					observer.error(next.error);
 				}
 			});
 		});
@@ -312,12 +314,12 @@ export class ProjectDataService {
 				databaseName: database
 			};
 
-			this.serverQuery(params).subscribe((next: any) => {
+			this.serverQuery(params).subscribe((next: ServerResponse) => {
 				if (next.success === true) {
 					observer.next(transformCommitList(next.data));
 					observer.complete();
 				} else {
-					observer.error(next);
+					observer.error(next.error);
 				}
 			});
 		});
