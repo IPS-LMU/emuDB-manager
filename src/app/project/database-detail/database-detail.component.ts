@@ -7,6 +7,7 @@ import {DownloadInfo} from "../../types/download-info";
 import {DownloadTarget} from "../../types/download-target";
 import {getConfigComments} from "../../core/get-config-comments.function";
 import {getConfigFinishedEditing} from "../../core/get-config-finished-editing.function";
+import {getErrorMessage} from "../../core/get-error-message.function";
 
 type State = 'BundleLists' | 'Sessions' | 'Download' | 'Rename' | 'Config';
 
@@ -158,7 +159,7 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 				this.tagList = nextTagList;
 			});
 		}, error => {
-			commit.saveTagError = error.message;
+			commit.saveTagError = getErrorMessage(error);
 		});
 	}
 
@@ -177,7 +178,7 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 					' changes.';
 				this.projectDataService.fetchData();
 			}, error => {
-				this.saveConfigError = error.message;
+				this.saveConfigError = getErrorMessage(error);
 			});
 	}
 
@@ -197,7 +198,7 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 			this.unsubscribe(false);
 			this.subscribe(this.newName);
 		}, error => {
-			this.renameError = error.message;
+			this.renameError = getErrorMessage(error);
 		});
 	}
 

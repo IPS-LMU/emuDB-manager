@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {ProjectDataService} from "../../project-data.service";
 import {BundleListItem} from "../../types/bundle-list-item";
 import {BundleList} from "../../types/bundle-list";
+import {getErrorMessage} from "../../core/get-error-message.function";
 
 type State = 'Info' | 'AllBundles' | 'CommentedBundles';
 
@@ -122,7 +123,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 				this.setBundleList(nextBundleList)
 			});
 		}, error => {
-			this.infoEditor.messageError = error.message;
+			this.infoEditor.messageError = getErrorMessage(error);
 		});
 	}
 
@@ -144,7 +145,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 
 			this.router.navigate(['/project/databases', this.database]);
 		}, error => {
-			this.deleteError = error.message;
+			this.deleteError = getErrorMessage(error);
 		});
 	}
 
@@ -167,7 +168,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 				' bundle list.';
 			this.projectDataService.fetchData();
 		}, error => {
-			this.duplicationEditor.messageError = error.message;
+			this.duplicationEditor.messageError = getErrorMessage(error);
 		});
 	}
 }

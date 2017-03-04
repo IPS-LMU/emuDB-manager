@@ -1,6 +1,7 @@
 import {Component, NgZone} from "@angular/core";
 import {ProjectDataService} from "../../project-data.service";
 import {NgUploaderOptions} from "ngx-uploader";
+import {getErrorMessage} from "../../core/get-error-message.function";
 
 @Component({
 	selector: 'emudbmanager-upload-form',
@@ -50,7 +51,7 @@ export class UploadFormComponent {
 				this.successMessage = 'The server has finished processing' +
 					' the upload. It has been saved under the UUID ' + response.data + '.';
 			} else {
-				this.errorMessage = response.message;
+				this.errorMessage = getErrorMessage(response.error);
 			}
 		}
 	}

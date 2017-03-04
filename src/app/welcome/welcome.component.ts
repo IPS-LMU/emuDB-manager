@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
 import {ProjectDataService} from "../project-data.service";
 import {Subscription} from "rxjs/Rx";
+import {getErrorMessage} from "../core/get-error-message.function";
 
 @Component({
 	selector: 'emudbmanager-welcome',
@@ -68,11 +69,11 @@ export class WelcomeComponent implements OnInit {
 		}, error => {
 			this.projectList = undefined;
 			this.selectedProject = undefined;
-			if (error.data === 'E_AUTHENTICATION') {
+			if (error.code === 'E_AUTHENTICATION') {
 				this.loginFailed = true;
 			} else {
 				this.unknownError = true;
-				this.unknownErrorMessage = error.message;
+				this.unknownErrorMessage = getErrorMessage(error);
 			}
 
 			this.sub = null;

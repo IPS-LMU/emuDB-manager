@@ -1,5 +1,8 @@
 export function getErrorMessage(error: {code: string, info?: any}): string {
 	switch (error.code) {
+		case 'E_AUTHENTICATION':
+			return 'Username and/or password incorrect;';
+
 		case 'E_BUNDLE_LIST_EXISTS':
 			return 'A bundle list for editor ' + error.info[2] + ' with' +
 				' archive label ' + error.info[3] + ' exists already.';

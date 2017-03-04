@@ -5,6 +5,7 @@ import {ProjectDataService} from "../../project-data.service";
 import {DatabaseInfo} from "../../types/database-info";
 import {getConfigFinishedEditing} from "../../core/get-config-finished-editing.function";
 import {getConfigComments} from "../../core/get-config-comments.function";
+import {getErrorMessage} from "../../core/get-error-message.function";
 
 type State = 'Overview' | 'Generator';
 
@@ -119,8 +120,7 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 		)
 			.subscribe(next => {
 			}, error => {
-				this.generatorError = error.message;
-
+				this.generatorError = getErrorMessage(error);
 			}, () => {
 				this.generatorSuccess += 'Successfully generated all bundle lists';
 				this.projectDataService.fetchData();

@@ -5,6 +5,7 @@ import {ProjectDataService} from "../../project-data.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DatabaseInfo} from "../../types/database-info";
 import {countBundles} from "../../core/count-bundles.function";
+import {getErrorMessage} from "../../core/get-error-message.function";
 
 type State = 'Sessions' | 'Save' | 'Delete';
 
@@ -99,7 +100,7 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 
 			this.router.navigate(['/project/uploads']);
 		}, error => {
-			this.deleteError = error.message;
+			this.deleteError = getErrorMessage(error);
 		});
 	}
 
@@ -118,7 +119,7 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 			this.projectDataService.fetchData();
 			this.saveForm.messageSuccess = 'The database has been saved.';
 		}, error => {
-			this.saveForm.messageError = error.message;
+			this.saveForm.messageError = getErrorMessage(error);
 			console.log(error);
 		});
 	}
@@ -132,7 +133,7 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 			this.fastForwardForm.messageSuccess = 'Database has been' +
 				' fast-forwarded. You can now delete this upload.';
 		}, error => {
-			this.fastForwardForm.messageError = error.message;
+			this.fastForwardForm.messageError = getErrorMessage(error);
 			console.log(error);
 		});
 	}
@@ -146,7 +147,7 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 			this.mergeForm.messageSuccess = 'Databases have been merged.' +
 				' You can now delete this upload.';
 		}, error => {
-			this.mergeForm.messageError = error.message;
+			this.mergeForm.messageError = getErrorMessage(error);
 			console.log(error);
 		});
 	}
