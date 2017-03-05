@@ -491,7 +491,9 @@ export class ProjectDataService {
 		return Observable.create(observer => {
 			this.getDatabase(database).map(dbInfo => {
 				if (dbInfo === null) {
-					observer.error('Invalid database specified');
+					observer.error({
+						code: 'Invalid database specified'
+					});
 					return;
 				}
 
@@ -506,7 +508,7 @@ export class ProjectDataService {
 
 				if (typeof resultBundleLists === 'string') {
 					observer.error({
-						message: resultBundleLists
+						code: resultBundleLists
 					});
 					return;
 				}
@@ -529,7 +531,7 @@ export class ProjectDataService {
 								observer.complete();
 							}
 						} else {
-							observer.error(next);
+							observer.error(next.error);
 							return;
 						}
 					});
