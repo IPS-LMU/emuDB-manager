@@ -9,7 +9,7 @@
       "outDir": "dist",
       "assets": [
         "assets",
-	"server-side"
+        "server-side"
       ],
       "index": "index.html",
       "main": "main.ts",
@@ -23,10 +23,10 @@
       ],
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
-	"assets/bootstrap/dist/js/bootstrap.min.js"
+        "assets/bootstrap/dist/js/bootstrap.min.js"
       ],
+      "environmentSource": "environments/environment.ts",
       "environments": {
-        "source": "environments/environment.ts",
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
       }
