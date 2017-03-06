@@ -121,7 +121,7 @@ export class ProjectDataService {
 		});
 	}
 
-	public getProjectList(): Observable<{name:string, level:string}[]> {
+	public getProjectList(): Observable<{name:string, permission:string}[]> {
 		return Observable.create(observer => {
 			let params = {
 				query: 'listProjects'

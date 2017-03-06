@@ -25,7 +25,7 @@
 				        name="selectedProject">
 					<option *ngFor="let project of projectList" [value]="project.name">
 						{{project.name}}
-						<span *ngIf="project.level === 'ro'">(read-only)</span>
+						({{project.permission}})
 					</option>
 				</select>
 

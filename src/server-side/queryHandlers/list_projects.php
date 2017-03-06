@@ -27,7 +27,7 @@ function list_projects ($userID) {
 		while ($row = $stmt->fetch()) {
 			$project = new Project();
 			$project->name = $row['name'];
-			$project->role = $row['permission'];
+			$project->permission = $row['permission'];
 			$projectList[] = $project;
 		}
 

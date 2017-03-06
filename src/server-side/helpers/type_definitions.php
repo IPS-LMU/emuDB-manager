@@ -227,5 +227,5 @@ class Restrictions
 
 class Project {
 	public $name;
-	public $role;
+	public $permission;
 }
