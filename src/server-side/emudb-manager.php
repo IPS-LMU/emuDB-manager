@@ -83,29 +83,58 @@ function authorize () {
 	);
 
 	$stmt = $dbh->prepare(
-		"SELECT
-		  proj.name,
-		  proj.description,
-		  proj.code,
-		  adm.password
-		FROM expproject proj
-		  JOIN expadmin adm ON proj.expadmin_id = adm.id
-		WHERE proj.name = :project
-		LIMIT 1"
+		"SELECT *
+		FROM authtokens
+		WHERE token = :token AND validuntil > current_timestamp"
 	);
 
-	$stmt->bindParam(':project', $_POST['user']);
+	$stmt->bindParam(':token', $_POST['secretToken']);
 	$stmt->execute();
 
-	while ($row = $stmt->fetch()) {
-		if (password_verify($_POST['password'], $row['password'])) {
-			$result = new AuthToken();
-			$result->projectDir = $dataDirectory . '/' . $row['code'];
-			$result->projectName = $row['description'];
+	if ($row = $stmt->fetch()) {
+		if ($_POST['query'] === 'listProjects') {
+			$stmt = $dbh->prepare("
+				SELECT name, permission, description FROM emu.permissions
+				JOIN emu.projects ON emu.projects.id = emu.permissions.project
+				WHERE username = :username
+			");
 
-			// date_default_timezone_set ($projectSpecificTimeZone);
+			$stmt->bindParam(':username', $row['userid']);
+			$stmt->execute();
 
-			return $result;
+			$projectList = Array();
+
+			while ($row = $stmt->fetch()) {
+				$project = new Project();
+				$project->name = $row['name'];
+				$project->role = $row['permission'];
+				$projectList[] = $project;
+			}
+
+			echo json_encode(
+				positiveResult($projectList),
+				JSON_PRETTY_PRINT
+			);
+			die();
+		} else {
+			$stmt = $dbh->prepare("
+				SELECT name, permission, description FROM emu.permissions
+				JOIN emu.projects ON emu.projects.id = emu.permissions.project
+				WHERE name = :projectname AND username = :username
+			");
+
+			$stmt->bindParam(':projectname', $_POST['project']);
+			$stmt->bindParam(':username', $row['userid']);
+			$stmt->execute();
+
+			if ($row = $stmt->fetch()) {
+				$result = new AuthToken();
+
+				$result->projectDir = $dataDirectory . '/' . $row['name'];
+				$result->projectName = $row['description'];
+
+				return $result;
+			}
 		}
 	}
 
