@@ -5,8 +5,7 @@ import {WelcomeComponent} from "./welcome/welcome.component";
 
 export const appRoutes:Routes = [
 	...projectRoutes,
-	{path: '', redirectTo: '/login', pathMatch: 'full'},
-	{path: 'login', component: WelcomeComponent},
+	{path: '', component: WelcomeComponent},
 	{path: '**', component: WelcomeComponent},
 ];
 

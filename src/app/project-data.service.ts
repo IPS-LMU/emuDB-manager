@@ -21,6 +21,7 @@ export class ProjectDataService {
 	private nodeJSServerURL = 'wss://webapp2.phonetik.uni-muenchen.de:17890/manager';
 	private password: string;
 	private project: string;
+	private secretToken: string;
 	private url = 'https://www.phonetik.uni-muenchen.de/apps/emuDB-manager/server-side/emudb-manager.php';
 	private username: string;
 
@@ -72,8 +73,12 @@ export class ProjectDataService {
 		let headers = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
 		let options = new RequestOptions({headers: headers});
 
-		params.username = this.username;
-		params.password = this.password;
+		if (this.secretToken) {
+			params.secretToken = this.secretToken;
+		} else {
+			params.username = this.username;
+			params.password = this.password;
+		}
 		if (this.project !== '') {
 			params.project = this.project;
 		}
@@ -114,11 +119,8 @@ export class ProjectDataService {
 		});
 	}
 
-	public getProjectList(username: string, password: string): Observable<{name:string, level:string}[]> {
+	public getProjectList(): Observable<{name:string, level:string}[]> {
 		return Observable.create(observer => {
-			this.username = username;
-			this.password = password;
-
 			let params = {
 				query: 'listProjects'
 			};
@@ -132,6 +134,18 @@ export class ProjectDataService {
 				}
 			});
 		});
+	}
+
+	public setSecretToken(secretToken: string): void {
+		this.secretToken = secretToken;
+		this.username = undefined;
+		this.password = undefined;
+	}
+
+	public setUsernameAndPassword(username: string, password: string): void {
+		this.username = username;
+		this.password = password;
+		this.secretToken = undefined
 	}
 
 	public setProject(project: string): void {
