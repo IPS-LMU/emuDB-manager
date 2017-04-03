@@ -354,9 +354,9 @@ export class ProjectDataService {
 		return this.serverQueryWithDefaultSubscription({
 			'query': 'editBundleList',
 			'databaseName': database,
-			'oldDatabaseName': name,
+			'oldBundleListName': name,
 			'oldArchiveLabel': archiveLabel,
-			'newDatabaseName': newName,
+			'newBundleListName': newName,
 			'newArchiveLabel': newArchiveLabel
 		});
 	}
@@ -393,11 +393,11 @@ export class ProjectDataService {
 		});
 	}
 
-	public mergeUpload(upload_uuid: string, database: string): Observable<ServerResponse> {
+	public mergeUpload(uploadUUID: string, databaseName: string): Observable<ServerResponse> {
 		return this.serverQueryWithDefaultSubscription({
-			'query': 'merge_upload',
-			'upload_uuid': upload_uuid,
-			'database': database
+			'query': 'mergeUpload',
+			'uploadUUID': uploadUUID,
+			'databaseName': databaseName
 		});
 	}
 
