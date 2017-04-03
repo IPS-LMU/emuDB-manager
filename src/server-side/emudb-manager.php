@@ -129,181 +129,181 @@ function authorize () {
  */
 function executeQuery (AuthToken $authToken) {
 	switch ($_POST['query']) {
-		case 'add_tag':
-			$result = validateDatabaseName($_POST['database']);
+		case 'addTag':
+			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateGitObjectName($_POST['commit']);
+			$result = validateGitObjectName($_POST['gitCommitID']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateTagLabel($_POST['label']);
+			$result = validateTagLabel($_POST['gitTagLabel']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
 			return add_tag(
 				$authToken->projectDir,
-				$_POST['database'],
-				$_POST['commit'],
-				$_POST['label']
+				$_POST['databaseName'],
+				$_POST['gitCommitID'],
+				$_POST['gitTagLabel']
 			);
 
 			break;
 
-		case 'create_archive':
-			$result = validateDatabaseName($_POST['database']);
+		case 'createArchive':
+			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateTreeish($_POST['treeish']);
+			$result = validateTreeish($_POST['gitTreeish']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
 			return create_archive(
 				$authToken->projectDir,
-				$_POST['database'],
-				$_POST['treeish']
+				$_POST['databaseName'],
+				$_POST['gitTreeish']
 			);
 
 			break;
 
-		case 'delete_bundle_list':
-			$result = validateDatabaseName($_POST['database']);
+		case 'deleteBundleList':
+			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateBundleListName($_POST['name']);
+			$result = validateBundleListName($_POST['bundleListName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateArchiveLabel($_POST['archive_label']);
+			$result = validateArchiveLabel($_POST['archiveLabel']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
 			return delete_bundle_list(
 				$authToken->projectDir,
-				$_POST['database'],
-				$_POST['name'],
-				$_POST['archive_label']
+				$_POST['databaseName'],
+				$_POST['bundleListName'],
+				$_POST['archiveLabel']
 			);
 			break;
 
-		case 'delete_upload':
-			$result = validateUploadIdentifier($_POST['uuid']);
+		case 'deleteUpload':
+			$result = validateUploadIdentifier($_POST['uploadUUID']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
 			return delete_upload(
 				$authToken->projectDir,
-				$_POST['uuid']
+				$_POST['uploadUUID']
 			);
 
 			break;
 
-		case 'download_database':
-			$result = validateDatabaseName($_POST['database']);
+		case 'downloadDatabase':
+			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateTreeish($_POST['treeish']);
+			$result = validateTreeish($_POST['gitTreeish']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
 			return download_database(
 				$authToken->projectDir,
-				$_POST['database'],
-				$_POST['treeish']
+				$_POST['databaseName'],
+				$_POST['gitTreeish']
 			);
 
 			break;
 
-		case 'edit_bundle_list':
-			$result = validateDatabaseName($_POST['database']);
+		case 'editBundleList':
+			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateArchiveLabel($_POST['old_archive_label']);
+			$result = validateArchiveLabel($_POST['oldArchiveLabel']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateArchiveLabel($_POST['new_archive_label']);
+			$result = validateArchiveLabel($_POST['newArchiveLabel']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateBundleListName($_POST['old_name']);
+			$result = validateBundleListName($_POST['oldBundleListName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateBundleListName($_POST['new_name']);
+			$result = validateBundleListName($_POST['newBundleListName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
 			return edit_bundle_list(
 				$authToken->projectDir,
-				$_POST['database'],
-				$_POST['old_archive_label'],
-				$_POST['old_name'],
-				$_POST['new_archive_label'],
-				$_POST['new_name']
+				$_POST['databaseName'],
+				$_POST['oldArchiveLabel'],
+				$_POST['oldBundleListName'],
+				$_POST['newArchiveLabel'],
+				$_POST['newBundleListName']
 			);
 			break;
 
-		case 'fast_forward':
-			$result = validateUploadIdentifier($_POST['upload_uuid']);
+		case 'fastForward':
+			$result = validateUploadIdentifier($_POST['uploadUUID']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateDatabaseName($_POST['database']);
+			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
 			return fast_forward(
 				$authToken->projectDir,
-				$_POST['upload_uuid'],
-				$_POST['database']
+				$_POST['uploadUUID'],
+				$_POST['databaseName']
 			);
 			break;
 
-		case 'list_commits':
-			$result = validateDatabaseName($_POST['database']);
+		case 'listCommits':
+			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
 			return list_commits(
 				$authToken->projectDir,
-				$_POST['database']
+				$_POST['databaseName']
 			);
 			break;
 
-		case 'list_tags':
-			$result = validateDatabaseName($_POST['database']);
+		case 'listTags':
+			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
 			return list_tags(
 				$authToken->projectDir,
-				$_POST['database']
+				$_POST['databaseName']
 			);
 			break;
 
@@ -311,54 +311,54 @@ function executeQuery (AuthToken $authToken) {
 			return positiveResult(null);
 			break;
 
-		case 'merge_upload':
-			$result = validateUploadIdentifier($_POST['upload_uuid']);
+		case 'mergeUpload':
+			$result = validateUploadIdentifier($_POST['uploadUUID']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateDatabaseName($_POST['database']);
+			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
 			return merge_upload(
 				$authToken->projectDir,
-				$_POST['upload_uuid'],
-				$_POST['database']
+				$_POST['uploadUUID'],
+				$_POST['databaseName']
 			);
 			break;
 
-		case 'rename_db':
-			$result = validateDatabaseName($_POST['old_name']);
+		case 'renameDatabase':
+			$result = validateDatabaseName($_POST['oldDatabaseName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateDatabaseName($_POST['new_name']);
+			$result = validateDatabaseName($_POST['newDatabaseName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
 			return rename_db(
 				$authToken->projectDir,
-				$_POST['old_name'],
-				$_POST['new_name']
+				$_POST['oldDatabaseName'],
+				$_POST['newDatabaseName']
 			);
 			break;
 
-		case 'save_bundle_list':
-			$result = validateBundleListName($_POST['name']);
+		case 'saveBundleList':
+			$result = validateBundleListName($_POST['bundleListName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateDatabaseName($_POST['database']);
+			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$bundleList = json_decode($_POST['list']);
+			$bundleList = json_decode($_POST['bundleListObject']);
 			if (is_null($bundleList)) {
 				return negativeResult(
 					'INVALID_BUNDLE_LIST',
@@ -368,15 +368,15 @@ function executeQuery (AuthToken $authToken) {
 
 			return save_bundle_list(
 				$authToken->projectDir,
-				$_POST['database'],
-				$_POST['name'],
+				$_POST['databaseName'],
+				$_POST['bundleListName'],
 				$bundleList
 			);
 
 			break;
 
-		case 'set_database_configuration':
-			$result = validateDatabaseName($_POST['database']);
+		case 'setDatabaseConfiguration':
+			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
 				return $result;
 			}
@@ -387,30 +387,31 @@ function executeQuery (AuthToken $authToken) {
 
 			return set_database_configuration(
 				$authToken->projectDir,
-				$_POST['database'],
+				$_POST['databaseName'],
 				$bundleComments,
 				$bundleFinishedEditing
 			);
 
 			break;
 
-		case 'save_upload':
-			$result = validateDatabaseName($_POST['name']);
+		case 'saveUpload':
+			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			$result = validateUploadIdentifier($_POST['uuid']);
+			$result = validateUploadIdentifier($_POST['uploadUUID']);
 			if ($result->success !== true) {
 				return $result;
 			}
 
-			return save_upload($authToken->projectDir, $_POST['uuid'],
-				$_POST['name']);
+			return save_upload(
+				$authToken->projectDir, $_POST['uploadUUID'],
+				$_POST['databaseName']);
 
 			break;
 
-		case 'project_info':
+		case 'projectInfo':
 			return project_info($authToken);
 			break;
 
