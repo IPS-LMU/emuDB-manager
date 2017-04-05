@@ -30,6 +30,8 @@ require_once 'queryHandlers/download_database.php';
 require_once 'queryHandlers/edit_bundle_list.php';
 require_once 'queryHandlers/fast_forward.php';
 require_once 'queryHandlers/list_commits.php';
+require_once 'queryHandlers/list_databases.php';
+require_once 'queryHandlers/list_projects.php';
 require_once 'queryHandlers/list_tags.php';
 require_once 'queryHandlers/merge_upload.php';
 require_once 'queryHandlers/project_info.php';
@@ -51,8 +53,13 @@ require_once 'queryHandlers/upload.php';
 
 // If the supplied credentials are invalid, the authorize function will echo
 // JSON data and then die()
+$dbh = connectDatabase();
 $authToken = authorize();
-$result = executeQuery($authToken);
+if (is_a($authToken, 'AuthToken')) {
+	$result = executeQuery(null, $authToken);
+} else {
+	$result = executeQuery($authToken, new AuthToken());
+}
 echo json_encode($result, JSON_PRETTY_PRINT);
 die();
 
@@ -63,59 +70,54 @@ die();
 // Functions
 //
 
-// Return the directory in which data may be collected
-// If authorization fails, die()
-function authorize () {
-	global $dataDirectory;
-
+function connectDatabase() {
 	global $dbHost;
 	global $dbDatabaseName;
 	global $dbUser;
 	global $dbPassword;
 
-	// Connect to database and look up the project that the client is trying
-	// to authenticate as
-
-	$dbh = new PDO(
-		'pgsql:host=' . $dbHost . ';dbname=' . $dbDatabaseName,
+	return new PDO(
+		'pgsql:host=' . $dbHost . ';dbname=' . $dbDatabaseName . ';sslmode=require',
 		$dbUser,
 		$dbPassword
 	);
+}
 
-	$stmt = $dbh->prepare(
-		"SELECT *
-		FROM authtokens
-		WHERE token = :token AND validuntil > current_timestamp"
-	);
+// Return the directory in which data may be collected
+// If authorization fails, die()
+function authorize () {
+	global $dataDirectory;
+	global $dbh;
 
-	$stmt->bindParam(':token', $_POST['secretToken']);
-	$stmt->execute();
+	//////////
+	// Look up user ID that belongs to a secret token
+	//
+	$userID = '';
 
-	if ($row = $stmt->fetch()) {
-		if ($_POST['query'] === 'listProjects') {
-			$stmt = $dbh->prepare("
-				SELECT name, permission, description FROM emu.permissions
-				JOIN emu.projects ON emu.projects.id = emu.permissions.project
-				WHERE username = :username
-			");
+	if (isset($_POST['secretToken'])) {
+		$stmt = $dbh->prepare("
+			SELECT *
+			FROM authtokens
+			WHERE token = :token AND validuntil > current_timestamp
+		");
 
-			$stmt->bindParam(':username', $row['userid']);
-			$stmt->execute();
+		$stmt->bindParam(':token', $_POST['secretToken']);
+		$stmt->execute();
 
-			$projectList = Array();
+		if ($row = $stmt->fetch()) {
+			$userID = $row['userid'];
+		}
+	} else {
+		// @todo This is where another auth mechanism (independent of our
+		// login app) might be implemented
+	}
+	//
+	//////////
 
-			while ($row = $stmt->fetch()) {
-				$project = new Project();
-				$project->name = $row['name'];
-				$project->role = $row['permission'];
-				$projectList[] = $project;
-			}
 
-			echo json_encode(
-				positiveResult($projectList),
-				JSON_PRETTY_PRINT
-			);
-			die();
+	if ($userID) {
+		if ($_POST['query'] === 'listProjects' || $_POST['query'] === 'listDatabases') {
+			return $userID;
 		} else {
 			$stmt = $dbh->prepare("
 				SELECT name, permission, description FROM emu.permissions
@@ -156,8 +158,16 @@ function authorize () {
  * @param $authToken
  * @return Result
  */
-function executeQuery (AuthToken $authToken) {
+function executeQuery ($userID, AuthToken $authToken) {
 	switch ($_POST['query']) {
+		case 'listProjects':
+			return list_projects($userID);
+			break;
+
+		case 'listDatabases':
+			return list_databases($userID);
+			break;
+
 		case 'addTag':
 			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
