@@ -224,3 +224,8 @@ class Restrictions
 	 */
 	public $bundleFinishedEditing;
 }
+
+class Project {
+	public $name;
+	public $role;
+}
