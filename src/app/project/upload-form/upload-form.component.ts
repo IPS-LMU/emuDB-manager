@@ -1,5 +1,6 @@
 import {Component, NgZone} from "@angular/core";
 import {ProjectDataService} from "../../project-data.service";
+import {NgUploaderOptions} from "ngx-uploader";
 
 @Component({
 	selector: 'emudbmanager-upload-form',
@@ -8,7 +9,7 @@ import {ProjectDataService} from "../../project-data.service";
 })
 export class UploadFormComponent {
 	public errorMessage:string = '';
-	public options = {
+	public options:NgUploaderOptions = new NgUploaderOptions({
 		data: {
 			user: '',
 			password: '',
@@ -19,11 +20,10 @@ export class UploadFormComponent {
 	public successMessage: string = '';
 	public transferMessage:string = '';
 	public uploadProgress: number;
-	private zone: NgZone;
 
-	constructor(private projectDataService: ProjectDataService) {
+	constructor(private zone: NgZone,
+				private projectDataService: ProjectDataService) {
 		this.uploadProgress = 0;
-		this.zone = new NgZone({ enableLongStackTrace: false });
 
 		let uploadTarget = this.projectDataService.getUploadTarget();
 		this.options.url = uploadTarget.url;

@@ -19,8 +19,8 @@ import {BundleListsDashboardComponent} from "./project/bundle-lists-dashboard/bu
 import {BundleListDetailComponent} from "./project/bundle-list-detail/bundle-list-detail.component";
 import {UploadDetailComponent} from "./project/upload-detail/upload-detail.component";
 import {UploadsDashboardComponent} from "./project/uploads-dashboard/uploads-dashboard.component";
-import {NgFileSelectDirective} from "ng2-uploader/ng2-uploader";
 import {EmudbmanagerTableComponent} from "./emudbmanager-table/emudbmanager-table.component";
+import {NgUploaderModule} from "ngx-uploader";
 
 @NgModule({
 	declarations: [
@@ -38,17 +38,15 @@ import {EmudbmanagerTableComponent} from "./emudbmanager-table/emudbmanager-tabl
 		UploadFormComponent,
 		UploadsDashboardComponent,
 		UploadsOverviewComponent,
-		WelcomeComponent,
-
-		// 3rd party
-		NgFileSelectDirective
+		WelcomeComponent
 	],
 	imports: [
 		// Angular stuff
 		BrowserModule,
 		FormsModule,
 		HttpModule,
-		RouterModule.forRoot(appRoutes)
+		RouterModule.forRoot(appRoutes),
+		NgUploaderModule
 	],
 	bootstrap: [AppComponent],
 	providers: [
