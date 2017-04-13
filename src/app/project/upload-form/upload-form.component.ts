@@ -10,11 +10,7 @@ import {NgUploaderOptions} from "ngx-uploader";
 export class UploadFormComponent {
 	public errorMessage:string = '';
 	public options:NgUploaderOptions = new NgUploaderOptions({
-		data: {
-			user: '',
-			password: '',
-			query: ''
-		},
+		data: {},
 		url: ''
 	});
 	public successMessage: string = '';

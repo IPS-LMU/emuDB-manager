@@ -157,6 +157,7 @@ export class ProjectDataService {
 		this.username = '';
 		this.password = '';
 		this.project = '';
+		this.secretToken = '';
 		this.createHotObservable();
 	}
 
@@ -168,7 +169,8 @@ export class ProjectDataService {
 				'user': this.username,
 				'password': this.password,
 				'project': this.project,
-				'query': 'upload'
+				'query': 'upload',
+				'secretToken': this.secretToken
 			}
 		};
 	}

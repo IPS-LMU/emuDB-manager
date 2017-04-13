@@ -4,6 +4,7 @@ export interface UploadTarget {
 		user: string,
 		password: string,
 		project: string,
-		query: string
+		query: string,
+		secretToken: string
 	}
 }
