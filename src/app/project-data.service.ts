@@ -292,6 +292,10 @@ export class ProjectDataService {
 
 			nodeJS += '/' + this.project + '/databases/' + database;
 
+			if (this.secretToken) {
+				nodeJS += '?secretToken=' + this.secretToken;
+			}
+
 			url += encodeURIComponent(nodeJS);
 
 			return url;
