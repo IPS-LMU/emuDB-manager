@@ -7,18 +7,18 @@ import {ProjectDataService} from "../../project-data.service";
 	styleUrls: ['./upload-form.component.css']
 })
 export class UploadFormComponent {
-	private errorMessage:string = '';
-	private options = {
+	public errorMessage:string = '';
+	public options = {
 		data: {
 			user: '',
 			password: '',
 			query: ''
 		},
 		url: ''
-	};
-	private successMessage: string = '';
-	private transferMessage:string = '';
-	private uploadProgress: number;
+	});
+	public successMessage: string = '';
+	public transferMessage:string = '';
+	public uploadProgress: number;
 	private zone: NgZone;
 
 	constructor(private projectDataService: ProjectDataService) {

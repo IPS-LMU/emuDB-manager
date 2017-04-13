@@ -28,13 +28,13 @@ export class EmudbmanagerTableComponent implements OnInit {
 
 	private reverseSort = false;
 	private sortColumn;
-	private visibleCount = 0;
+	public visibleCount = 0;
 
 	/**
 	 * Filter this.data based on the filters specified in this.columns[x].filter
 	 * @returns {Array}
 	 */
-	private getVisibleData() {
+	public getVisibleData() {
 		let result = [];
 
 		/**
@@ -120,14 +120,14 @@ export class EmudbmanagerTableComponent implements OnInit {
 		return typeof test === 'boolean';
 	}
 
-	private percentage(): number {
+	public percentage(): number {
 		if (this.data.length === 0) {
 			return 0;
 		}
 		return Math.round(100 * this.visibleCount / this.data.length);
 	}
 
-	private sort(column) {
+	public sort(column) {
 		if (this.sortColumn === column) {
 			this.reverseSort = !this.reverseSort;
 		} else {

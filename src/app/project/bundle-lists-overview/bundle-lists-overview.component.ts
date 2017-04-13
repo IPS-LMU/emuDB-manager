@@ -11,7 +11,7 @@ import {Subscription} from "rxjs/Rx";
 })
 export class BundleListsOverviewComponent implements OnDestroy {
 	private _database:string;
-	private databases:DatabaseInfo[] = [];
+	public databases:DatabaseInfo[] = [];
 	private sub:Subscription;
 
 	constructor(private projectDataService:ProjectDataService) {

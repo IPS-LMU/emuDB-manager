@@ -9,7 +9,7 @@ import {Subscription} from "rxjs/Rx";
 	styleUrls: ['./database-dashboard.component.css']
 })
 export class DatabaseDashboardComponent implements OnInit,OnDestroy {
-	private databases:DatabaseInfo[] = [];
+	public databases:DatabaseInfo[] = [];
 	private sub:Subscription;
 
 	constructor(private projectDataService:ProjectDataService) {

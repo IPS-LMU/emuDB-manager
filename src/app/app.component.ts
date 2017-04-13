@@ -56,7 +56,7 @@ export class AppComponent implements AfterViewInit {
 	private activeAppendix: string = '';
 	private nextActiveAppendix: string = '';
 
-	private changeState(event) {
+	public changeState(event) {
 		this.nextActiveAppendix += '.';
 	}
 
@@ -64,7 +64,7 @@ export class AppComponent implements AfterViewInit {
 		this.activeAppendix = this.nextActiveAppendix;
 	}
 
-	private progressBarState() {
+	public progressBarState() {
 		if (this.projectDataService.connectionCount === 0) {
 			this.activeAppendix = '';
 			this.nextActiveAppendix = '';

@@ -13,9 +13,9 @@ type State = 'Overview' | 'New';
 	styleUrls: ['./uploads-dashboard.component.css'],
 })
 export class UploadsDashboardComponent implements OnInit,OnDestroy {
-	private state:State = 'Overview';
+	public state:State = 'Overview';
 	private subUploads:Subscription;
-	private uploads:UploadInfo[] = [];
+	public uploads:UploadInfo[] = [];
 
 	constructor(private projectDataService:ProjectDataService) {
 	}

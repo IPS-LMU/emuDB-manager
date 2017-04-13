@@ -8,7 +8,7 @@ import {DownloadTarget} from "../../types/download-target";
 import {getConfigComments} from "../../core/get-config-comments.function";
 import {getConfigFinishedEditing} from "../../core/get-config-finished-editing.function";
 
-type State = 'BundleLists' | 'Session' | 'Download' | 'Rename' | 'Config';
+type State = 'BundleLists' | 'Sessions' | 'Download' | 'Rename' | 'Config';
 
 @Component({
 	selector: 'emudbmanager-database-detail',
@@ -21,7 +21,7 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private configFinishedEditing: boolean;
 	private createArchiveCurrent: string = '';
 	private createArchiveError: string = '';
-	private database: DatabaseInfo;
+	public database: DatabaseInfo;
 	private downloadList: DownloadInfo[] = [];
 	private newName: string = '';
 	private renameError: string = '';
@@ -34,13 +34,13 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private subParams: Subscription;
 	private subTagList: Subscription;
 	private subWebAppLink: Subscription;
-	private state: State = 'BundleLists';
+	public state: State = 'BundleLists';
 	private tableFormat = [
 		{type: 'string', heading: 'Name', value: x => x.name},
 		{type: 'string', heading: 'Bundles', value: x => x.bundles.length}
 	];
 	private tagList: string[] = [];
-	private webAppLink: string = '';
+	public webAppLink: string = '';
 
 	constructor(private projectDataService: ProjectDataService, private route: ActivatedRoute) {
 	}

@@ -11,14 +11,14 @@ import {UploadInfo} from "../../types/upload-info";
 	styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit,OnDestroy {
-	private bundleLists:BundleList[] = [];
-	private databases:DatabaseInfo[] = [];
-	private projectName:string;
+	public bundleLists:BundleList[] = [];
+	public databases:DatabaseInfo[] = [];
+	public projectName:string;
 	private subBundleLists:Subscription;
 	private subDatabases:Subscription;
 	private subProjectName:Subscription;
 	private subUploads:Subscription;
-	private uploads:UploadInfo[] = [];
+	public uploads:UploadInfo[] = [];
 
 	constructor(private projectDataService:ProjectDataService) {
 	}

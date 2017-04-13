@@ -11,7 +11,7 @@ import {countBundles} from "../../core/count-bundles.function";
 })
 export class DatabasesOverviewComponent implements OnInit,OnDestroy {
 	private countBundles = countBundles;
-	private databases:DatabaseInfo[];
+	public databases:DatabaseInfo[];
 	private sub:Subscription;
 
 	constructor(private projectDataService:ProjectDataService) {

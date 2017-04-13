@@ -9,16 +9,16 @@ import {Subscription} from "rxjs/Rx";
 	styleUrls: ['./welcome.component.css']
 })
 export class WelcomeComponent implements OnInit {
-	private loginFailed:boolean = false;
-	private password:string;
+	public loginFailed:boolean = false;
+	public password:string;
 	private project:string = '';
-	private projectList:{name:string, level:string}[];
+	public projectList:{name:string, level:string}[];
 	private secretToken:string = '';
 	private selectedProject:string;
 	private sub:Subscription;
-	private unknownError:boolean = false;
+	public unknownError:boolean = false;
 	private unknownErrorMessage:string = '';
-	private username:string;
+	public username:string;
 
 	constructor(private projectDataService:ProjectDataService,
 	            private router:Router) {
@@ -44,7 +44,7 @@ export class WelcomeComponent implements OnInit {
 		this.router.navigate(['/project/overview']);
 	}
 
-	private checkLogin() {
+	public checkLogin() {
 		this.loginFailed = false;
 		this.unknownError = false;
 

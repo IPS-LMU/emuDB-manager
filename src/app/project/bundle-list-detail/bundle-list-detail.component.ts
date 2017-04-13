@@ -5,7 +5,7 @@ import {ProjectDataService} from "../../project-data.service";
 import {BundleListItem} from "../../types/bundle-list-item";
 import {BundleList} from "../../types/bundle-list";
 
-type State = 'Info' | 'AllBundles' | 'CommentedItems';
+type State = 'Info' | 'AllBundles' | 'CommentedBundles';
 
 @Component({
 	selector: 'emudbmanager-bundle-list-detail',
@@ -13,9 +13,9 @@ type State = 'Info' | 'AllBundles' | 'CommentedItems';
 	styleUrls: ['./bundle-list-detail.component.css']
 })
 export class BundleListDetailComponent implements OnInit,OnDestroy {
-	private allBundles: BundleListItem[] = [];
+	public allBundles: BundleListItem[] = [];
 	private bundleList: BundleList;
-	private commentedBundles: BundleListItem[] = [];
+	public commentedBundles: BundleListItem[] = [];
 	private database: string = '';
 	private deleteError: string = '';
 	private duplicationEditor = {
@@ -32,7 +32,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 		newArchiveLabel: ''
 	};
 	private reallyDelete: boolean = false;
-	private state: State = 'Info';
+	public state: State = 'Info';
 	private subBundleList: Subscription;
 	private subParams: Subscription;
 	private tableFormat = [

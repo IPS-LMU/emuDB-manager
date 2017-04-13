@@ -32,7 +32,7 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 		messageError: '',
 		messageSuccess: '',
 	};
-	private state:State = 'Save';
+	public state:State = 'Save';
 	private subDatabase:Subscription;
 	private subDatabaseList:Subscription;
 	private subParams:Subscription;
@@ -41,7 +41,7 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 		{type: 'string', heading: 'Name', value: x => x.name},
 		{type: 'string', heading: 'Bundles', value: x => x.bundles.length}
 	];
-	private upload:UploadInfo;
+	public upload:UploadInfo;
 
 	constructor(private projectDataService:ProjectDataService,
 	            private route:ActivatedRoute,
@@ -151,7 +151,7 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 		});
 	}
 
-	private countBundles () {
+	public countBundles () {
 		if (this.upload) {
 			return countBundles(this.upload.sessions);
 		}

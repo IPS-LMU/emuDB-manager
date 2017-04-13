@@ -10,8 +10,8 @@ import {countBundles} from "../../core/count-bundles.function";
 	styleUrls: ['./uploads-overview.component.css']
 })
 export class UploadsOverviewComponent implements OnInit,OnDestroy {
-	private countBundles = countBundles;
-	private uploads:UploadInfo[];
+	public countBundles = countBundles;
+	public uploads:UploadInfo[];
 	private subUploads:Subscription;
 
 	constructor(private projectDataService:ProjectDataService) {

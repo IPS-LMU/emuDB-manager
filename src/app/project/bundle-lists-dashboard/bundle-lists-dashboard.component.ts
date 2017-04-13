@@ -14,9 +14,9 @@ type State = 'Overview' | 'Generator';
 	styleUrls: ['./bundle-lists-dashboard.component.css']
 })
 export class BundleListsDashboardComponent implements OnInit,OnDestroy {
-	private bundleLists:BundleList[];
+	public bundleLists:BundleList[];
 	private databases:DatabaseInfo[];
-	private state:State = 'Overview';
+	public state:State = 'Overview';
 	private subBundleLists:Subscription;
 	private subDatabases:Subscription;
 
@@ -67,7 +67,7 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 
 			for (let i = 0; i < this.selectedDatabase.sessions.length; ++i) {
 				let currentSession = this.selectedDatabase.sessions[i];
-				let matched = sessionRegex.test(currentSession.name)
+				let matched = sessionRegex.test(currentSession.name);
 
 				result.push({
 					name: currentSession.name,

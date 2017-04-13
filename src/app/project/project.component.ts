@@ -12,14 +12,14 @@ import {UploadInfo} from "../types/upload-info";
 	styleUrls: ['./project.component.css']
 })
 export class ProjectComponent implements OnInit,OnDestroy {
-	private bundleLists:BundleList[] = [];
-	private databases:DatabaseInfo[] = [];
+	public bundleLists:BundleList[] = [];
+	public databases:DatabaseInfo[] = [];
 	private subBundleLists:Subscription;
 	private subDatabases:Subscription;
 	private subUploads:Subscription;
-	private uploads:UploadInfo[] = [];
+	public uploads:UploadInfo[] = [];
 
-	constructor(private projectDataService:ProjectDataService,
+	constructor(public projectDataService:ProjectDataService,
 	            private router:Router) {
 	}
 
@@ -47,7 +47,7 @@ export class ProjectComponent implements OnInit,OnDestroy {
 		}
 	}
 
-	private logout():void {
+	public logout():void {
 		this.projectDataService.logout();
 		this.router.navigate(['/']);
 	}
