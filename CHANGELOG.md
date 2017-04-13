@@ -1,3 +1,7 @@
+# 1.2.0 (2017-04-13)
+
+- Login mechanism changed from project accounts to individual accounts
+
 # 1.1.0 (2017-01-18)
 
 - Bundle list generator now creates shuffled bundle lists per default (#3)
