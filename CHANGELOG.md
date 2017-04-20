@@ -1,3 +1,7 @@
+# 1.2.1 (2017-04-20)
+
+- Bugfix: Pass secret token to backend when downloading a db
+
 # 1.2.0 (2017-04-13)
 
 - Login mechanism changed from project accounts to individual accounts
