@@ -182,6 +182,7 @@ export class ProjectDataService {
 				query: 'downloadDatabase',
 				user: this.username,
 				password: this.password,
+				secretToken: this.secretToken,
 				project: this.project,
 				databaseName: database,
 				gitTreeish: treeish
