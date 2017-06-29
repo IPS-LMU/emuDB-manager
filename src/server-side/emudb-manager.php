@@ -141,8 +141,7 @@ function authorize () {
 	}
 
 	$result = negativeResult(
-		'BAD_LOGIN',
-		'Bad username or password'
+		'E_AUTHENTICATION'
 	);
 
 	echo json_encode($result, JSON_PRETTY_PRINT);
@@ -400,8 +399,7 @@ function executeQuery ($userID, AuthToken $authToken) {
 			$bundleList = json_decode($_POST['bundleListObject']);
 			if (is_null($bundleList)) {
 				return negativeResult(
-					'INVALID_BUNDLE_LIST',
-					'The provided bundle list is invalid.'
+					'E_INVALID_BUNDLE_LIST'
 				);
 			}
 
@@ -460,8 +458,8 @@ function executeQuery ($userID, AuthToken $authToken) {
 
 		default:
 			return negativeResult(
-				'INVALID_QUERY',
-				'An invalid query has been performed.'
+				'E_USER_INPUT',
+				'query'
 			);
 	}
 }

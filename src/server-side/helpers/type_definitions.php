@@ -136,19 +136,39 @@ class Result
 	/**
 	 * @var mixed
 	 *
-	 * In case of success: result data
-	 *
-	 * In case of error: Error code (string) or reference to another Result
-	 * object, with the referenced object describing why the error happened
-	 * (this can be chained)
+	 * In case of success: result data.
+	 * In case of error: unset.
 	 */
 	public $data;
 
 	/**
-	 * @var string Human-readable error string, or empty string (in case of
-	 *      success)
+	 * @var EmuError
+	 * Error code (string) or reference to another Result
+	 * object, with the referenced object describing why the error happened
+	 * (this can be chained)
 	 */
-	public $message;
+	public $error;
+}
+
+/**
+ * Class EmuError
+ *
+ * Describes a server-side error to be passed to the client
+ */
+class EmuError {
+	/**
+	 * @var string
+	 *
+	 * Closed-vocabulary error code (currently all defined codes start with E_)
+	 */
+	public $code;
+
+	/**
+	 * @var mixed
+	 * Optional. Can further specify the error, e.g. for E_USER_INPUT,
+	 * specifies the fields in the user input that are bad.
+	 */
+	public $info;
 }
 
 /**

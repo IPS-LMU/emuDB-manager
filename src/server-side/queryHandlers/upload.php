@@ -28,15 +28,14 @@ function upload ($projectDir) {
 
 	if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 		return negativeResult(
-			'WRONG_REQUEST_METHOD',
-			'The upload query was not sent using POST.'
+			'E_REQUEST_METHOD'
 		);
 	}
 
 	if (!isset($_FILES['file'])) {
 		return negativeResult(
-			'NO_UPLOAD',
-			'No file was selected for upload.'
+			'E_USER_INPUT',
+			'UPLOAD'
 		);
 	}
 
@@ -47,15 +46,14 @@ function upload ($projectDir) {
 	$result = validateUploadFilename($baseName);
 	if ($result->success !== true) {
 		return negativeResult(
-			'INVALID_FILENAME',
-			'The file name may only contain numbers, letters, dashes and'
-			. ' underscores. It must not be empty.'
+			'E_USER_INPUT',
+			'FILE_NAME'
 		);
 	}
 
 	if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
 		return negativeResult(
-			'UPLOAD_ERROR',
+			'E_INTERNAL_SERVER_ERROR',
 			'An unknown upload error was indicated (error code '
 			. $_FILES['file']['error'] . ')'
 		);
@@ -63,7 +61,7 @@ function upload ($projectDir) {
 
 	if (!mkdir($targetPath)) {
 		return negativeResult(
-			'CREATE_UPLOAD_DIR_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Creating the directory for the upload failed.'
 		);
 	}
@@ -73,7 +71,7 @@ function upload ($projectDir) {
 
 	if ($result !== true) {
 		return negativeResult(
-			'SAVING_UPLOAD_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Saving the uploaded file failed.'
 		);
 	}
@@ -83,7 +81,7 @@ function upload ($projectDir) {
 
 	if (!mkdir($dataPath)) {
 		return negativeResult(
-			'CREATE_DATA_DIR_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Creating the unzip directory for the upload failed.'
 		);
 	}
@@ -94,9 +92,8 @@ function upload ($projectDir) {
 
 	if ($res !== true) {
 		return negativeResult(
-			'UNZIP_FAILED',
-			'The uploaded file is not a valid zip file. It has been stored on'
-			. ' the server but you will not be able to use it properly.'
+			'E_UPLOAD',
+			'UNZIP'
 		);
 	}
 
@@ -112,8 +109,8 @@ function upload ($projectDir) {
 
 	if ($databaseName === '') {
 		return negativeResult(
-			'NO_DATABASE_IN_ZIP',
-			'The zip file you uploaded contains no emu speech database.'
+			'E_UPLOAD',
+			'NO_DATABASE_IN_ZIP'
 		);
 	}
 
@@ -121,9 +118,8 @@ function upload ($projectDir) {
 
 	if ($stat->success !== true) {
 		return negativeResult(
-			'INVALID_DB_NAME',
-			'The emu database in the uploaded zip file has an invalid name '
-			. ' (can only contain letters, numbers, underscores and dashes).'
+			'E_UPLOAD',
+			'INVALID_DB_NAME'
 		);
 	}
 
@@ -131,9 +127,8 @@ function upload ($projectDir) {
 
 	if ($res !== true) {
 		return negativeResult(
-			'UNZIP_FAILED',
-			'The uploaded file is not a valid zip file. It has been stored on'
-			. ' the server but you will not be able to use it properly.'
+			'E_UPLOAD',
+			'UNZIP'
 		);
 	}
 

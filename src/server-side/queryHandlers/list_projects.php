@@ -34,7 +34,7 @@ function list_projects ($userID) {
 		return positiveResult($projectList);
 	} catch (Exception $e) {
 		return negativeResult(
-			'LIST_PROJECTS_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to list projects.'
 		);
 	}

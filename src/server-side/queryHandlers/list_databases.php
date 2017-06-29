@@ -61,7 +61,7 @@ function list_databases ($userID) {
 		return positiveResult($databases);
 	} catch (Exception $e) {
 		return negativeResult(
-			'LIST_DIR_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to read data directory.'
 		);
 	}

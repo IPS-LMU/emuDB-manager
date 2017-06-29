@@ -32,9 +32,8 @@ function set_database_configuration ($projectDir,
 	$config = load_json_file($configFilename);
 	if ($config->success !== true) {
 		return negativeResult(
-			$config->data,
-			'The database given contains a corrupt configuration file or no'
-			. ' configuration file at all.'
+			'E_DATABASE_CONFIG',
+			$config->error->info
 		);
 	}
 
@@ -55,7 +54,7 @@ function set_database_configuration ($projectDir,
 	$result = save_json_file($config->data, $configFilename);
 	if ($result->success !== true) {
 		return negativeResult(
-			'WRITE_DBCONFIG_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'The database configuration could not be rewritten.'
 		);
 	}

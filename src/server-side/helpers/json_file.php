@@ -22,24 +22,21 @@ function load_json_file ($filename) {
 	$length = filesize($filename);
 	if ($length === false) {
 		return negativeResult(
-			'LOAD_JSON_FAILED',
-			'Loading a JSON file failed'
+			'E_JSON_LOAD'
 		);
 	}
 
 	$fh = fopen($filename, 'r');
 	if ($fh === false) {
 		return negativeResult(
-			'LOAD_JSON_FAILED',
-			'Loading a JSON file failed'
+			'E_JSON_LOAD'
 		);
 	}
 
 	$contents = fread($fh, $length);
 	if ($contents === false) {
 		return negativeResult(
-			'LOAD_JSON_FAILED',
-			'Loading a JSON file failed'
+			'E_JSON_LOAD'
 		);
 	}
 
@@ -49,8 +46,7 @@ function load_json_file ($filename) {
 	$object = json_decode($contents);
 	if (is_null($object)) {
 		return negativeResult(
-			'PARSE_JSON_FAILED',
-			'Loading a JSON file failed'
+			'E_JSON_PARSE'
 		);
 	}
 
@@ -70,23 +66,20 @@ function save_json_file ($object, $filename, $options = DEFAULT_JSON_ENCODE_OPTI
 
 	if ($json === false) {
 		return negativeResult(
-			'SAVE_JSON_FAILED',
-			'Saving a JSON file failed'
+			'E_JSON_SAVE'
 		);
 	}
 
 	$fh = fopen($filename, 'w');
 	if ($fh === false) {
 		return negativeResult(
-			'SAVE_JSON_FAILED',
-			'Saving a JSON file failed'
+			'E_JSON_SAVE'
 		);
 	}
 
 	if (fwrite($fh, $json) === false) {
 		return negativeResult(
-			'SAVE_JSON_FAILED',
-			'Saving a JSON file failed'
+			'E_JSON_SAVE'
 		);
 	}
 

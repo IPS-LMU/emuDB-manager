@@ -47,22 +47,31 @@ function edit_bundle_list (
 		$newDirectory = $bundleListsDir . '/' . $newArchiveLabel . '_archiveLabel';
 	}
 
-	$oldName = $oldName . '_bundleList.json';
-	$newName = $newName . '_bundleList.json';
+	$oldFileName = $oldName . '_bundleList.json';
+	$newFileName = $newName . '_bundleList.json';
 
 
-	if (filetype($oldDirectory . '/' . $oldName) !== 'file') {
+	if (filetype($oldDirectory . '/' . $oldFileName) !== 'file') {
 		return negativeResult(
-			'NAME_DOES_NOT_EXIST',
-			'The given bundle list does not exist. ' . $oldDirectory . '/' .
-			$oldName
+			'E_NO_BUNDLE_LIST',
+			array (
+				basename($projectDir),
+				$db,
+				$oldName,
+				$oldArchiveLabel
+			)
 		);
 	}
 
-	if (file_exists($newDirectory . '/' . $newName)) {
+	if (file_exists($newDirectory . '/' . $newFileName)) {
 		return negativeResult(
-			'NAME_ALREADY_TAKEN',
-			'The name/archive label combination for the bundle list ist already taken.'
+			'E_BUNDLE_LIST_EXISTS',
+			array (
+				basename($projectDir),
+				$db,
+				$newName,
+				$newArchiveLabel
+			)
 		);
 	}
 
@@ -70,23 +79,24 @@ function edit_bundle_list (
 		// @todo set mode explicitly
 		if (!mkdir($newDirectory)) {
 			return negativeResult(
-				'CREATING_ARCHIVE_LABEL_DIR_FAILED',
+				'E_INTERNAL_SERVER_ERROR',
 				'The directory for the new archive label could not be created.'
 			);
 		}
 	}
 
-	$result = rename($oldDirectory . '/' . $oldName, $newDirectory . '/' . $newName);
+	$result = rename($oldDirectory . '/' . $oldFileName, $newDirectory . '/' .
+		$newFileName);
 	if (!$result) {
 		return negativeResult(
-			'MOVING_BUNDLE_LIST_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Moving the bundle list failed.'
 		);
 	}
 
 	return gitCommitEverything(
 		$dbDir,
-		'Moved bundle list from ' . $oldArchiveLabel . '/' . $oldName . ' to ' .
-		$newArchiveLabel . '/' . $newName
+		'Moved bundle list from ' . $oldArchiveLabel . '/' . $oldFileName . ' to ' .
+		$newArchiveLabel . '/' . $newFileName
 	);
 }

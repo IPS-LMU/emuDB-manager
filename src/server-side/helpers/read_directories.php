@@ -11,7 +11,7 @@ function readDirOfUploads ($directory) {
 
 	if ($dirHandle === false || is_null($dirHandle)) {
 		return negativeResult(
-			'LIST_DIR_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to read directory of uploads.'
 		);
 	}
@@ -33,7 +33,7 @@ function readDirOfUploads ($directory) {
 		$stat = stat($directory . '/' . $entry);
 		if ($stat === false) {
 			return negativeResult(
-				'STAT_UPLOAD_DIR_FAILED',
+				'E_INTERNAL_SERVER_ERROR',
 				'Failed to read an upload directory.'
 			);
 		}
@@ -43,7 +43,12 @@ function readDirOfUploads ($directory) {
 		$databaseName = findDatabaseInUpload($directory . '/' . $entry);
 
 		if ($databaseName->success !== true) {
-			$upload->name = 'INVALID_UPLOAD_' . $databaseName->data;
+			if ($databaseName->error->code === 'E_UPLOAD') {
+				$suffix = $databaseName->error->info;
+			} else {
+				$suffix = 'INTERNAL_SERVER_ERROR';
+			}
+			$upload->name = 'INVALID_UPLOAD_' . $suffix;
 			$upload->sessions = array();
 		} else {
 			$upload->name = $databaseName->data;
@@ -71,7 +76,7 @@ function readDirOfDownloads ($directory) {
 
 	if ($dirHandle === false || is_null($dirHandle)) {
 		return negativeResult(
-			'LIST_DIR_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to read directory of downloads.'
 		);
 	}
@@ -110,7 +115,7 @@ function readDirOfDownloads ($directory) {
 		$stat = stat($directory . '/' . $entry);
 		if ($stat === false) {
 			return negativeResult(
-				'STAT_DOWNLOAD_FAILED',
+				'E_INTERNAL_SERVER_ERROR',
 				'Failed to read a download zip file.'
 			);
 		}
@@ -139,7 +144,7 @@ function readDirOfDatabases ($directory) {
 
 	if ($dirHandle === false || is_null($dirHandle)) {
 		return negativeResult(
-			'LIST_DIR_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to read directory of databases.'
 		);
 	}
@@ -180,7 +185,7 @@ function readDatabase ($directory) {
 
 	if ($dirHandle === false || is_null($dirHandle)) {
 		return negativeResult(
-			'LIST_DIR_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to read database directory.'
 		);
 	}
@@ -220,8 +225,7 @@ function readDatabase ($directory) {
 
 	if (is_null($db->dbConfig)) {
 		return negativeResult(
-			'NO_DATABASE_CONFIG',
-			'No database configuration found'
+			'E_DATABASE_CONFIG'
 		);
 	}
 
@@ -242,7 +246,7 @@ function readBundleLists ($directory) {
 
 	if ($dirHandle === false || is_null($dirHandle)) {
 		return negativeResult(
-			'LIST_DIR_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to read directory of bundle lists.'
 		);
 	}
@@ -266,7 +270,7 @@ function readBundleLists ($directory) {
 
 			if ($subdirHandle === false || is_null($subdirHandle)) {
 				return negativeResult(
-					'LIST_DIR_FAILED',
+					'E_INTERNAL_SERVER_ERROR',
 					'Failed to read directory of bundle lists.'
 				);
 			}
@@ -311,7 +315,7 @@ function readSession ($directory) {
 
 	if ($dirHandle === false || is_null($dirHandle)) {
 		return negativeResult(
-			'LIST_DIR_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to read session directory.'
 		);
 	}
