@@ -159,14 +159,6 @@ function authorize () {
  */
 function executeQuery ($userID, AuthToken $authToken) {
 	switch ($_POST['query']) {
-		case 'listProjects':
-			return list_projects($userID);
-			break;
-
-		case 'listDatabases':
-			return list_databases($userID);
-			break;
-
 		case 'addTag':
 			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
@@ -333,6 +325,14 @@ function executeQuery ($userID, AuthToken $authToken) {
 			);
 			break;
 
+		case 'listDatabases':
+			return list_databases($userID);
+			break;
+
+		case 'listProjects':
+			return list_projects($userID);
+			break;
+
 		case 'listTags':
 			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
@@ -412,6 +412,23 @@ function executeQuery ($userID, AuthToken $authToken) {
 
 			break;
 
+		case 'saveUpload':
+			$result = validateDatabaseName($_POST['databaseName']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateUploadIdentifier($_POST['uploadUUID']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return save_upload(
+				$authToken->projectDir, $_POST['uploadUUID'],
+				$_POST['databaseName']);
+
+			break;
+
 		case 'setDatabaseConfiguration':
 			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
@@ -428,23 +445,6 @@ function executeQuery ($userID, AuthToken $authToken) {
 				$bundleComments,
 				$bundleFinishedEditing
 			);
-
-			break;
-
-		case 'saveUpload':
-			$result = validateDatabaseName($_POST['databaseName']);
-			if ($result->success !== true) {
-				return $result;
-			}
-
-			$result = validateUploadIdentifier($_POST['uploadUUID']);
-			if ($result->success !== true) {
-				return $result;
-			}
-
-			return save_upload(
-				$authToken->projectDir, $_POST['uploadUUID'],
-				$_POST['databaseName']);
 
 			break;
 
