@@ -21,6 +21,7 @@ import {UploadDetailComponent} from "./project/upload-detail/upload-detail.compo
 import {UploadsDashboardComponent} from "./project/uploads-dashboard/uploads-dashboard.component";
 import {EmudbmanagerTableComponent} from "./emudbmanager-table/emudbmanager-table.component";
 import {NgUploaderModule} from "ngx-uploader";
+import {ManagerAPIService} from "./manager-api.service";
 
 @NgModule({
 	declarations: [
@@ -50,6 +51,7 @@ import {NgUploaderModule} from "ngx-uploader";
 	],
 	bootstrap: [AppComponent],
 	providers: [
+		ManagerAPIService,
 		ProjectDataService
 	]
 })

@@ -5,6 +5,7 @@ import {ProjectDataService} from "../../project-data.service";
 import {BundleListItem} from "../../types/bundle-list-item";
 import {BundleList} from "../../types/bundle-list";
 import {getErrorMessage} from "../../core/get-error-message.function";
+import {ManagerAPIService} from "../../manager-api.service";
 
 type State = 'Info' | 'AllBundles' | 'CommentedBundles';
 
@@ -43,7 +44,8 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 		{type: 'string', heading: 'Comment', value: x => x.comment}
 	];
 
-	constructor(private projectDataService: ProjectDataService,
+	constructor(private managerAPIService: ManagerAPIService,
+	            private projectDataService: ProjectDataService,
 	            private router: Router,
 	            private route: ActivatedRoute) {
 	}
@@ -103,14 +105,14 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 			return;
 		}
 
-		this.projectDataService.editBundleList(
+		this.managerAPIService.editBundleList(
 			this.database,
 			this.bundleList.name,
 			this.bundleList.archiveLabel,
 			newName, newArchiveLabel
 		).subscribe (next => {
 			this.infoEditor.messageSuccess = 'Successfully edited.';
-			this.projectDataService.fetchData();
+			this.projectDataService.refresh();
 
 			if (this.subBundleList) {
 				this.subBundleList.unsubscribe();
@@ -140,8 +142,8 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 	private deleteBundleList () {
 		this.reallyDelete = false;
 
-		this.projectDataService.deleteBundleList(this.database, this.bundleList).subscribe(next => {
-			this.projectDataService.fetchData();
+		this.managerAPIService.deleteBundleList(this.database, this.bundleList).subscribe(next => {
+			this.projectDataService.refresh();
 
 			this.router.navigate(['/project/databases', this.database]);
 		}, error => {
@@ -166,7 +168,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 		).subscribe (next => {
 			this.duplicationEditor.messageSuccess = 'Successfully duplicated' +
 				' bundle list.';
-			this.projectDataService.fetchData();
+			this.projectDataService.refresh();
 		}, error => {
 			this.duplicationEditor.messageError = getErrorMessage(error);
 		});

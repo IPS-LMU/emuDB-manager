@@ -1,7 +1,6 @@
-import {ProjectInfo} from "./project-info";
 export interface ServerResponse {
 	success: boolean;
-	data?: ProjectInfo;
+	data?: any;
 	error?: {
 		code: string;
 		info?: any;

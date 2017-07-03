@@ -8,6 +8,7 @@ import {DownloadTarget} from "../../types/download-target";
 import {getConfigComments} from "../../core/get-config-comments.function";
 import {getConfigFinishedEditing} from "../../core/get-config-finished-editing.function";
 import {getErrorMessage} from "../../core/get-error-message.function";
+import {ManagerAPIService} from "../../manager-api.service";
 
 type State = 'BundleLists' | 'Sessions' | 'Download' | 'Rename' | 'Config';
 
@@ -43,7 +44,9 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	private tagList: string[] = [];
 	public webAppLink: string = '';
 
-	constructor(private projectDataService: ProjectDataService, private route: ActivatedRoute) {
+	constructor(private managerAPIService: ManagerAPIService,
+	            private projectDataService: ProjectDataService,
+	            private route: ActivatedRoute) {
 	}
 
 	ngOnInit() {
@@ -130,7 +133,7 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	}
 
 	private createArchive(treeish: string) {
-		this.projectDataService.createArchive(this.database.name, treeish).subscribe(next => {
+		this.managerAPIService.createArchive(this.database.name, treeish).subscribe(next => {
 			this.createArchiveCurrent = treeish;
 		}, error => {
 			this.createArchiveError = 'Error while preparing';
@@ -146,7 +149,7 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 			return;
 		}
 
-		this.projectDataService.addTag(this.database.name, commit.commitID, commit.tagLabel).subscribe(next => {
+		this.managerAPIService.addTag(this.database.name, commit.commitID, commit.tagLabel).subscribe(next => {
 			commit.saveTagSuccess = 'Successfully created tag: ' + commit.tagLabel;
 			commit.tagLabel = '';
 			commit.editingTag = false;
@@ -172,11 +175,11 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 			return;
 		}
 
-		this.projectDataService.setDatabaseConfiguration(this.database.name, this.configComments, this.configFinishedEditing)
+		this.managerAPIService.setDatabaseConfiguration(this.database.name, this.configComments, this.configFinishedEditing)
 			.subscribe(next => {
 				this.saveConfigSuccess = 'Successfully stored configuration' +
 					' changes.';
-				this.projectDataService.fetchData();
+				this.projectDataService.refresh();
 			}, error => {
 				this.saveConfigError = getErrorMessage(error);
 			});
@@ -191,9 +194,9 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 			return;
 		}
 
-		this.projectDataService.renameDatabase(this.database.name, this.newName).subscribe(next => {
+		this.managerAPIService.renameDatabase(this.database.name, this.newName).subscribe(next => {
 			this.renameSuccess = 'Successfully renamed';
-			this.projectDataService.fetchData();
+			this.projectDataService.refresh();
 
 			this.unsubscribe(false);
 			this.subscribe(this.newName);
@@ -223,7 +226,7 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 	}
 
 	private downloadTarget(treeish: string): DownloadTarget {
-		return this.projectDataService.getDownloadTarget(this.database.name, treeish);
+		return this.managerAPIService.getDownloadTarget(this.database.name, treeish);
 	}
 
 	private downloadOptions(treeish: string): string[] {

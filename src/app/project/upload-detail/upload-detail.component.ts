@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {DatabaseInfo} from "../../types/database-info";
 import {countBundles} from "../../core/count-bundles.function";
 import {getErrorMessage} from "../../core/get-error-message.function";
+import {ManagerAPIService} from "../../manager-api.service";
 
 type State = 'Sessions' | 'Save' | 'Delete';
 
@@ -44,7 +45,8 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 	];
 	public upload:UploadInfo;
 
-	constructor(private projectDataService:ProjectDataService,
+	constructor(private managerAPIService: ManagerAPIService,
+	            private projectDataService:ProjectDataService,
 	            private route:ActivatedRoute,
 				private router:Router) {
 	}
@@ -91,8 +93,8 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 	private deleteUpload () {
 		this.reallyDelete = false;
 
-		this.projectDataService.deleteUpload(this.upload.uuid).subscribe(next => {
-			this.projectDataService.fetchData();
+		this.managerAPIService.deleteUpload(this.upload.uuid).subscribe(next => {
+			this.projectDataService.refresh();
 
 			if (this.subUpload) {
 				this.subUpload.unsubscribe();
@@ -115,8 +117,8 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 			name = this.upload.name;
 		}
 
-		this.projectDataService.saveUpload(this.upload.uuid, name).subscribe(next => {
-			this.projectDataService.fetchData();
+		this.managerAPIService.saveUpload(this.upload.uuid, name).subscribe(next => {
+			this.projectDataService.refresh();
 			this.saveForm.messageSuccess = 'The database has been saved.';
 		}, error => {
 			this.saveForm.messageError = getErrorMessage(error);
@@ -128,8 +130,8 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 		this.fastForwardForm.messageSuccess = '';
 		this.fastForwardForm.messageError = '';
 
-		this.projectDataService.fastForward(this.upload.uuid, this.upload.name).subscribe(next => {
-			this.projectDataService.fetchData();
+		this.managerAPIService.fastForward(this.upload.uuid, this.upload.name).subscribe(next => {
+			this.projectDataService.refresh();
 			this.fastForwardForm.messageSuccess = 'Database has been' +
 				' fast-forwarded. You can now delete this upload.';
 		}, error => {
@@ -142,8 +144,8 @@ export class UploadDetailComponent implements OnInit,OnDestroy {
 		this.mergeForm.messageSuccess = '';
 		this.mergeForm.messageError = '';
 
-		this.projectDataService.mergeUpload(this.upload.uuid, this.mergeForm.selectedDatabase.name).subscribe(next => {
-			this.projectDataService.fetchData();
+		this.managerAPIService.mergeUpload(this.upload.uuid, this.mergeForm.selectedDatabase.name).subscribe(next => {
+			this.projectDataService.refresh();
 			this.mergeForm.messageSuccess = 'Databases have been merged.' +
 				' You can now delete this upload.';
 		}, error => {

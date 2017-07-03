@@ -8,8 +8,8 @@ import {
 	state,
 	AfterViewChecked, AfterViewInit
 } from "@angular/core";
-import {ProjectDataService} from "./project-data.service";
 import "./rxjs-operators";
+import {ManagerAPIService} from "./manager-api.service";
 
 
 @Component({
@@ -50,7 +50,7 @@ import "./rxjs-operators";
 	]
 })
 export class AppComponent implements AfterViewInit {
-	constructor(private projectDataService: ProjectDataService) {
+	constructor(private managerAPIService: ManagerAPIService) {
 	}
 
 	private activeAppendix: string = '';
@@ -65,7 +65,7 @@ export class AppComponent implements AfterViewInit {
 	}
 
 	public progressBarState() {
-		if (this.projectDataService.connectionCount === 0) {
+		if (this.managerAPIService.connectionCount === 0) {
 			this.activeAppendix = '';
 			this.nextActiveAppendix = '';
 			return 'idle';

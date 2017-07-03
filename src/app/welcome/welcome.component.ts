@@ -1,8 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
-import {ProjectDataService} from "../project-data.service";
 import {Subscription} from "rxjs/Rx";
 import {getErrorMessage} from "../core/get-error-message.function";
+import {ManagerAPIService} from "../manager-api.service";
 
 @Component({
 	selector: 'emudbmanager-welcome',
@@ -21,7 +21,7 @@ export class WelcomeComponent implements OnInit {
 	private unknownErrorMessage:string = '';
 	public username:string;
 
-	constructor(private projectDataService:ProjectDataService,
+	constructor(private managerAPIService: ManagerAPIService,
 	            private router:Router) {
 		let params = new URLSearchParams(window.location.search);
 		let secretToken = params.get('secretToken');
@@ -41,7 +41,7 @@ export class WelcomeComponent implements OnInit {
 	}
 
 	private chooseProject(project:string) {
-		this.projectDataService.setProject(project);
+		this.managerAPIService.setProject(project);
 		this.router.navigate(['/project/overview']);
 	}
 
@@ -54,12 +54,12 @@ export class WelcomeComponent implements OnInit {
 		}
 
 		if (this.secretToken) {
-			this.projectDataService.setSecretToken(this.secretToken);
+			this.managerAPIService.setSecretToken(this.secretToken);
 		} else {
-			this.projectDataService.setUsernameAndPassword(this.username, this.password);
+			this.managerAPIService.setUsernameAndPassword(this.username, this.password);
 		}
 
-		this.sub = this.projectDataService.getProjectList().subscribe(next => {
+		this.sub = this.managerAPIService.listProjects().subscribe(next => {
 			this.projectList = next;
 			for (let i = 0; i < this.projectList.length; ++i) {
 				if (this.projectList[i].name === this.project) {

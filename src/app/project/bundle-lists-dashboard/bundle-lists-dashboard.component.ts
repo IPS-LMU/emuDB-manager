@@ -123,7 +123,7 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 				this.generatorError = getErrorMessage(error);
 			}, () => {
 				this.generatorSuccess += 'Successfully generated all bundle lists';
-				this.projectDataService.fetchData();
+				this.projectDataService.refresh();
 			});
 	}
 

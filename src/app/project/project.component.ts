@@ -5,6 +5,7 @@ import {ProjectDataService} from "../project-data.service";
 import {Router} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 import {UploadInfo} from "../types/upload-info";
+import {ManagerAPIService} from "../manager-api.service";
 
 @Component({
 	selector: 'emudbmanager-project',
@@ -19,7 +20,8 @@ export class ProjectComponent implements OnInit,OnDestroy {
 	private subUploads:Subscription;
 	public uploads:UploadInfo[] = [];
 
-	constructor(public projectDataService:ProjectDataService,
+	constructor(private managerAPIService: ManagerAPIService,
+	            public projectDataService: ProjectDataService,
 	            private router:Router) {
 	}
 
@@ -48,7 +50,7 @@ export class ProjectComponent implements OnInit,OnDestroy {
 	}
 
 	public logout():void {
-		this.projectDataService.logout();
+		this.managerAPIService.forgetAuthentication();
 		this.router.navigate(['/']);
 	}
 }

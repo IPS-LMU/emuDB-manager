@@ -2,6 +2,7 @@ import {Component, NgZone} from "@angular/core";
 import {ProjectDataService} from "../../project-data.service";
 import {NgUploaderOptions} from "ngx-uploader";
 import {getErrorMessage} from "../../core/get-error-message.function";
+import {ManagerAPIService} from "../../manager-api.service";
 
 @Component({
 	selector: 'emudbmanager-upload-form',
@@ -18,11 +19,12 @@ export class UploadFormComponent {
 	public transferMessage:string = '';
 	public uploadProgress: number;
 
-	constructor(private zone: NgZone,
-				private projectDataService: ProjectDataService) {
+	constructor(private managerAPIService: ManagerAPIService,
+				private projectDataService: ProjectDataService,
+				private zone: NgZone) {
 		this.uploadProgress = 0;
 
-		let uploadTarget = this.projectDataService.getUploadTarget();
+		let uploadTarget = this.managerAPIService.getUploadTarget();
 		this.options.url = uploadTarget.url;
 		this.options.data = uploadTarget.params;
 	}
@@ -43,7 +45,7 @@ export class UploadFormComponent {
 		} else if (data.error) {
 			this.errorMessage = 'Unknown error during upload.';
 		} else if (data.done) {
-			this.projectDataService.fetchData();
+			this.projectDataService.refresh();
 
 			let response = JSON.parse(data.response);
 
