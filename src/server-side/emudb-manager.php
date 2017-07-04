@@ -62,7 +62,7 @@ if (is_a($authToken, 'AuthToken')) {
 } else {
 	$result = executeQuery($authToken, new AuthToken());
 }
-echo json_encode($result, JSON_PRETTY_PRINT);
+echo json_encode($result);
 die();
 
 //
@@ -146,7 +146,7 @@ function authorize () {
 		'E_AUTHENTICATION'
 	);
 
-	echo json_encode($result, JSON_PRETTY_PRINT);
+	echo json_encode($result);
 	die();
 }
 
