@@ -3,6 +3,15 @@ export function getErrorMessage(error: {code: string, info?: any}): string {
 		case 'E_AUTHENTICATION':
 			return 'Username and/or password incorrect;';
 
+		case 'E_BAD_BUNDLE_LIST':
+			if (error.info[3]) {
+				return 'The bundle list for editor ' + error.info[2] + ' with' +
+					' archive label ' + error.info[3] + ' is malformed.';
+			} else {
+				return 'The bundle list for editor ' + error.info[2] + ' with' +
+					' no archive label is malformed.';
+			}
+
 		case 'E_BUNDLE_LIST_EXISTS':
 			if (error.info[3]) {
 				return 'A bundle list for editor ' + error.info[2] + ' with' +
@@ -17,8 +26,8 @@ export function getErrorMessage(error: {code: string, info?: any}): string {
 				' the target database’s (' + error.info + ')';
 
 		case 'E_DATABASE_CONFIG':
-			return 'The database given contains a corrupt configuration file' +
-				' or no configuration file at all.';
+			return 'The database "' + error.info[1] + '" contains a corrupt' +
+				' configuration file or no configuration file at all.';
 
 		case 'E_DATABASE_EXISTS':
 			return 'The new name for the database (' + error.info[1] + ') is' +

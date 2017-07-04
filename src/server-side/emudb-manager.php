@@ -29,6 +29,8 @@ require_once 'queryHandlers/delete_upload.php';
 require_once 'queryHandlers/download_database.php';
 require_once 'queryHandlers/edit_bundle_list.php';
 require_once 'queryHandlers/fast_forward.php';
+require_once 'queryHandlers/get_bundle_list.php';
+require_once 'queryHandlers/get_database_configuration.php';
 require_once 'queryHandlers/list_commits.php';
 require_once 'queryHandlers/list_databases.php';
 require_once 'queryHandlers/list_projects.php';
@@ -309,6 +311,42 @@ function executeQuery ($userID, AuthToken $authToken) {
 			return fast_forward(
 				$authToken->projectDir,
 				$_POST['uploadUUID'],
+				$_POST['databaseName']
+			);
+			break;
+
+		case 'getBundleList':
+			$result = validateDatabaseName($_POST['databaseName']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateArchiveLabel($_POST['archiveLabel']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateBundleListName($_POST['bundleListName']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return get_bundle_list(
+				$authToken->projectDir,
+				$_POST['databaseName'],
+				$_POST['archiveLabel'],
+				$_POST['bundleListName']
+			);
+			break;
+
+		case 'getDatabaseConfiguration':
+			$result = validateDatabaseName($_POST['databaseName']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return get_database_configuration(
+				$authToken->projectDir,
 				$_POST['databaseName']
 			);
 			break;

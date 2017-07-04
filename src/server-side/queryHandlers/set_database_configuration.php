@@ -33,7 +33,10 @@ function set_database_configuration ($projectDir,
 	if ($config->success !== true) {
 		return negativeResult(
 			'E_DATABASE_CONFIG',
-			$config->error->info
+			array(
+				basename($projectDir),
+				$db
+			)
 		);
 	}
 

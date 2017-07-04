@@ -64,7 +64,10 @@ function moveDatabase ($databaseDir, $newName, $newParentDir = '') {
 	if ($config->success !== true) {
 		return negativeResult(
 			'E_DATABASE_CONFIG',
-			$config->error->code
+			array(
+				null,
+				$databaseName
+			)
 		);
 	}
 	if ($config->data->name !== $databaseName) {

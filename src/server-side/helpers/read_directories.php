@@ -225,7 +225,11 @@ function readDatabase ($directory) {
 
 	if (is_null($db->dbConfig)) {
 		return negativeResult(
-			'E_DATABASE_CONFIG'
+			'E_DATABASE_CONFIG',
+			array(
+				null,
+				$db->name
+			)
 		);
 	}
 
