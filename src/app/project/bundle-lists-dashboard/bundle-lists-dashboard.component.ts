@@ -7,8 +7,6 @@ import {getConfigFinishedEditing} from "../../core/get-config-finished-editing.f
 import {getConfigComments} from "../../core/get-config-comments.function";
 import {getErrorMessage} from "../../core/get-error-message.function";
 
-type State = 'Overview' | 'Generator';
-
 @Component({
 	selector: 'emudbmanager-bundle-lists-dashboard',
 	templateUrl: './bundle-lists-dashboard.component.html',
@@ -17,7 +15,6 @@ type State = 'Overview' | 'Generator';
 export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 	public bundleLists:BundleListStub[];
 	private databases:DatabaseInfo[];
-	public state:State = 'Overview';
 	private subBundleLists:Subscription;
 	private subDatabases:Subscription;
 
@@ -27,7 +24,7 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 	private generatorSuccess:string = '';
 	private newEditor:string = '';
 	private personsPerBundle:number = 1;
-	private preview: 'none'|'sessions'|'complete' = 'none';
+	public preview: 'none'|'sessions'|'complete' = 'none';
 	private selectedDatabase:DatabaseInfo = null;
 	private sessionPattern:string = '.*';
 	private shuffle:boolean = true;

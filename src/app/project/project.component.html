@@ -7,12 +7,21 @@
 				</li>
 			</ul>
 			<ul class="nav nav-sidebar">
-				<li routerLinkActive="active"><a routerLink="/project/databases">Databases <span
-					class="badge pull-right">{{databases?.length}}</span></a></li>
-				<li routerLinkActive="active"><a routerLink="/project/bundle-lists">Bundle lists
-					<span class="badge pull-right">{{bundleListStubs?.length}}</span></a></li>
-				<li routerLinkActive="active"><a routerLink="/project/uploads">Uploads
-					<span class="badge pull-right">{{uploads?.length}}</span></a></li>
+				<li routerLinkActive="active">
+					<a routerLink="/project/databases">
+						Databases <span class="badge pull-right">{{databases?.length}}</span>
+					</a>
+				</li>
+				<li routerLinkActive="active">
+					<a routerLink="/project/uploads">
+						Uploads <span class="badge pull-right">{{uploads?.length}}</span>
+					</a>
+				</li>
+				<li routerLinkActive="active">
+					<a routerLink="/project/bundle-lists">
+						Bundle list generator
+					</a>
+				</li>
 			</ul>
 			<ul class="nav nav-sidebar">
 				<li><a (click)="projectDataService.refresh()">Refresh</a></li>
