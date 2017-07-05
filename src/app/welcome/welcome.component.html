@@ -4,17 +4,17 @@
 	<div class="panel-heading">Login</div>
 	<div class="panel-body">
 		<form (ngSubmit)="checkLogin()">
-			<p>
+			<p *ngIf="!projectList">
 				<input autofocus class="form-control" placeholder="Username" [(ngModel)]="username"
 				       name="username">
 			</p>
 
-			<p>
+			<p *ngIf="!projectList">
 				<input class="form-control" type="password" placeholder="Password"
 				       [(ngModel)]="password" name="password">
 			</p>
 
-			<p>
+			<p *ngIf="!projectList">
 				<button type="submit" class="btn btn-default">
 					Login
 				</button>
