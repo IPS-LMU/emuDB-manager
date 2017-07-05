@@ -20,10 +20,9 @@
 			</div>
 		</div>
 
-		<div class="progress" [@progressBarContainer]="progressBarState()">
+		<div class="progress" [@progressBarContainer]="progressBarState | async">
 			<div class="progress-bar progress-bar-striped" role="progressbar"
-			     [@progressBar]="progressBarState()"
-			     (@progressBar.start)="changeState($event)"
+			     [@progressBar]="progressBarState | async"
 			>
 				Communicating with server
 			</div>

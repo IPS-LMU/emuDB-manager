@@ -6,11 +6,13 @@ import {
 	trigger,
 	keyframes,
 	state,
-	AfterViewInit
+	OnInit
 } from "@angular/core";
 import "./rxjs-operators";
 import {ManagerAPIService} from "./manager-api.service";
 import {ProjectDataService} from "./project-data.service";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {Subject} from "rxjs/Subject";
 
 
 @Component({
@@ -50,9 +52,12 @@ import {ProjectDataService} from "./project-data.service";
 		])
 	]
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit {
 	constructor(private managerAPIService: ManagerAPIService,
 				private projectDataService: ProjectDataService) {
+	}
+
+	ngOnInit() {
 		this.managerAPIService.authenticationError.subscribe(next => {
 			this.authenticationError = true;
 		});
@@ -62,7 +67,11 @@ export class AppComponent implements AfterViewInit {
 		});
 
 		this.managerAPIService.onConnectionCountChange.subscribe(next => {
-			this.connectionCount = next;
+			if (next === 0) {
+				this.progressBarState.next('idle');
+			} else {
+				this.progressBarState.next('active' + next);
+			}
 		});
 
 		this.projectDataService.dataError.subscribe(next => {
@@ -70,26 +79,7 @@ export class AppComponent implements AfterViewInit {
 		});
 	}
 
-	private activeAppendix: string = '';
+	public progressBarState: Subject<string> = new BehaviorSubject('idle');
+
 	private authenticationError: boolean = false;
-	private connectionCount: number = 0;
-	private nextActiveAppendix: string = '';
-
-	public changeState(event) {
-		this.nextActiveAppendix += '.';
-	}
-
-	ngAfterViewInit(): void {
-		this.activeAppendix = this.nextActiveAppendix;
-	}
-
-	public progressBarState() {
-		if (this.connectionCount === 0) {
-			this.activeAppendix = '';
-			this.nextActiveAppendix = '';
-			return 'idle';
-		} else {
-			return 'active' + this.activeAppendix;
-		}
-	}
 }
