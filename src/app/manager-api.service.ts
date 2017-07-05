@@ -22,9 +22,10 @@ export class ManagerAPIService {
 	};
 
 	public authenticationError = new EventEmitter<void>();
-	public connectionCount: number = 0;
+	public onConnectionCountChange = new EventEmitter<number>();
 	public connectionError = new EventEmitter<void>();
 
+	private connectionCount = 0;
 	private password: string;
 	private project: string;
 	private secretToken: string;
@@ -298,6 +299,7 @@ export class ManagerAPIService {
 			.do(() => {
 				console.log('Querying backend', params);
 				++this.connectionCount;
+				this.onConnectionCountChange.emit(this.connectionCount);
 			})
 			.ignoreElements()
 			.merge(this.http.post(this.urls.managerAPIBackend, body, options))
@@ -305,11 +307,13 @@ export class ManagerAPIService {
 				console.log('Error in HTTP transfer', error);
 
 				--this.connectionCount;
+				this.onConnectionCountChange.emit(this.connectionCount);
 				this.connectionError.emit();
 				return Observable.empty();
 			})
 			.map((response: Response) => {
 				--this.connectionCount;
+				this.onConnectionCountChange.emit(this.connectionCount);
 				return response.json();
 			})
 			.catch(error => {
