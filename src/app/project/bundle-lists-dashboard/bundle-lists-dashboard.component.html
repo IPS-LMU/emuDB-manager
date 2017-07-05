@@ -5,7 +5,7 @@
     <ul class="panel-body nav nav-pills nav-justified">
         <li role="presentation" [ngClass]="{active: state === 'Overview'}">
             <a (click)="state = 'Overview'">
-                Existing bundle lists <span class="badge">{{bundleLists?.length}}</span>
+                Existing bundle lists <span class="badge">{{bundleListStubs?.length}}</span>
             </a>
         </li>
         <li role="presentation" [ngClass]="{active: state === 'Generator'}">

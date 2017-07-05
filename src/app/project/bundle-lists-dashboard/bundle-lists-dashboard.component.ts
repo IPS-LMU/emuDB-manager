@@ -1,5 +1,5 @@
 import {Component, OnInit, OnDestroy} from "@angular/core";
-import {BundleList} from "../../types/bundle-list";
+import {BundleListStub} from "../../types/bundle-list-stub";
 import {Subscription} from "rxjs/Rx";
 import {ProjectDataService} from "../../project-data.service";
 import {DatabaseInfo} from "../../types/database-info";
@@ -15,7 +15,7 @@ type State = 'Overview' | 'Generator';
 	styleUrls: ['./bundle-lists-dashboard.component.css']
 })
 export class BundleListsDashboardComponent implements OnInit,OnDestroy {
-	public bundleLists:BundleList[];
+	public bundleLists:BundleListStub[];
 	private databases:DatabaseInfo[];
 	public state:State = 'Overview';
 	private subBundleLists:Subscription;
@@ -36,7 +36,7 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 	}
 
 	ngOnInit() {
-		this.subBundleLists = this.projectDataService.getAllBundleLists().subscribe(next => {
+		this.subBundleLists = this.projectDataService.getAllBundleListStubs().subscribe(next => {
 			this.bundleLists = next;
 		});
 		this.subDatabases = this.projectDataService.getAllDatabases().subscribe(next => {

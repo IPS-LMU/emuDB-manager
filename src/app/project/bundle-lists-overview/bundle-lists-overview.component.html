@@ -2,7 +2,6 @@
 	<table class="table table-striped">
 		<thead>
 		<tr>
-			<th *ngIf="!database">Database</th>
 			<th>Editor</th>
 			<th>Archive label</th>
 			<th>Bundles</th>
@@ -14,29 +13,25 @@
 
 		<tbody>
 
-		<template ngFor let-db [ngForOf]="databases">
-			<template ngFor let-bundleList [ngForOf]="db.bundleLists">
-				<tr>
-					<td *ngIf="!database"><a [routerLink]="['/project/databases', db.name]">{{db.name}}</a>
-					</td>
-					<td>{{bundleList.name}}</td>
-					<td>{{bundleList.archiveLabel}}</td>
-					<td>{{bundleList.items.length}}</td>
-					<td>{{countFinishedItems(bundleList)}} ({{percentageFinishedItems(bundleList)}}
-						%)
-					</td>
-					<td>{{countCommentedItems(bundleList)}}
-						({{percentageCommentedItems(bundleList)}} %)
-					</td>
-					<td>
-						<button
-							[routerLink]="['/project/bundle-lists', db.name, bundleList.name, bundleList.archiveLabel]"
-							class="btn btn-default">
-							View &amp; edit
-						</button>
-					</td>
-				</tr>
-			</template>
+		<template ngFor let-bundleList [ngForOf]="bundleLists">
+			<tr>
+				<td>{{bundleList.name}}</td>
+				<td>{{bundleList.archiveLabel}}</td>
+				<td>{{bundleList.items?.length}}</td>
+				<td>{{countFinishedItems(bundleList)}} ({{percentageFinishedItems(bundleList)}}
+					%)
+				</td>
+				<td>{{countCommentedItems(bundleList)}}
+					({{percentageCommentedItems(bundleList)}} %)
+				</td>
+				<td>
+					<button
+						[routerLink]="['/project/bundle-lists', database, bundleList.name, bundleList.archiveLabel]"
+						class="btn btn-default">
+						View &amp; edit
+					</button>
+				</td>
+			</tr>
 		</template>
 
 		</tbody>

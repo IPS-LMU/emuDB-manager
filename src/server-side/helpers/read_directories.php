@@ -179,7 +179,7 @@ function readDatabase ($directory) {
 	$db = new Database();
 	$db->name = substr(basename($directory), 0, -6);
 	$db->sessions = array();
-	$db->bundleLists = array();
+	$db->bundleListStubs = array();
 
 	$dirHandle = dir($directory);
 
@@ -200,7 +200,7 @@ function readDatabase ($directory) {
 			$bundleListsStat = readBundleLists($directory . '/' . $entry);
 
 			if ($bundleListsStat->success === true) {
-				$db->bundleLists = $bundleListsStat->data;
+				$db->bundleListStubs = $bundleListsStat->data;
 			} else {
 				return $bundleListsStat;
 			}
@@ -257,16 +257,9 @@ function readBundleLists ($directory) {
 
 	while (false !== ($entry = $dirHandle->read())) {
 		if (substr($entry, -16) === '_bundleList.json') {
-			$bundleList = new BundleList();
+			$bundleList = new BundleListStub();
 			$bundleList->name = substr($entry, 0, -16);
 			$bundleList->archiveLabel = '';
-
-			$itemsStat = load_json_file($directory . '/' . $entry);
-			if ($itemsStat->success === true) {
-				$bundleList->items = $itemsStat->data;
-			} else {
-				return $itemsStat;
-			}
 
 			$bundleLists[] = $bundleList;
 		} else if (substr($entry, -13) === '_archiveLabel') {
@@ -281,18 +274,9 @@ function readBundleLists ($directory) {
 
 			while (false !== ($subdirEntry = $subdirHandle->read())) {
 				if (substr($subdirEntry, -16) === '_bundleList.json') {
-					$bundleList = new BundleList();
+					$bundleList = new BundleListStub();
 					$bundleList->name = substr($subdirEntry, 0, -16);
 					$bundleList->archiveLabel = substr($entry, 0, -13);
-
-					$itemsStat = load_json_file(
-						$directory . '/' . $entry . '/' . $subdirEntry
-				);
-					if ($itemsStat->success === true) {
-						$bundleList->items = $itemsStat->data;
-					} else {
-						return $itemsStat;
-					}
 
 					$bundleLists[] = $bundleList;
 				}

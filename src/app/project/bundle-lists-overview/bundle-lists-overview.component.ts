@@ -1,8 +1,8 @@
 import {Component, Input, OnDestroy} from "@angular/core";
 import {BundleList} from "../../types/bundle-list";
 import {ProjectDataService} from "../../project-data.service";
-import {DatabaseInfo} from "../../types/database-info";
 import {Subscription} from "rxjs/Rx";
+import {ManagerAPIService} from "../../manager-api.service";
 
 @Component({
 	selector: 'emudbmanager-bundle-lists-overview',
@@ -10,39 +10,73 @@ import {Subscription} from "rxjs/Rx";
 	styleUrls: ['./bundle-lists-overview.component.css']
 })
 export class BundleListsOverviewComponent implements OnDestroy {
-	private _database:string;
-	public databases:DatabaseInfo[] = [];
-	private sub:Subscription;
+	public bundleLists: BundleList[] = [];
 
-	constructor(private projectDataService:ProjectDataService) {
+	private bundleListSubscriptions: Subscription[] = [];
+	private databaseName: string;
+	private subDatabase: Subscription;
+
+	constructor(private managerAPIService: ManagerAPIService,
+	            private projectDataService: ProjectDataService) {
 	}
 
-	get database():string {
-		return this._database;
+	public get database() {
+		return this.databaseName;
 	}
 
-	@Input() set database(database:string) {
-		this._database = database;
+	@Input() public set database(database: string) {
+		this.databaseName = database;
 
-		if (this.sub) {
-			this.sub.unsubscribe();
-			this.sub.unsubscribe();
+		if (this.subDatabase) {
+			this.subDatabase.unsubscribe();
 		}
 
-		if (this.database) {
-			this.sub = this.projectDataService.getDatabase(this.database).subscribe(next => {
-				this.databases = [next];
-			});
-		} else {
-			this.sub = this.projectDataService.getAllDatabases().subscribe(next => {
-				this.databases = next;
-			});
+		if (database === "") {
+			return;
 		}
+
+		this.subDatabase = this.projectDataService.getDatabase(database)
+			.map(x => x.bundleListStubs)
+			.subscribe(
+				next => {
+					while (this.bundleListSubscriptions.length > 0) {
+						let subscription = this.bundleListSubscriptions.pop();
+						subscription.unsubscribe();
+					}
+
+					this.bundleLists = [];
+
+					for (let bundleListStub of next) {
+						let sub = this.managerAPIService.getBundleList(
+							database,
+							bundleListStub.archiveLabel,
+							bundleListStub.name
+						).subscribe(
+							next => {
+								this.bundleLists.push({
+									name: bundleListStub.name,
+									archiveLabel: bundleListStub.archiveLabel,
+									items: next
+								});
+							},
+							error => {
+								// @fixme how to handle errors?
+							}
+						);
+
+						this.bundleListSubscriptions.push(sub);
+					}
+				},
+
+				error => {
+					// @fixme how to handle errors?
+				}
+			);
 	}
 
 	ngOnDestroy() {
-		if (this.sub) {
-			this.sub.unsubscribe();
+		if (this.subDatabase) {
+			this.subDatabase.unsubscribe();
 		}
 	}
 
@@ -53,7 +87,7 @@ export class BundleListsOverviewComponent implements OnDestroy {
 	 * @param bundleList The bundle list in which to count items
 	 * @returns {number} The absolute number of finished items
 	 */
-	private countFinishedItems(bundleList:BundleList):number {
+	public countFinishedItems(bundleList: BundleList): number {
 		return bundleList.items.reduce((previousValue, currentValue, currentIndex, array) => {
 			if (currentValue.finishedEditing) {
 				return previousValue + 1;
@@ -69,7 +103,7 @@ export class BundleListsOverviewComponent implements OnDestroy {
 	 * @param bundleList The bundle list in which to count items
 	 * @returns {number} The absolute number of commented items
 	 */
-	private countCommentedItems(bundleList:BundleList):number {
+	public countCommentedItems(bundleList: BundleList): number {
 		return bundleList.items.reduce((previousValue, currentValue, currentIndex, array) => {
 			if (currentValue.comment !== "") {
 				return previousValue + 1;
@@ -87,7 +121,7 @@ export class BundleListsOverviewComponent implements OnDestroy {
 	 * @param bundleList The bundle list in which to count items
 	 * @returns {number} The relative portion (percentage) of finished items
 	 */
-	private percentageFinishedItems(bundleList:BundleList):number {
+	public percentageFinishedItems(bundleList: BundleList): number {
 		if (bundleList.items.length === 0) {
 			return 0;
 		}
@@ -101,7 +135,7 @@ export class BundleListsOverviewComponent implements OnDestroy {
 	 * @param bundleList The bundle list in which to count items
 	 * @returns {number} The relative portion (percentage) of commented items
 	 */
-	private percentageCommentedItems(bundleList:BundleList):number {
+	 public percentageCommentedItems(bundleList: BundleList): number {
 		if (bundleList.items.length === 0) {
 			return 0;
 		}

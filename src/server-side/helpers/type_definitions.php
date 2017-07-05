@@ -73,18 +73,16 @@ class BundleListItem
 }
 
 /**
- * Class BundleList
+ * Class BundleListStub
  *
- * Represents one bundle list inside an Emu speech database.
+ * Represents a stub of one bundle list inside an Emu speech database.
  */
-class BundleList
+class BundleListStub
 {
 	/** @var string Username of the editor this bundle list is assigned to */
 	public $name;
 	/** @var string Archive label assigned to this bundle list */
 	public $archiveLabel;
-	/** @var BundleListItem[] The items that make up this bundle list */
-	public $items;
 }
 
 /**
@@ -98,8 +96,8 @@ class Database
 	public $name;
 	/** @var EmuDBConfig Configuration object (as read from the _DBconfig .json) */
 	public $dbConfig;
-	/** @var BundleList[] The bundle lists associated with this database */
-	public $bundleLists;
+	/** @var BundleListStub[] The bundle lists associated with this database */
+	public $bundleListStubs;
 	/** @var Session[] The sessions that make up this database */
 	public $sessions;
 }

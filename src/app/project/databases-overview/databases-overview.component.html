@@ -17,7 +17,7 @@
 			<td>{{countBundles(database.sessions)}}</td>
 			<td>
 				<ul>
-					<li *ngFor="let bundleList of database.bundleLists">
+					<li *ngFor="let bundleList of database.bundleListStubs">
 						{{bundleList.name}}
 						<span *ngIf="bundleList.archiveLabel">({{bundleList.archiveLabel}})</span>
 					</li>

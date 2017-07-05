@@ -10,6 +10,7 @@ import {DownloadInfo} from "./types/download-info";
 import {generateBundleLists} from "./core/generate-bundle-lists.function";
 import {ManagerAPIService} from "./manager-api.service";
 import {transformCommitList} from "./core/transform-commit-list.function";
+import {BundleListStub} from "./types/bundle-list-stub";
 
 @Injectable()
 export class ProjectDataService {
@@ -58,6 +59,10 @@ export class ProjectDataService {
 		this.refreshTicker.next();
 	}
 
+	public getRefreshTicker (): Observable<void> {
+		return this.refreshTicker.asObservable();
+	}
+
 	/**************************************************************************\
 	 *
 	 *
@@ -75,32 +80,13 @@ export class ProjectDataService {
 		});
 	}
 
-	public getAllBundleLists(): Observable<BundleList[]> {
-		return this.projectInfoCache.map((x: ProjectInfo) => {
-			let result: BundleList[] = [];
+	public getAllBundleListStubs(): Observable<BundleListStub[]> {
+		return this.projectInfoCache.map((x) => {
+			let result: BundleListStub[] = [];
 			for (let i = 0; i < x.databases.length; ++i) {
-				result = result.concat(x.databases[i].bundleLists);
+				result = result.concat(x.databases[i].bundleListStubs);
 			}
 			return result;
-		});
-	}
-
-	public getBundleList(database: string, name: string, archiveLabel: string): Observable<BundleList> {
-		return this.projectInfoCache.map((x: ProjectInfo) => {
-			for (let i = 0; i < x.databases.length; ++i) {
-				if (x.databases[i].name === database) {
-					for (let j = 0; j < x.databases[i].bundleLists.length; ++j) {
-						if (
-							x.databases[i].bundleLists[j].name === name
-							&& x.databases[i].bundleLists[j].archiveLabel === archiveLabel
-						) {
-							return x.databases[i].bundleLists[j];
-						}
-					}
-				}
-			}
-
-			return null;
 		});
 	}
 

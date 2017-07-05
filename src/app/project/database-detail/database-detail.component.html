@@ -11,7 +11,7 @@
 	<ul class="panel-body nav nav-pills nav-justified">
 		<li role="presentation" [ngClass]="{active: state === 'BundleLists'}">
 			<a (click)="state = 'BundleLists'">
-				Bundle lists <span class="badge">{{database?.bundleLists?.length}}</span>
+				Bundle lists <span class="badge">{{database?.bundleListStubs?.length}}</span>
 			</a>
 		</li>
 		<li role="presentation" [ngClass]="{active: state === 'Sessions'}">

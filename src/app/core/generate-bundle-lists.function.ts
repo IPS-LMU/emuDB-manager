@@ -21,8 +21,8 @@ export function generateBundleLists(dbInfo: DatabaseInfo,
 	//////////
 
 	for (let i = 0; i < editors.length; ++i) {
-		for (let j = 0; j < dbInfo.bundleLists.length; ++j) {
-			if (editors[i] === dbInfo.bundleLists[j].name && dbInfo.bundleLists[j].archiveLabel === '') {
+		for (let j = 0; j < dbInfo.bundleListStubs.length; ++j) {
+			if (editors[i] === dbInfo.bundleListStubs[j].name && dbInfo.bundleListStubs[j].archiveLabel === '') {
 				return 'Editor already has a non-archived bundle list: ' + editors[i];
 			}
 		}

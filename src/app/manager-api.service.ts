@@ -5,6 +5,8 @@ import {BundleList} from "./types/bundle-list";
 import {ServerResponse} from "./types/server-response";
 import {DownloadTarget} from "./types/download-target";
 import {UploadTarget} from "./types/upload-target";
+import {BundleListItem} from "./types/bundle-list-item";
+import {ProjectInfo} from "./types/project-info";
 
 /**
  * The service for the Manager API handles all connections to the
@@ -120,6 +122,17 @@ export class ManagerAPIService {
 		});
 	}
 
+	public getBundleList(databaseName: string,
+	                     archiveLabel: string,
+	                     bundleListName: string): Observable<BundleListItem[]> {
+		return this.query({
+			'query': 'getBundleList',
+			'databaseName': databaseName,
+			'archiveLabel': archiveLabel,
+			'bundleListName': bundleListName
+		});
+	}
+
 	public listCommits(databaseName: string): Observable<Array<{ commitID: string, date: string, message: string }>> {
 		return this.query({
 			'query': 'listCommits',
@@ -201,7 +214,7 @@ export class ManagerAPIService {
 		});
 	}
 
-	public projectInfo(): Observable<any> {
+	public projectInfo(): Observable<ProjectInfo> {
 		return this.query({
 			'query': 'projectInfo'
 		});

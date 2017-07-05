@@ -35,9 +35,9 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 	};
 	private reallyDelete: boolean = false;
 	public state: State = 'Info';
-	private subBundleList: Subscription;
 	private subParams: Subscription;
-	private tableFormat = [
+	private subRefresh: Subscription;
+	public tableFormat = [
 		{type: 'string', heading: 'Session', value: x => x.session},
 		{type: 'string', heading: 'Bundle', value: x => x.name},
 		{type: 'boolean', heading: 'Finished editing', value: x => x.finishedEditing},
@@ -56,20 +56,26 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 				nextParams['archiveLabel'] = '';
 			}
 
-			this.subBundleList = this.projectDataService.getBundleList(
-				nextParams['database'],
-				nextParams['name'],
-				nextParams['archiveLabel']
-			).subscribe(nextBundleList => {
-				this.database = nextParams['database'];
-				this.setBundleList(nextBundleList);
+			this.subRefresh = this.projectDataService.getRefreshTicker().subscribe(next => {
+				this.managerAPIService.getBundleList(
+					nextParams['database'],
+					nextParams['archiveLabel'],
+					nextParams['name']
+				).subscribe(nextBundleList => {
+					this.database = nextParams['database'];
+					this.setBundleList({
+						name: nextParams['name'],
+						archiveLabel: nextParams['archiveLabel'],
+						items: nextBundleList
+					});
+				});
 			});
 		});
 	}
 
 	ngOnDestroy() {
-		if (this.subBundleList) {
-			this.subBundleList.unsubscribe();
+		if (this.subRefresh) {
+			this.subRefresh.unsubscribe();
 		}
 		if (this.subParams) {
 			this.subParams.unsubscribe();
@@ -114,15 +120,22 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 			this.infoEditor.messageSuccess = 'Successfully edited.';
 			this.projectDataService.refresh();
 
-			if (this.subBundleList) {
-				this.subBundleList.unsubscribe();
+			if (this.subRefresh) {
+				this.subRefresh.unsubscribe();
 			}
-			this.subBundleList = this.projectDataService.getBundleList(
-				this.database,
-				newName,
-				newArchiveLabel
-			).subscribe(nextBundleList => {
-				this.setBundleList(nextBundleList)
+
+			this.subRefresh = this.projectDataService.getRefreshTicker().subscribe(next => {
+				this.managerAPIService.getBundleList(
+					this.database,
+					newName,
+					newArchiveLabel
+				).subscribe(nextBundleList => {
+					this.setBundleList({
+						name: newName,
+						archiveLabel: newArchiveLabel,
+						items: nextBundleList
+					})
+				});
 			});
 		}, error => {
 			this.infoEditor.messageError = getErrorMessage(error);

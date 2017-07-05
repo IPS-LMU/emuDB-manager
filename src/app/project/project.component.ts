@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy} from "@angular/core";
 import {DatabaseInfo} from "../types/database-info";
-import {BundleList} from "../types/bundle-list";
+import {BundleListStub} from "../types/bundle-list-stub";
 import {ProjectDataService} from "../project-data.service";
 import {Router} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
@@ -13,9 +13,9 @@ import {ManagerAPIService} from "../manager-api.service";
 	styleUrls: ['./project.component.css']
 })
 export class ProjectComponent implements OnInit,OnDestroy {
-	public bundleLists:BundleList[] = [];
+	public bundleListStubs:BundleListStub[] = [];
 	public databases:DatabaseInfo[] = [];
-	private subBundleLists:Subscription;
+	private subBundleListStubs:Subscription;
 	private subDatabases:Subscription;
 	private subUploads:Subscription;
 	public uploads:UploadInfo[] = [];
@@ -26,8 +26,8 @@ export class ProjectComponent implements OnInit,OnDestroy {
 	}
 
 	ngOnInit():any {
-		this.subBundleLists = this.projectDataService.getAllBundleLists().subscribe(next => {
-			this.bundleLists = next;
+		this.subBundleListStubs = this.projectDataService.getAllBundleListStubs().subscribe(next => {
+			this.bundleListStubs = next;
 		});
 		this.subDatabases = this.projectDataService.getAllDatabases().subscribe(next => {
 			this.databases = next;
@@ -38,8 +38,8 @@ export class ProjectComponent implements OnInit,OnDestroy {
 	}
 
 	ngOnDestroy():any {
-		if (this.subBundleLists) {
-			this.subBundleLists.unsubscribe();
+		if (this.subBundleListStubs) {
+			this.subBundleListStubs.unsubscribe();
 		}
 		if (this.subDatabases) {
 			this.subDatabases.unsubscribe();

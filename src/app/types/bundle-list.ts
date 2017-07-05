@@ -1,7 +1,6 @@
 import {BundleListItem} from "./bundle-list-item";
+import {BundleListStub} from "./bundle-list-stub";
 
-export interface BundleList {
-	name:string;
-	archiveLabel:string;
-	items:BundleListItem[];
+export interface BundleList extends BundleListStub {
+	items: BundleListItem[];
 }
