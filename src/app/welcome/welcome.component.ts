@@ -3,6 +3,7 @@ import {Router} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 import {getErrorMessage} from "../core/get-error-message.function";
 import {ManagerAPIService} from "../manager-api.service";
+import {ProjectDataService} from "../project-data.service";
 
 @Component({
 	selector: 'emudbmanager-welcome',
@@ -22,6 +23,7 @@ export class WelcomeComponent implements OnInit {
 	public username:string;
 
 	constructor(private managerAPIService: ManagerAPIService,
+	            private projectDataService: ProjectDataService,
 	            private router:Router) {
 		let params = new URLSearchParams(window.location.search);
 		let secretToken = params.get('secretToken');
@@ -42,6 +44,7 @@ export class WelcomeComponent implements OnInit {
 
 	private chooseProject(project:string) {
 		this.managerAPIService.setProject(project);
+		this.projectDataService.refresh();
 		this.router.navigate(['/project/overview']);
 	}
 
