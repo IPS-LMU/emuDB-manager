@@ -6,10 +6,11 @@ import {
 	trigger,
 	keyframes,
 	state,
-	AfterViewChecked, AfterViewInit
+	AfterViewInit
 } from "@angular/core";
 import "./rxjs-operators";
 import {ManagerAPIService} from "./manager-api.service";
+import {ProjectDataService} from "./project-data.service";
 
 
 @Component({
@@ -50,10 +51,28 @@ import {ManagerAPIService} from "./manager-api.service";
 	]
 })
 export class AppComponent implements AfterViewInit {
-	constructor(private managerAPIService: ManagerAPIService) {
+	constructor(private managerAPIService: ManagerAPIService,
+				private projectDataService: ProjectDataService) {
+		this.managerAPIService.authenticationError.subscribe(next => {
+			this.authenticationError = true;
+		});
+
+		this.managerAPIService.connectionError.subscribe(next => {
+			console.log('Connection error');
+		});
+
+		this.managerAPIService.onConnectionCountChange.subscribe(next => {
+			this.connectionCount = next;
+		});
+
+		this.projectDataService.dataError.subscribe(next => {
+			console.log('Data error');
+		});
 	}
 
 	private activeAppendix: string = '';
+	private authenticationError: boolean = false;
+	private connectionCount: number = 0;
 	private nextActiveAppendix: string = '';
 
 	public changeState(event) {
@@ -65,7 +84,7 @@ export class AppComponent implements AfterViewInit {
 	}
 
 	public progressBarState() {
-		if (this.managerAPIService.connectionCount === 0) {
+		if (this.connectionCount === 0) {
 			this.activeAppendix = '';
 			this.nextActiveAppendix = '';
 			return 'idle';

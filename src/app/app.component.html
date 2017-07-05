@@ -30,5 +30,14 @@
 		</div>
 	</nav>
 
+	<div *ngIf="authenticationError" class="emudbmanager-modal">
+		<div>
+			<b>Authentication error</b>
+
+			You have either typed wrong credentials or your session has expired. Please go
+			back to the log in page and try again.
+		</div>
+	</div>
+
 	<router-outlet></router-outlet>
 </div>
