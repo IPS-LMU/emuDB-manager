@@ -39,7 +39,7 @@ export class ProjectDataService {
 	// observables, to my best understanding, are unsubscribed from
 	// automatically.
 	//
-	private addRefreshToObservable (sourceObservable) {
+	private addRefreshToObservable(sourceObservable) {
 		// Subjects are a combination of observer and observable.
 		// Basically, it is an observable into which we can easily induce the
 		// values it emits.
@@ -47,7 +47,16 @@ export class ProjectDataService {
 
 		let ticker = this.refreshTicker
 			.startWith(null)
-			.do(() => sourceObservable.subscribe(result))
+			.do(() => sourceObservable.subscribe(
+				next => {
+					result.next(next);
+				},
+				error => {
+					result.error(error);
+				},
+				() => { // Ignore completion
+				}
+			))
 			.ignoreElements();
 
 		// Thanks to the merge, the caller will subscribe to the ticker and
