@@ -11,6 +11,7 @@ import {generateBundleLists} from "./core/generate-bundle-lists.function";
 import {ManagerAPIService} from "./manager-api.service";
 import {transformCommitList} from "./core/transform-commit-list.function";
 import {BundleListStub} from "./types/bundle-list-stub";
+import {BundleListItem} from "./types/bundle-list-item";
 
 @Injectable()
 export class ProjectDataService {
@@ -153,6 +154,16 @@ export class ProjectDataService {
 		return this.getName().map(projectName => {
 			return this.managerAPIService.getEmuWebAppURL(database);
 		});
+	}
+
+	public getBundleList(databaseName: string,
+	                     archiveLabel: string,
+	                     bundleListName: string): Observable<BundleListItem[]> {
+		let source = this.managerAPIService.getBundleList(
+			databaseName,
+			archiveLabel,
+			bundleListName);
+		return this.addRefreshToObservable(source);
 	}
 
 	public getCommitList(databaseName: string): Observable<Array<any>> {

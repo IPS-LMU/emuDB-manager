@@ -35,8 +35,8 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 	};
 	private reallyDelete: boolean = false;
 	public state: State = 'Info';
+	private subBundleList: Subscription;
 	private subParams: Subscription;
-	private subRefresh: Subscription;
 	public tableFormat = [
 		{type: 'string', heading: 'Session', value: x => x.session},
 		{type: 'string', heading: 'Bundle', value: x => x.name},
@@ -56,26 +56,24 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 				nextParams['archiveLabel'] = '';
 			}
 
-			this.subRefresh = this.projectDataService.getRefreshTicker().subscribe(next => {
-				this.managerAPIService.getBundleList(
-					nextParams['database'],
-					nextParams['archiveLabel'],
-					nextParams['name']
-				).subscribe(nextBundleList => {
-					this.database = nextParams['database'];
-					this.setBundleList({
-						name: nextParams['name'],
-						archiveLabel: nextParams['archiveLabel'],
-						items: nextBundleList
-					});
+			this.subBundleList = this.projectDataService.getBundleList(
+				nextParams['database'],
+				nextParams['archiveLabel'],
+				nextParams['name']
+			).subscribe(nextBundleList => {
+				this.database = nextParams['database'];
+				this.setBundleList({
+					name: nextParams['name'],
+					archiveLabel: nextParams['archiveLabel'],
+					items: nextBundleList
 				});
 			});
 		});
 	}
 
 	ngOnDestroy() {
-		if (this.subRefresh) {
-			this.subRefresh.unsubscribe();
+		if (this.subBundleList) {
+			this.subBundleList.unsubscribe();
 		}
 		if (this.subParams) {
 			this.subParams.unsubscribe();
@@ -120,22 +118,20 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 			this.infoEditor.messageSuccess = 'Successfully edited.';
 			this.projectDataService.refresh();
 
-			if (this.subRefresh) {
-				this.subRefresh.unsubscribe();
+			if (this.subBundleList) {
+				this.subBundleList.unsubscribe();
 			}
 
-			this.subRefresh = this.projectDataService.getRefreshTicker().subscribe(next => {
-				this.managerAPIService.getBundleList(
-					this.database,
-					newName,
-					newArchiveLabel
-				).subscribe(nextBundleList => {
-					this.setBundleList({
-						name: newName,
-						archiveLabel: newArchiveLabel,
-						items: nextBundleList
-					})
-				});
+			this.subBundleList = this.projectDataService.getBundleList(
+				this.database,
+				newName,
+				newArchiveLabel
+			).subscribe(nextBundleList => {
+				this.setBundleList({
+					name: newName,
+					archiveLabel: newArchiveLabel,
+					items: nextBundleList
+				})
 			});
 		}, error => {
 			this.infoEditor.messageError = getErrorMessage(error);
