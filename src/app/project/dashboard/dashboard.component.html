@@ -10,8 +10,12 @@
 			<td>{{databases.length}}</td>
 		</tr>
 		<tr>
-			<td>Number of bundle lists</td>
-			<td>{{bundleListStubs.length}}</td>
+			<td>Number of active bundle lists</td>
+			<td>{{countActiveBundleLists()}}</td>
+		</tr>
+		<tr>
+			<td>Number of archived bundle lists</td>
+			<td>{{countArchivedBundleLists()}}</td>
 		</tr>
 		<tr>
 			<td>Number of uploads</td>

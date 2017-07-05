@@ -55,4 +55,12 @@ export class DashboardComponent implements OnInit,OnDestroy {
 			this.subUploads.unsubscribe();
 		}
 	}
+
+	public countActiveBundleLists () {
+		return this.bundleListStubs.filter(x => x.archiveLabel === '').length;
+	}
+
+	public countArchivedBundleLists () {
+		return this.bundleListStubs.filter(x => x.archiveLabel !== '').length;
+	}
 }
