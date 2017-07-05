@@ -33,7 +33,7 @@ export class ProjectDataService {
 	// This is the boilerplate code to use our refresh events with any cold
 	// observable from the ManagerAPIService.
 	//
-	// Only use this finite observables (i.e. observables that terminate at
+	// Only use this with finite observables (i.e. observables that terminate at
 	// some point). Otherwise, we will subscribe to the sourceObservable
 	// with every tick of the refresher and never unsubscribe. Finite
 	// observables, to my best understanding, are unsubscribed from
