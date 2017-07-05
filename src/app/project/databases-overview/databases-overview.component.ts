@@ -3,6 +3,7 @@ import {ProjectDataService} from "../../project-data.service";
 import {DatabaseInfo} from "../../types/database-info";
 import {Subscription} from "rxjs/Rx";
 import {countBundles} from "../../core/count-bundles.function";
+import {BundleListStub} from "../../types/bundle-list-stub";
 
 @Component({
 	selector: 'emudbmanager-databases-overview',
@@ -10,7 +11,7 @@ import {countBundles} from "../../core/count-bundles.function";
 	styleUrls: ['./databases-overview.component.css']
 })
 export class DatabasesOverviewComponent implements OnInit,OnDestroy {
-	private countBundles = countBundles;
+	public countBundles = countBundles;
 	public databases:DatabaseInfo[];
 	private sub:Subscription;
 
@@ -27,5 +28,9 @@ export class DatabasesOverviewComponent implements OnInit,OnDestroy {
 		if (this.sub) {
 			this.sub.unsubscribe();
 		}
+	}
+
+	public activeBundleLists (allBundleLists: BundleListStub[]) {
+		return allBundleLists.filter(x => x.archiveLabel === '');
 	}
 }

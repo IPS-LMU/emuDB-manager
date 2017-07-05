@@ -5,7 +5,7 @@
 			<th>Name</th>
 			<th>Sessions</th>
 			<th>Bundles</th>
-			<th>Bundle lists</th>
+			<th>Active editors</th>
 			<th>Actions</th>
 		</tr>
 		</thead>
@@ -17,9 +17,8 @@
 			<td>{{countBundles(database.sessions)}}</td>
 			<td>
 				<ul>
-					<li *ngFor="let bundleList of database.bundleListStubs">
+					<li *ngFor="let bundleList of activeBundleLists(database.bundleListStubs)">
 						{{bundleList.name}}
-						<span *ngIf="bundleList.archiveLabel">({{bundleList.archiveLabel}})</span>
 					</li>
 				</ul>
 			</td>
