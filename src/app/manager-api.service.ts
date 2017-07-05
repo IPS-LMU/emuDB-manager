@@ -294,11 +294,13 @@ export class ManagerAPIService {
 		//
 		// Send request
 		//
-		console.log('Querying backend', params);
-		++this.connectionCount;
-
-		return this.http
-			.post(this.urls.managerAPIBackend, body, options)
+		return Observable.of(null)
+			.do(() => {
+				console.log('Querying backend', params);
+				++this.connectionCount;
+			})
+			.ignoreElements()
+			.merge(this.http.post(this.urls.managerAPIBackend, body, options))
 			.catch(error => {
 				console.log('Error in HTTP transfer', error);
 
