@@ -3,6 +3,10 @@ import {BundleList} from "../../types/bundle-list";
 import {ProjectDataService} from "../../project-data.service";
 import {Subscription} from "rxjs/Rx";
 import {ManagerAPIService} from "../../manager-api.service";
+import {countFinishedItems} from "../../core/count-finished-items.function";
+import {countCommentedItems} from "../../core/count-commented-items.function"
+import {percentageFinishedItems} from "../../core/percentage-finished-items.function";
+import {percentageCommentedItems} from "../../core/percentage-commented-items.function";
 
 @Component({
 	selector: 'emudbmanager-bundle-lists-overview',
@@ -80,66 +84,8 @@ export class BundleListsOverviewComponent implements OnDestroy {
 		}
 	}
 
-	/**
-	 * Count the number of items in a bundle list that have been marked as
-	 * "finished editing"
-	 *
-	 * @param bundleList The bundle list in which to count items
-	 * @returns {number} The absolute number of finished items
-	 */
-	public countFinishedItems(bundleList: BundleList): number {
-		return bundleList.items.reduce((previousValue, currentValue, currentIndex, array) => {
-			if (currentValue.finishedEditing) {
-				return previousValue + 1;
-			} else {
-				return previousValue;
-			}
-		}, 0);
-	}
-
-	/**
-	 * Count the number of items in a bundle list that have been commented.
-	 *
-	 * @param bundleList The bundle list in which to count items
-	 * @returns {number} The absolute number of commented items
-	 */
-	public countCommentedItems(bundleList: BundleList): number {
-		return bundleList.items.reduce((previousValue, currentValue, currentIndex, array) => {
-			if (currentValue.comment !== "") {
-				return previousValue + 1;
-			} else {
-				return previousValue;
-			}
-		}, 0);
-	}
-
-
-	/**
-	 * Count the relative portion (percentage) of items in a bundle list that have
-	 * been marked as "finished editing"
-	 *
-	 * @param bundleList The bundle list in which to count items
-	 * @returns {number} The relative portion (percentage) of finished items
-	 */
-	public percentageFinishedItems(bundleList: BundleList): number {
-		if (bundleList.items.length === 0) {
-			return 0;
-		}
-		return Math.round(100 * this.countFinishedItems(bundleList) / bundleList.items.length);
-	}
-
-	/**
-	 * Count the relative portion (percentage) of items in a bundle list that have
-	 * been commented
-	 *
-	 * @param bundleList The bundle list in which to count items
-	 * @returns {number} The relative portion (percentage) of commented items
-	 */
-	 public percentageCommentedItems(bundleList: BundleList): number {
-		if (bundleList.items.length === 0) {
-			return 0;
-		}
-		return Math.round(100 * this.countCommentedItems(bundleList) / bundleList.items.length);
-	}
-
+	public countCommentedItems = countCommentedItems;
+	public countFinishedItems = countFinishedItems;
+	public percentageCommentedItems = percentageCommentedItems;
+	public percentageFinishedItems = percentageFinishedItems;
 }

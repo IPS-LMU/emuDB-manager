@@ -6,6 +6,10 @@ import {BundleListItem} from "../../types/bundle-list-item";
 import {BundleList} from "../../types/bundle-list";
 import {getErrorMessage} from "../../core/get-error-message.function";
 import {ManagerAPIService} from "../../manager-api.service";
+import {countFinishedItems} from "../../core/count-finished-items.function";
+import {countCommentedItems} from "../../core/count-commented-items.function"
+import {percentageFinishedItems} from "../../core/percentage-finished-items.function";
+import {percentageCommentedItems} from "../../core/percentage-commented-items.function";
 
 type State = 'Info' | 'AllBundles' | 'CommentedBundles';
 
@@ -183,4 +187,9 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 			this.duplicationEditor.messageError = getErrorMessage(error);
 		});
 	}
+
+	public countCommentedItems = countCommentedItems;
+	public countFinishedItems = countFinishedItems;
+	public percentageCommentedItems = percentageCommentedItems;
+	public percentageFinishedItems = percentageFinishedItems;
 }

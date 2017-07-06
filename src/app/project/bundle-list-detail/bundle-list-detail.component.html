@@ -49,6 +49,24 @@
 							       name="newArchiveLabel">
 						</td>
 					</tr>
+					<tr>
+						<td>Finished bundles</td>
+						<td>
+							<span *ngIf="bundleList">
+							{{countFinishedItems(bundleList)}}
+							({{percentageFinishedItems(bundleList)}} %)
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td>Commented bundles</td>
+						<td>
+							<span *ngIf="bundleList">
+							{{countCommentedItems(bundleList)}}
+							({{percentageCommentedItems(bundleList)}} %)
+							</span>
+						</td>
+					</tr>
 					</tbody>
 				</table>
 			</div>
