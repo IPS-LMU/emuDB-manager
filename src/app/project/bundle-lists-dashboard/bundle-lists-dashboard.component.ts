@@ -14,20 +14,20 @@ import {getErrorMessage} from "../../core/get-error-message.function";
 })
 export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 	public bundleLists:BundleListStub[];
-	private databases:DatabaseInfo[];
+	public databases:DatabaseInfo[];
 	private subBundleLists:Subscription;
 	private subDatabases:Subscription;
 
-	private bundlePattern:string = '.*';
-	private editors:{name:string}[] = [];
-	private generatorError:string = '';
-	private generatorSuccess:string = '';
-	private newEditor:string = '';
-	private personsPerBundle:number = 1;
+	public bundlePattern:string = '.*';
+	public editors:{name:string}[] = [];
+	public generatorError:string = '';
+	public generatorSuccess:string = '';
+	public newEditor:string = '';
+	public personsPerBundle:number = 1;
 	public preview: 'none'|'sessions'|'complete' = 'none';
-	private selectedDatabase:DatabaseInfo = null;
-	private sessionPattern:string = '.*';
-	private shuffle:boolean = true;
+	public selectedDatabase:DatabaseInfo = null;
+	public sessionPattern:string = '.*';
+	public shuffle:boolean = true;
 
 	constructor(private projectDataService:ProjectDataService) {
 	}
@@ -90,7 +90,7 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 		return result;
 	}
 
-	private generateLists() {
+	public generateLists() {
 		this.checkNumber();
 
 		this.generatorError = '';
@@ -124,7 +124,7 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 			});
 	}
 
-	private addEditor() {
+	public addEditor() {
 		this.editors.push({name: this.newEditor});
 		this.newEditor = '';
 	}
@@ -142,7 +142,7 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 		}
 	}
 
-	private checkDBConfig():boolean {
+	public checkDBConfig():boolean {
 		return (
 			getConfigComments(this.selectedDatabase)
 			&&
@@ -150,7 +150,7 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 		);
 	}
 
-	private validBundlePattern():boolean {
+	public validBundlePattern():boolean {
 		try {
 			new RegExp(this.bundlePattern);
 		} catch (e) {
@@ -159,7 +159,7 @@ export class BundleListsDashboardComponent implements OnInit,OnDestroy {
 		return true;
 	}
 
-	private validSessionPattern():boolean {
+	public validSessionPattern():boolean {
 		try {
 			new RegExp(this.sessionPattern);
 		} catch (e) {

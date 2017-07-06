@@ -81,5 +81,5 @@ export class AppComponent implements OnInit {
 
 	public progressBarState: Subject<string> = new BehaviorSubject('idle');
 
-	private authenticationError: boolean = false;
+	public authenticationError: boolean = false;
 }

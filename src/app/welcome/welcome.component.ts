@@ -14,7 +14,7 @@ export class WelcomeComponent implements OnInit {
 	public loginFailed:boolean = false;
 	public password:string;
 	private project:string = '';
-	private projectList:{name:string, permission:string}[];
+	public projectList:{name:string, permission:string}[];
 	private secretToken:string = '';
 	private selectedProject:string;
 	private sub:Subscription;
