@@ -16,7 +16,7 @@ type State = 'Info' | 'AllBundles' | 'CommentedBundles';
 })
 export class BundleListDetailComponent implements OnInit,OnDestroy {
 	public allBundles: BundleListItem[] = [];
-	private bundleList: BundleList;
+	public bundleList: BundleList;
 	public commentedBundles: BundleListItem[] = [];
 	private database: string = '';
 	private deleteError: string = '';
