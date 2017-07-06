@@ -95,7 +95,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 		}
 	}
 
-	private saveEditedInfo () {
+	public saveEditedInfo () {
 		let newName = this.infoEditor.newName;
 		let newArchiveLabel = this.infoEditor.newArchiveLabel;
 		this.toggleEditInfo(); // that will reset this.infoEditor.newName
@@ -116,16 +116,17 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 			newName, newArchiveLabel
 		).subscribe (next => {
 			this.infoEditor.messageSuccess = 'Successfully edited.';
-			this.projectDataService.refresh();
 
 			if (this.subBundleList) {
 				this.subBundleList.unsubscribe();
 			}
 
+			this.projectDataService.refresh();
+
 			this.subBundleList = this.projectDataService.getBundleList(
 				this.database,
-				newName,
-				newArchiveLabel
+				newArchiveLabel,
+				newName
 			).subscribe(nextBundleList => {
 				this.setBundleList({
 					name: newName,
