@@ -56,19 +56,20 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 
 	ngOnInit() {
 		this.subParams = this.route.params.subscribe(nextParams => {
-			if (typeof nextParams['archiveLabel'] === 'undefined') {
-				nextParams['archiveLabel'] = '';
+			let archiveLabel = '';
+			if (typeof nextParams['archiveLabel'] === 'string') {
+				archiveLabel = nextParams['archiveLabel'];
 			}
 
 			this.subBundleList = this.projectDataService.getBundleList(
 				nextParams['database'],
-				nextParams['archiveLabel'],
+				archiveLabel,
 				nextParams['name']
 			).subscribe(nextBundleList => {
 				this.database = nextParams['database'];
 				this.setBundleList({
 					name: nextParams['name'],
-					archiveLabel: nextParams['archiveLabel'],
+					archiveLabel: archiveLabel,
 					items: nextBundleList
 				});
 			});
