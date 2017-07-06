@@ -198,9 +198,8 @@ export class DatabaseDetailComponent implements OnInit,OnDestroy {
 			this.renameSuccess = 'Successfully renamed';
 
 			this.unsubscribe(false);
-			this.subscribe(this.newName);
-
 			this.projectDataService.refresh();
+			this.subscribe(this.newName);
 		}, error => {
 			this.renameError = getErrorMessage(error);
 		});
