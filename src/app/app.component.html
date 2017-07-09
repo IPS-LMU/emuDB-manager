@@ -27,6 +27,26 @@
 				Communicating with server
 			</div>
 		</div>
+
+		<div class="alert alert-danger" *ngIf="connectionError || dataErrors.length > 0">
+			<button type="button" class="close" aria-label="Close"
+			        (click)="clearErrors()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+
+			<p *ngIf="connectionError">
+				<b>Server connection problem.</b> Check your internet connection.
+			</p>
+
+			<div *ngIf="dataErrors.length > 0">
+				<b>Errors in project data:</b>
+				<ul>
+					<li *ngFor="let dataError of dataErrors">
+						{{dataError}}
+					</li>
+				</ul>
+			</div>
+		</div>
 	</nav>
 
 	<div *ngIf="authenticationError" class="emudbmanager-modal">

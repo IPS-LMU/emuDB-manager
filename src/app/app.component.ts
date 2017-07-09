@@ -13,6 +13,7 @@ import {ManagerAPIService} from "./manager-api.service";
 import {ProjectDataService} from "./project-data.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Subject} from "rxjs/Subject";
+import {getErrorMessage} from "./core/get-error-message.function";
 import {appConfig} from "./app.config";
 
 
@@ -65,8 +66,8 @@ export class AppComponent implements OnInit {
 			this.authenticationError = true;
 		});
 
-		this.managerAPIService.connectionError.subscribe(next => {
-			console.log('Connection error');
+		this.managerAPIService.connectionError.subscribe(() => {
+			this.connectionError = true;
 		});
 
 		this.managerAPIService.onConnectionCountChange.subscribe(next => {
@@ -78,11 +79,18 @@ export class AppComponent implements OnInit {
 		});
 
 		this.projectDataService.dataError.subscribe(next => {
-			console.log('Data error');
+			this.dataErrors.push(getErrorMessage(next));
 		});
+	}
+
+	public clearErrors() {
+		this.connectionError = false;
+		this.dataErrors = [];
 	}
 
 	public progressBarState: Subject<string> = new BehaviorSubject('idle');
 
 	public authenticationError: boolean = false;
+	public connectionError: boolean = false;
+	public dataErrors: string[] = [];
 }

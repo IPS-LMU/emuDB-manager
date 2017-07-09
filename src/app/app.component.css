@@ -65,3 +65,11 @@ div.emudbmanager-modal > div {
     flex-direction: column;
     justify-content: center;
 }
+
+/*
+ * Error bar
+ */
+
+.alert {
+    margin-bottom: 0;
+}

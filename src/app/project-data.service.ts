@@ -15,7 +15,7 @@ import {BundleListItem} from "./types/bundle-list-item";
 
 @Injectable()
 export class ProjectDataService {
-	public dataError = new EventEmitter<any>();
+	public dataError: EventEmitter<{code: string, info?: any}> = new EventEmitter<{code: string, info?: any}>();
 
 	private projectInfoCache: Subject<ProjectInfo> = new ReplaySubject<ProjectInfo>(1);
 	private refreshTicker: Subject<void> = new Subject<void>();
