@@ -63,8 +63,13 @@ export function getErrorMessage(error: {code: string, info?: any}): string {
 			}
 
 		case 'E_NO_BUNDLE_LIST':
-			return 'A bundle list for editor ' + error.info[2] + ' with' +
-				' archive label ' + error.info[3] + ' does not exist.';
+			if (error.info[3]) {
+				return 'A bundle list for editor ' + error.info[2] + ' with' +
+					' archive label ' + error.info[3] + ' does not exist.';
+			} else {
+				return 'A bundle list for editor ' + error.info[2] + ' does' +
+					' not exist';
+			}
 
 		case 'E_NO_DATABASE':
 			return 'The database given (' + error.info[1] + ') does not exist.';

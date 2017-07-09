@@ -30,6 +30,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 		messageError: '',
 		messageSuccess: ''
 	};
+	public generalErrors: string[] = [];
 	private infoEditor = {
 		isEditing: false,
 		messageError: '',
@@ -72,6 +73,9 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 					archiveLabel: archiveLabel,
 					items: nextBundleList
 				});
+			},
+			error => {
+				this.generalErrors.push(getErrorMessage(error));
 			});
 		});
 	}
@@ -86,9 +90,9 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 	}
 
 	private setBundleList (bundleList:BundleList) {
-		if (bundleList === null) {
-			// @todo what to do here?
-		} else {
+		this.bundleList = bundleList;
+
+		if (bundleList) {
 			this.bundleList = bundleList;
 			this.infoEditor.newName = bundleList.name;
 			this.infoEditor.newArchiveLabel = bundleList.archiveLabel;
@@ -138,9 +142,13 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 					archiveLabel: newArchiveLabel,
 					items: nextBundleList
 				})
+			},
+			error => {
+				this.generalErrors.push(getErrorMessage(error));
 			});
 		}, error => {
 			this.infoEditor.messageError = getErrorMessage(error);
+			this.projectDataService.refresh();
 		});
 	}
 
@@ -163,6 +171,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 			this.router.navigate(['/project/databases', this.database]);
 		}, error => {
 			this.deleteError = getErrorMessage(error);
+			this.projectDataService.refresh();
 		});
 	}
 
@@ -186,6 +195,7 @@ export class BundleListDetailComponent implements OnInit,OnDestroy {
 			this.projectDataService.refresh();
 		}, error => {
 			this.duplicationEditor.messageError = getErrorMessage(error);
+			this.projectDataService.refresh();
 		});
 	}
 

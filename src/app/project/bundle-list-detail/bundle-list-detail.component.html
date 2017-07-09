@@ -1,7 +1,14 @@
 <h1 class="page-header">Individual bundle list</h1>
 
-<div class="panel panel-default">
+<div class="alert alert-danger" *ngIf="generalErrors.length > 0">
+	<ul>
+		<li *ngFor="let generalError of generalErrors">
+			{{generalError}}
+		</li>
+	</ul>
+</div>
 
+<div class="panel panel-default" *ngIf="bundleList">
 	<ul class="panel-body nav nav-pills nav-justified">
 		<li role="presentation" [ngClass]="{active: state === 'Info'}">
 			<a (click)="state = 'Info'">
@@ -52,19 +59,15 @@
 					<tr>
 						<td>Finished bundles</td>
 						<td>
-							<span *ngIf="bundleList">
 							{{countFinishedItems(bundleList)}}
 							({{percentageFinishedItems(bundleList)}} %)
-							</span>
 						</td>
 					</tr>
 					<tr>
 						<td>Commented bundles</td>
 						<td>
-							<span *ngIf="bundleList">
 							{{countCommentedItems(bundleList)}}
 							({{percentageCommentedItems(bundleList)}} %)
-							</span>
 						</td>
 					</tr>
 					</tbody>
@@ -73,10 +76,9 @@
 
 			<div class="panel-body">
 				<p>
-					<button type="button" class="btn btn-default" (click)="toggleEditInfo()"
-					        [ngClass]="{active: infoEditor.isEditing}"
-					        [disabled]="!bundleList"
-					>
+					<button type="button" class="btn btn-default"
+					        (click)="toggleEditInfo()"
+					        [ngClass]="{active: infoEditor.isEditing}">
 						Edit
 					</button>
 
