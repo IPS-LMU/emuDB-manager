@@ -5,10 +5,9 @@
 		     (click)="collapseNavbar(collapsibleNavbar)"
 		     #collapsibleNavbar>
 			<ul class="nav nav-sidebar">
-				<li routerLinkActive="active"><a routerLink="/project/overview">Project overview</a>
+				<li routerLinkActive="active">
+					<a routerLink="/project/overview">Project overview</a>
 				</li>
-			</ul>
-			<ul class="nav nav-sidebar">
 				<li routerLinkActive="active">
 					<a routerLink="/project/databases">
 						Databases <span class="badge pull-right">{{databases?.length}}</span>

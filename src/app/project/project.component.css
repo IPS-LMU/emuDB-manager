@@ -91,3 +91,7 @@
 /*
  * Adaptations for emuDB manager
  */
+
+li {
+	cursor: pointer;
+}
