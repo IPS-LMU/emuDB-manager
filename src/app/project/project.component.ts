@@ -44,4 +44,8 @@ export class ProjectComponent implements OnInit,OnDestroy {
 		this.managerAPIService.forgetAuthentication();
 		this.router.navigate(['/']);
 	}
+
+	public collapseNavbar(collapsibleNavbar: HTMLElement) {
+		collapsibleNavbar.classList.remove('in');
+	}
 }
