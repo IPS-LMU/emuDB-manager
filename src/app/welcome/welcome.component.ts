@@ -4,6 +4,7 @@ import {Subscription} from "rxjs/Rx";
 import {getErrorMessage} from "../core/get-error-message.function";
 import {ManagerAPIService} from "../manager-api.service";
 import {ProjectDataService} from "../project-data.service";
+import {appConfig} from "../app.config";
 
 @Component({
 	selector: 'emudbmanager-welcome',
@@ -11,6 +12,7 @@ import {ProjectDataService} from "../project-data.service";
 	styleUrls: ['./welcome.component.css']
 })
 export class WelcomeComponent implements OnInit {
+	public enableLoginForm:boolean = appConfig.enableLoginForm;
 	public loginFailed:boolean = false;
 	public password:string;
 	private project:string = '';

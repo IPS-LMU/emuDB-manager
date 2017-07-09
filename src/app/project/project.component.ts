@@ -5,6 +5,7 @@ import {Router} from "@angular/router";
 import {Subscription} from "rxjs/Rx";
 import {UploadInfo} from "../types/upload-info";
 import {ManagerAPIService} from "../manager-api.service";
+import {appConfig} from "../app.config";
 
 @Component({
 	selector: 'emudbmanager-project',
@@ -13,6 +14,7 @@ import {ManagerAPIService} from "../manager-api.service";
 })
 export class ProjectComponent implements OnInit,OnDestroy {
 	public databases:DatabaseInfo[] = [];
+	public showLogoutError:boolean = false;
 	private subDatabases:Subscription;
 	private subUploads:Subscription;
 	public uploads:UploadInfo[] = [];
@@ -41,8 +43,12 @@ export class ProjectComponent implements OnInit,OnDestroy {
 	}
 
 	public logout():void {
-		this.managerAPIService.forgetAuthentication();
-		this.router.navigate(['/']);
+		if (appConfig.enableLoginForm) {
+			this.managerAPIService.forgetAuthentication();
+			this.router.navigate(['/']);
+		} else {
+			this.showLogoutError = true;
+		}
 	}
 
 	public collapseNavbar(collapsibleNavbar: HTMLElement) {

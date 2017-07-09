@@ -1,5 +1,12 @@
 <div class="container-fluid">
 	<div class="row">
+		<div class="col-sm-offset-3 col-md-offset-2 alert alert-warning" *ngIf="showLogoutError">
+			<b>Logged in via an external app.</b>
+			Close emuDB Manager and use external app to log out.
+		</div>
+	</div>
+
+	<div class="row">
 
 		<nav class="col-sm-3 col-md-2 navbar sidebar navbar-collapse collapse"
 		     (click)="collapseNavbar(collapsibleNavbar)"
@@ -26,7 +33,9 @@
 			</ul>
 			<ul class="nav nav-sidebar">
 				<li><a (click)="projectDataService.refresh()">Refresh</a></li>
-				<li><a (click)="logout()">Logout</a></li>
+				<li>
+					<a (click)="logout()">Logout</a>
+				</li>
 			</ul>
 		</nav>
 

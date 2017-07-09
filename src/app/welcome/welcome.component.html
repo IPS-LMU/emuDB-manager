@@ -1,39 +1,28 @@
 <h1 class="page-header">emuDB Manager</h1>
 
-<div class="panel panel-default">
+<div class="panel panel-default" *ngIf="!projectList">
 	<div class="panel-heading">Login</div>
-	<div class="panel-body">
+
+	<div class="panel-body" *ngIf="!enableLoginForm">
+		The login form has been disabled in this installation of emuDB Manager. Please use an
+		external app to log in.
+	</div>
+
+	<div class="panel-body" *ngIf="enableLoginForm">
 		<form (ngSubmit)="checkLogin()">
-			<p *ngIf="!projectList">
+			<p>
 				<input autofocus class="form-control" placeholder="Username" [(ngModel)]="username"
 				       name="username">
 			</p>
 
-			<p *ngIf="!projectList">
+			<p>
 				<input class="form-control" type="password" placeholder="Password"
 				       [(ngModel)]="password" name="password">
 			</p>
 
-			<p *ngIf="!projectList">
+			<p>
 				<button type="submit" class="btn btn-default">
 					Login
-				</button>
-			</p>
-			
-			<p *ngIf="projectList">
-				<select class="form-control" [(ngModel)]="selectedProject"
-				        name="selectedProject">
-					<option *ngFor="let project of projectList" [value]="project.name">
-						{{project.name}}
-						({{project.permission}})
-					</option>
-				</select>
-
-				<br>
-
-				<button type="button" class="btn btn-default"
-				        (click)="chooseProject(selectedProject)">
-					Choose project
 				</button>
 			</p>
 
@@ -64,6 +53,30 @@
 		</form>
 	</div>
 </div>
+
+<div class="panel panel-default" *ngIf="projectList">
+	<div class="panel-heading">
+		Choose project
+	</div>
+
+	<div class="panel-body">
+		<select class="form-control" [(ngModel)]="selectedProject"
+		        name="selectedProject">
+			<option *ngFor="let project of projectList" [value]="project.name">
+				{{project.name}}
+				({{project.permission}})
+			</option>
+		</select>
+
+		<br>
+
+		<button type="button" class="btn btn-default"
+		        (click)="chooseProject(selectedProject)">
+			Choose project
+		</button>
+	</div>
+</div>
+
 
 <div class="panel panel-primary">
 	<div class="panel-heading">What is this?</div>
