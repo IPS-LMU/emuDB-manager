@@ -16,9 +16,9 @@ import {ProjectInfo} from "./types/project-info";
 @Injectable()
 export class ManagerAPIService {
 	private urls = {
-		emuWebApp: 'https://ips-lmu.github.io/EMU-webApp/',
-		managerAPIBackend: 'https://www.phonetik.uni-muenchen.de/apps/emuDB-manager/server-side/emudb-manager.php',
-		nodeJSServer: 'wss://webapp2.phonetik.uni-muenchen.de:17890/manager'
+		emuWebApp: '',
+		managerAPIBackend: '',
+		nodeJSServer: ''
 	};
 
 	public authenticationError = new EventEmitter<void>();
@@ -36,6 +36,14 @@ export class ManagerAPIService {
 		this.password = '';
 		this.project = '';
 		this.secretToken = '';
+	}
+
+	public setURLs(urls: {
+		emuWebApp: string,
+		managerAPIBackend: string,
+		nodeJSServer: string
+	}) {
+		this.urls = urls;
 	}
 
 	public setProject(project: string): void {

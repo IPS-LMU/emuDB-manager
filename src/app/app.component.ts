@@ -13,6 +13,7 @@ import {ManagerAPIService} from "./manager-api.service";
 import {ProjectDataService} from "./project-data.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Subject} from "rxjs/Subject";
+import {appConfig} from "./app.config";
 
 
 @Component({
@@ -58,6 +59,8 @@ export class AppComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		this.managerAPIService.setURLs(appConfig.urls);
+
 		this.managerAPIService.authenticationError.subscribe(next => {
 			this.authenticationError = true;
 		});
