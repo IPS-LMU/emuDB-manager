@@ -13,6 +13,7 @@ import {appConfig} from "../app.config";
 })
 export class WelcomeComponent implements OnInit {
 	public enableLoginForm:boolean = appConfig.enableLoginForm;
+	public externalLoginAppURL:string = appConfig.urls.externalLoginApp;
 	public loginFailed:boolean = false;
 	public password:string;
 	private project:string = '';
