@@ -77,9 +77,10 @@ function connectDatabase() {
 	global $dbDatabaseName;
 	global $dbUser;
 	global $dbPassword;
+	global $dbSSLMode;
 
 	return new PDO(
-		'pgsql:host=' . $dbHost . ';dbname=' . $dbDatabaseName . ';sslmode=require',
+		'pgsql:host=' . $dbHost . ';dbname=' . $dbDatabaseName . ';sslmode=' . $dbSSLMode,
 		$dbUser,
 		$dbPassword
 	);

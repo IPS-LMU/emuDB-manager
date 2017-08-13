@@ -12,5 +12,6 @@ $dbHost = 'localhost';
 $dbDatabaseName = 'emudb-manager';
 $dbUser = 'user';
 $dbPassword = 'my-secret-password';
+$dbSSLMode = 'require';
 //
 //////////
