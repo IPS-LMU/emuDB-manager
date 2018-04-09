@@ -231,8 +231,6 @@ export class ProjectDataService {
 	                          editors: string[],
 	                          personsPerBundle: number,
 	                          shuffled: boolean) {
-		return Observable.throw('generateBundleList() currently disabled');
-		/*
 		return Observable.create(observer => {
 			this.getDatabase(database).map(dbInfo => {
 				if (dbInfo === null) {
@@ -261,28 +259,21 @@ export class ProjectDataService {
 				let successCount: number = 0;
 
 				for (let i = 0; i < resultBundleLists.length; ++i) {
-					let params = {
-						query: 'saveBundleList',
-						databaseName: database,
-						bundleListName: resultBundleLists[i].name,
-						bundleListObject: JSON.stringify(resultBundleLists[i].items)
-					};
-
-					this.serverQuery(params).subscribe((next: any) => {
-						if (next.success === true) {
-							++successCount;
-							observer.next(null);
-							if (successCount === resultBundleLists.length) {
-								observer.complete();
-							}
-						} else {
-							observer.error(next.error);
-							return;
+					this.managerAPIService.saveBundleList(
+						database,
+						resultBundleLists[i].name,
+						resultBundleLists[i]
+					).subscribe(() => {
+						++successCount;
+						observer.next(null);
+						if (successCount === resultBundleLists.length) {
+							observer.complete();
 						}
+					}, (error) => {
+						observer.error(error);
 					});
 				}
 			}).subscribe().unsubscribe();
 		});
-		*/
 	}
 }
