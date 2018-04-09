@@ -7,6 +7,7 @@ import {DownloadTarget} from "./types/download-target";
 import {UploadTarget} from "./types/upload-target";
 import {BundleListItem} from "./types/bundle-list-item";
 import {ProjectInfo} from "./types/project-info";
+import {DatabaseInfo} from "./types/database-info";
 
 /**
  * The service for the Manager API handles all connections to the
@@ -226,6 +227,14 @@ export class ManagerAPIService {
 	public projectInfo(): Observable<ProjectInfo> {
 		return this.query({
 			'query': 'projectInfo'
+		}).do(next => {
+			next.databases.sort((a: DatabaseInfo, b: DatabaseInfo): number => {
+				if (a.name > b.name) {
+					return 1;
+				} else {
+					return -1;
+				}
+			});
 		});
 	}
 
