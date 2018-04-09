@@ -1,3 +1,30 @@
+# 2.0.0 (2018-04-09)
+
+## User interface
+
+- Removed cross-database overview of all bundle lists
+- Moved bundle list generator to the top level in the main menu
+- Added percentage of finished and commented bundles to bundle list view (was only in database view previously)
+- Only list active editors in database list (instead of archived editors as well) 
+- Project dashboard counts active and archived bundle lists separately 
+- Show error when login has expired (used to fail silently)
+- Be explicit about login/out via an external app
+- Welcome screen: Hide username and password inputs when projectList is already available 
+
+## API
+
+- Removed pretty-print to save a lot of traffic (ca. 66%)
+- Added new queries getBundleList and getDatabaseConfiguration - bundle lists are no longer included in projectInfo responses
+- The backend now transmits machine-readable error codes and the frontend translates them to human-readable messages
+- listProjects returns 'permission' field rather than 'level'
+
+## Technical changes
+
+- Major service re-design (split projectDataService into projectDataService and managerAPIService)
+- Created config file app.config.ts
+- Made sslmode in database connection configurable
+- Severable minor bug fixes and improvements 
+
 # 1.2.1 (2017-04-20)
 
 - Bugfix: Pass secret token to backend when downloading a db
