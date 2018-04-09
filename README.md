@@ -68,7 +68,7 @@ chmod 755 dist/server-side/helpers/generate-download.sh
 # Commit the new version to git repo.
 # The push is important for the following subtree push
 git add dist/
-git commit
+git commit -m "Version x.x.x"
 git tag "x.x.x" -m "Version x.x.x"
 git push
 git push --tags
