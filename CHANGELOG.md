@@ -1,3 +1,8 @@
+# 2.0.1 (2018-04-09)
+
+- Databases are now sorted alphabetically
+- When uploading is successful, two messages appear and both used to be green - now, the first one is yellow
+
 # 2.0.0 (2018-04-09)
 
 ## User interface
