@@ -34,7 +34,7 @@ function findDatabaseInUpload ($dir) {
 		);
 	} catch (Exception $e) {
 		return negativeResult(
-			'LIST_DIR_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to read data directory of an upload.'
 		);
 	}
@@ -48,8 +48,8 @@ function findDatabaseInUpload ($dir) {
 				$databaseName = substr(basename($filePath), 0, -6);
 			} else {
 				return negativeResult(
-					'MULTIPLE_DATABASES',
-					'The upload contains multiple databases'
+					'E_UPLOAD',
+					'MULTIPLE_DATABASES'
 				);
 			}
 		}
@@ -59,8 +59,8 @@ function findDatabaseInUpload ($dir) {
 		return positiveResult($databaseName);
 	} else {
 		return negativeResult(
-			'NO_DATABASE',
-			'The upload contains no database'
+			'E_UPLOAD',
+			'NO_DATABASE'
 		);
 	}
 }

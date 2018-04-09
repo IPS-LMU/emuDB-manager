@@ -31,7 +31,7 @@ function delete_bundle_list ($projectDir, $database, $name, $archiveLabel) {
 
 	if (!unlink($bundleListPath)) {
 		return negativeResult(
-			'DELETE_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'The bundle list could not be deleted.'
 		);
 	}

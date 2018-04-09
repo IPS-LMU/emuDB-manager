@@ -18,8 +18,8 @@ require_once 'result_helper.php';
 function validateDatabaseName ($name) {
 	if (!is_string($name)) {
 		return negativeResult(
-			'INVALID_DATABASE_NAME',
-			'The specified database name is invalid.'
+			'E_USER_INPUT',
+			'DATABASE_NAME'
 		);
 	}
 
@@ -27,15 +27,15 @@ function validateDatabaseName ($name) {
 
 	if ($result === false) {
 		return negativeResult(
-			'REGEX_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to check whether a given database name is valid.'
 		);
 	}
 
 	if ($result === 1 || $name === '') {
 		return negativeResult(
-			'INVALID_DATABASE_NAME',
-			'The specified database name is invalid.'
+			'E_USER_INPUT',
+			'DATABASE_NAME'
 		);
 	}
 
@@ -52,8 +52,8 @@ function validateDatabaseName ($name) {
 function validateArchiveLabel ($name) {
 	if (!is_string($name)) {
 		return negativeResult(
-			'INVALID_ARCHIVE_LABEL',
-			'The specified archive label is invalid.'
+			'E_USER_INPUT',
+			'ARCHIVE_LABEL'
 		);
 	}
 
@@ -61,15 +61,15 @@ function validateArchiveLabel ($name) {
 
 	if ($result === false) {
 		return negativeResult(
-			'REGEX_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to check whether a given archive label is valid.'
 		);
 	}
 
 	if ($result === 1) {
 		return negativeResult(
-			'INVALID_ARCHIVE_LABEL',
-			'The specified archive label is invalid.'
+			'E_USER_INPUT',
+			'ARCHIVE_LABEL'
 		);
 	}
 
@@ -86,8 +86,8 @@ function validateArchiveLabel ($name) {
 function validateBundleListName ($name) {
 	if (!is_string($name)) {
 		return negativeResult(
-			'INVALID_BUNDLELIST_NAME',
-			'The specified bundle list name is invalid.'
+			'E_USER_INPUT',
+			'BUNDLE_LIST_NAME'
 		);
 	}
 
@@ -100,15 +100,15 @@ function validateBundleListName ($name) {
 
 	if ($result === false) {
 		return negativeResult(
-			'REGEX_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to check whether a given bundle list name is valid.'
 		);
 	}
 
 	if ($result === 1 || $name === '') {
 		return negativeResult(
-			'INVALID_BUNDLELIST_NAME',
-			'The specified bundle list name is invalid.'
+			'E_USER_INPUT',
+			'BUNDLE_LIST_NAME'
 		);
 	}
 
@@ -125,8 +125,8 @@ function validateBundleListName ($name) {
 function validateUploadFilename ($name) {
 	if (!is_string($name)) {
 		return negativeResult(
-			'INVALID_FILE_NAME',
-			'The specified file name is invalid.'
+			'E_USER_INPUT',
+			'FILE_NAME'
 		);
 	}
 
@@ -134,15 +134,15 @@ function validateUploadFilename ($name) {
 
 	if ($result === false) {
 		return negativeResult(
-			'REGEX_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to check whether a given upload file name is valid.'
 		);
 	}
 
 	if ($result === 1 || $name === '') {
 		return negativeResult(
-			'INVALID_FILE_NAME',
-			'The specified file name is invalid.'
+			'E_USER_INPUT',
+			'FILE_NAME'
 		);
 	}
 
@@ -159,8 +159,8 @@ function validateUploadFilename ($name) {
 function validateUploadIdentifier ($string) {
 	if (!is_string($string)) {
 		return negativeResult(
-			'INVALID_UPLOAD_IDENTIFIER',
-			'The specified upload identifier is invalid.'
+			'E_USER_INPUT',
+			'UPLOAD_IDENTIFIER'
 		);
 	}
 
@@ -168,15 +168,15 @@ function validateUploadIdentifier ($string) {
 
 	if ($result === false) {
 		return negativeResult(
-			'REGEX_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to check whether a given upload identifier is valid.'
 		);
 	}
 
 	if ($result === 1 || $string === '') {
 		return negativeResult(
-			'INVALID_UPLOAD_IDENTIFIER',
-			'The specified upload identifier is invalid.'
+			'E_USER_INPUT',
+			'UPLOAD_IDENTIFIER'
 		);
 	}
 
@@ -195,8 +195,8 @@ function validateUploadIdentifier ($string) {
 function validateGitObjectName ($string) {
 	if (!is_string($string)) {
 		return negativeResult(
-			'INVALID_OBJECT_NAME',
-			'The specified object name is invalid.'
+			'E_USER_INPUT',
+			'OBJECT_NAME'
 		);
 	}
 
@@ -204,22 +204,22 @@ function validateGitObjectName ($string) {
 
 	if ($result === false) {
 		return negativeResult(
-			'REGEX_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to check whether a given object name is valid.'
 		);
 	}
 
 	if ($result === 0) {
 		return negativeResult(
-			'INVALID_OBJECT_NAME',
-			'The specified object name contains non-hexadecimal digits.'
+			'E_USER_INPUT',
+			'OBJECT_NAME'
 		);
 	}
 
 	if (strlen($string) > 40 && strlen($string) === 0) {
 		return negativeResult(
-			'INVALID_OBJECT_NAME',
-			'The specified object name is empty or too long.'
+			'E_USER_INPUT',
+			'OBJECT_NAME'
 		);
 	}
 
@@ -236,8 +236,8 @@ function validateGitObjectName ($string) {
 function validateTagLabel ($label) {
 	if (!is_string($label)) {
 		return negativeResult(
-			'INVALID_TAG_LABEL',
-			'The specified tag label is invalid.'
+			'E_USER_INPUT',
+			'TAG_LABEL'
 		);
 	}
 
@@ -245,15 +245,15 @@ function validateTagLabel ($label) {
 
 	if ($result === false) {
 		return negativeResult(
-			'REGEX_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to check whether a given tag label is valid.'
 		);
 	}
 
 	if ($result === 1 || $label === '') {
 		return negativeResult(
-			'INVALID_TAG_LABEL',
-			'The specified tag label is invalid.'
+			'E_USER_INPUT',
+			'TAG_LABEL'
 		);
 	}
 
@@ -273,8 +273,8 @@ function validateTagLabel ($label) {
 function validateTreeish ($treeish) {
 	if (!is_string($treeish)) {
 		return negativeResult(
-			'INVALID_TREEISH',
-			'The specified tree-ish identifier is invalid.'
+			'E_USER_INPUT',
+			'TAG_LABEL'
 		);
 	}
 
@@ -282,15 +282,15 @@ function validateTreeish ($treeish) {
 
 	if ($result === false) {
 		return negativeResult(
-			'REGEX_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to check whether a given tree-ish identifier is valid.'
 		);
 	}
 
 	if ($result === 1 || $treeish === '') {
 		return negativeResult(
-			'INVALID_TREEISH',
-			'The specified tree-ish identifier is invalid.'
+			'E_USER_INPUT',
+			'TAG_LABEL'
 		);
 	}
 

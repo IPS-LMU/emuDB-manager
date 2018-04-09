@@ -26,7 +26,7 @@ function save_bundle_list ($projectDir, $database, $name, $list) {
 	if (!file_exists($dirName)) {
 		if (!mkdir($dirName)) {
 			return negativeResult(
-				'MKDIR_FAILED',
+				'E_INTERNAL_SERVER_ERROR',
 				'Failed to create bundleLists/ directory.'
 			);
 		}
@@ -37,8 +37,7 @@ function save_bundle_list ($projectDir, $database, $name, $list) {
 	// Check whether $name already exists
 	if (file_exists($fileName)) {
 		return negativeResult(
-			'NAME_ALREADY_TAKEN',
-			'The chosen editor already has a non-archived bundle list.'
+			'E_BUNDLE_LIST_EXISTS'
 		);
 	}
 

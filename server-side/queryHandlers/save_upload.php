@@ -26,18 +26,18 @@ function save_upload ($projectDir, $uuid, $name) {
 
 	if (file_exists($targetDir . '/' . $name . '_emuDB')) {
 		return negativeResult(
-			'DATABASE_NAME_TAKEN',
-			'There is already a database with the chosen name'
+			'E_DATABASE_EXISTS',
+			array(
+				basename($projectDir),
+				$name
+			)
 		);
 	}
 
 	$uploadDir = getUploadDirectory($projectDir, $uuid);
 	$dbName = findDatabaseInUpload($uploadDir);
 	if ($dbName->success !== true) {
-		return negativeResult(
-			'INVALID_UPLOAD',
-			'Could not find specified upload database.'
-		);
+		return $dbName;
 	}
 	$databaseDir = getUploadDatabaseDirectory($projectDir, $uuid, $dbName->data);
 

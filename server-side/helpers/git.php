@@ -52,7 +52,7 @@ function gitInit ($path) {
 
 	if ($result !== 0) {
 		return negativeResult(
-			'GIT_INIT_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to initialise git repository in database.'
 		);
 	}
@@ -65,7 +65,7 @@ function gitCommitEverything ($path, $commitMessage) {
 
 	if ($result !== 0) {
 		return negativeResult(
-			'GIT_ADD_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to add files to git repository.'
 		);
 	}
@@ -75,7 +75,7 @@ function gitCommitEverything ($path, $commitMessage) {
 
 	if ($result !== 0) {
 		return negativeResult(
-			'GIT_COMMIT_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to commit files to git repository.'
 		);
 	}
@@ -89,7 +89,7 @@ function gitLog ($path) {
 
 	if ($result !== 0) {
 		return negativeResult(
-			'GIT_LOG_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to list git commits in database.'
 		);
 	}
@@ -104,7 +104,7 @@ function gitShowRefTags ($path) {
 
 	if ($result !== 0 && $result !== 1) {
 		return negativeResult(
-			'GIT_SHOW_REF_TAGS_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to list git tags in database.'
 		);
 	}
@@ -120,7 +120,7 @@ function gitTag ($path, $tag, $commit) {
 
 	if ($result !== 0) {
 		return negativeResult(
-			'GIT_TAG_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to add git tag to database.'
 		);
 	}
@@ -141,7 +141,7 @@ function gitArchive ($path, $dbName, $treeish, $filename) {
 
 	if ($result !== 0) {
 		return negativeResult(
-			'GIT_ARCHIVE_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to create ZIP file for download.'
 		);
 	}
@@ -154,7 +154,7 @@ function gitHeadRevision ($path) {
 
 	if ($result !== 0) {
 		return negativeResult(
-			'GIT_LOG_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to list git commits in database.'
 		);
 	}
@@ -177,7 +177,7 @@ function gitFastForwardPull ($srcDir, $targetDir) {
 
 	if ($result !== 0) {
 		return negativeResult(
-			'GIT_PULL_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Failed to pull changes into the target repository.'
 		);
 	}
