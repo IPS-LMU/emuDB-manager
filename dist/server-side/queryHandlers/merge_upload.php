@@ -92,9 +92,8 @@ function merge_upload ($projectDir, $uploadUUID, $targetDBName) {
 		$uploadDB->dbConfig->ssffTrackDefinitions
 	) {
 		return negativeResult(
-			'CONFIGURATION_MISMATCH',
-			'The configuration of the uploaded database differs from the ' .
-			'target database’s (ssffTrackDefinitions)'
+			'E_CONFIGURATION_MISMATCH',
+			'ssffTrackDefinitions'
 		);
 	}
 
@@ -104,9 +103,8 @@ function merge_upload ($projectDir, $uploadUUID, $targetDBName) {
 		$uploadDB->dbConfig->levelDefinitions
 	) {
 		return negativeResult(
-			'CONFIGURATION_MISMATCH',
-			'The configuration of the uploaded database differs from the ' .
-			'target database’s (levelDefinitions)'
+			'E_CONFIGURATION_MISMATCH',
+			'levelDefinitions'
 		);
 	}
 
@@ -116,9 +114,8 @@ function merge_upload ($projectDir, $uploadUUID, $targetDBName) {
 		$uploadDB->dbConfig->linkDefinitions
 	) {
 		return negativeResult(
-			'CONFIGURATION_MISMATCH',
-			'The configuration of the uploaded database differs from the ' .
-			'target database’s (linkDefinitions)'
+			'E_CONFIGURATION_MISMATCH',
+			'linkDefinitions'
 		);
 	}
 
@@ -128,9 +125,8 @@ function merge_upload ($projectDir, $uploadUUID, $targetDBName) {
 		$uploadDB->dbConfig->mediaFileExtension
 	) {
 		return negativeResult(
-			'CONFIGURATION_MISMATCH',
-			'The configuration of the uploaded database differs from the ' .
-			'target database’s (mediaFileExtension)'
+			'E_CONFIGURATION_MISMATCH',
+			'mediaFileExtension'
 		);
 	}
 
@@ -256,12 +252,12 @@ function merge_upload ($projectDir, $uploadUUID, $targetDBName) {
 	if (!$complete) {
 		if ($git->success === true) {
 			return negativeResult(
-				'MERGE_INCOMPLETE',
+				'E_INTERNAL_SERVER_ERROR',
 				'The merge could not be completed. Check the consistency of your data.'
 			);
 		} else {
 			return negativeResult(
-				'MERGE_INCOMPLETE_GIT_FAIL',
+				'E_INTERNAL_SERVER_ERROR',
 				'The merge could not be completed. Check the consistency of your data.'
 				. 'Moreover, the new state of the database could not be committed to git.'
 			);
@@ -270,7 +266,7 @@ function merge_upload ($projectDir, $uploadUUID, $targetDBName) {
 
 	if ($git->success !== true) {
 		return negativeResult(
-			'GIT_FAIL',
+			'E_INTERNAL_SERVER_ERROR',
 			'The merge was completed, but the new state of the database could not be committed to git.'
 		);
 	}

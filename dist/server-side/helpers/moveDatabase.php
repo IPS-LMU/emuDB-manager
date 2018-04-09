@@ -39,7 +39,7 @@ function moveDatabase ($databaseDir, $newName, $newParentDir = '') {
 		(substr($databaseDir, -6) !== '_emuDB')
 	) {
 		return negativeResult(
-			'BAD_PARAMETERS',
+			'E_INTERNAL_SERVER_ERROR',
 			'Moving the database failed due to bad parameters.'
 		);
 	}
@@ -52,24 +52,28 @@ function moveDatabase ($databaseDir, $newName, $newParentDir = '') {
 
 	if (!is_dir($databaseDir)) {
 		return negativeResult(
-			'INVALID_DATABASE',
-			'The database given does not exist.'
+			'E_NO_DATABASE',
+			array(
+				null,
+				$databaseName
+			)
 		);
 	}
 
 	$config = load_json_file($databaseDir . '/' . $databaseName . '_DBconfig.json');
 	if ($config->success !== true) {
 		return negativeResult(
-			$config->data,
-			'The database given contains a corrupt configuration file or no'
-			. ' configuration file at all.'
+			'E_DATABASE_CONFIG',
+			array(
+				null,
+				$databaseName
+			)
 		);
 	}
 	if ($config->data->name !== $databaseName) {
 		return negativeResult(
-			'INVALID_DATABASE',
-			'The name of the database given does not match its configuration'
-			. ' file.'
+			'E_INVALID_DATABASE',
+			'NAME_MISMATCH'
 		);
 	}
 
@@ -89,8 +93,11 @@ function moveDatabase ($databaseDir, $newName, $newParentDir = '') {
 	// Make sure no database with $newName exists already
 	if (file_exists($newDatabaseDir)) {
 		return negativeResult(
-			'NAME_ALREADY_TAKEN',
-			'The new name for the database is already taken.'
+			'E_DATABASE_EXISTS',
+			array(
+				null,
+				$newName
+			)
 		);
 	}
 
@@ -104,7 +111,7 @@ function moveDatabase ($databaseDir, $newName, $newParentDir = '') {
 	// Rename database directory
 	if (!rename($databaseDir, $newDatabaseDir)) {
 		return negativeResult(
-			'FILESYSTEM_RENAME_DB_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'The database directory failed to be renamed.'
 		);
 	}
@@ -116,7 +123,7 @@ function moveDatabase ($databaseDir, $newName, $newParentDir = '') {
 
 	if ($result->success !== true) {
 		return negativeResult(
-			'WRITE_DBCONFIG_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Database has been moved, but writing the new database '
 			. 'configuration file failed. The database may be invalid.'
 		);

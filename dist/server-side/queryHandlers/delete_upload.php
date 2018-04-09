@@ -36,7 +36,7 @@ function delete_upload ($projectDir, $uuid) {
 		);
 	} catch (Exception $e) {
 		return negativeResult(
-			'INVALID_UPLOAD_DIR',
+			'E_INTERNAL_SERVER_ERROR',
 			'The upload directory could not be accessed.'
 		);
 	}
@@ -50,21 +50,21 @@ function delete_upload ($projectDir, $uuid) {
 		if ($fileInfo->isLink()) {
 			if (!unlink($name)) {
 				return negativeResult(
-					'DELETE_INCOMPLETE',
+					'E_INTERNAL_SERVER_ERROR',
 					'The upload directory was not deleted completely.'
 				);
 			}
 		} else if ($fileInfo->isDir()) {
 			if (!rmdir ($name)) {
 				return negativeResult(
-					'DELETE_INCOMPLETE',
+					'E_INTERNAL_SERVER_ERROR',
 					'The upload directory was not deleted completely.'
 				);
 			}
 		} else {
 			if (!unlink($name)) {
 				return negativeResult(
-					'DELETE_INCOMPLETE',
+					'E_INTERNAL_SERVER_ERROR',
 					'The upload directory was not deleted completely.'
 				);
 			}
@@ -73,7 +73,7 @@ function delete_upload ($projectDir, $uuid) {
 
 	if (!rmdir($uploadDir)) {
 		return negativeResult(
-			'DELETE_INCOMPLETE',
+			'E_INTERNAL_SERVER_ERROR',
 			'The upload directory was not deleted completely.'
 		);
 	}

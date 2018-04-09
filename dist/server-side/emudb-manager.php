@@ -29,6 +29,8 @@ require_once 'queryHandlers/delete_upload.php';
 require_once 'queryHandlers/download_database.php';
 require_once 'queryHandlers/edit_bundle_list.php';
 require_once 'queryHandlers/fast_forward.php';
+require_once 'queryHandlers/get_bundle_list.php';
+require_once 'queryHandlers/get_database_configuration.php';
 require_once 'queryHandlers/list_commits.php';
 require_once 'queryHandlers/list_databases.php';
 require_once 'queryHandlers/list_projects.php';
@@ -60,7 +62,7 @@ if (is_a($authToken, 'AuthToken')) {
 } else {
 	$result = executeQuery($authToken, new AuthToken());
 }
-echo json_encode($result, JSON_PRETTY_PRINT);
+echo json_encode($result);
 die();
 
 //
@@ -75,9 +77,10 @@ function connectDatabase() {
 	global $dbDatabaseName;
 	global $dbUser;
 	global $dbPassword;
+	global $dbSSLMode;
 
 	return new PDO(
-		'pgsql:host=' . $dbHost . ';dbname=' . $dbDatabaseName . ';sslmode=require',
+		'pgsql:host=' . $dbHost . ';dbname=' . $dbDatabaseName . ';sslmode=' . $dbSSLMode,
 		$dbUser,
 		$dbPassword
 	);
@@ -141,11 +144,10 @@ function authorize () {
 	}
 
 	$result = negativeResult(
-		'BAD_LOGIN',
-		'Bad username or password'
+		'E_AUTHENTICATION'
 	);
 
-	echo json_encode($result, JSON_PRETTY_PRINT);
+	echo json_encode($result);
 	die();
 }
 
@@ -160,14 +162,6 @@ function authorize () {
  */
 function executeQuery ($userID, AuthToken $authToken) {
 	switch ($_POST['query']) {
-		case 'listProjects':
-			return list_projects($userID);
-			break;
-
-		case 'listDatabases':
-			return list_databases($userID);
-			break;
-
 		case 'addTag':
 			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
@@ -322,6 +316,42 @@ function executeQuery ($userID, AuthToken $authToken) {
 			);
 			break;
 
+		case 'getBundleList':
+			$result = validateDatabaseName($_POST['databaseName']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateArchiveLabel($_POST['archiveLabel']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateBundleListName($_POST['bundleListName']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return get_bundle_list(
+				$authToken->projectDir,
+				$_POST['databaseName'],
+				$_POST['archiveLabel'],
+				$_POST['bundleListName']
+			);
+			break;
+
+		case 'getDatabaseConfiguration':
+			$result = validateDatabaseName($_POST['databaseName']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return get_database_configuration(
+				$authToken->projectDir,
+				$_POST['databaseName']
+			);
+			break;
+
 		case 'listCommits':
 			$result = validateDatabaseName($_POST['databaseName']);
 			if ($result->success !== true) {
@@ -332,6 +362,14 @@ function executeQuery ($userID, AuthToken $authToken) {
 				$authToken->projectDir,
 				$_POST['databaseName']
 			);
+			break;
+
+		case 'listDatabases':
+			return list_databases($userID);
+			break;
+
+		case 'listProjects':
+			return list_projects($userID);
 			break;
 
 		case 'listTags':
@@ -400,8 +438,7 @@ function executeQuery ($userID, AuthToken $authToken) {
 			$bundleList = json_decode($_POST['bundleListObject']);
 			if (is_null($bundleList)) {
 				return negativeResult(
-					'INVALID_BUNDLE_LIST',
-					'The provided bundle list is invalid.'
+					'E_INVALID_BUNDLE_LIST'
 				);
 			}
 
@@ -411,6 +448,23 @@ function executeQuery ($userID, AuthToken $authToken) {
 				$_POST['bundleListName'],
 				$bundleList
 			);
+
+			break;
+
+		case 'saveUpload':
+			$result = validateDatabaseName($_POST['databaseName']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			$result = validateUploadIdentifier($_POST['uploadUUID']);
+			if ($result->success !== true) {
+				return $result;
+			}
+
+			return save_upload(
+				$authToken->projectDir, $_POST['uploadUUID'],
+				$_POST['databaseName']);
 
 			break;
 
@@ -433,23 +487,6 @@ function executeQuery ($userID, AuthToken $authToken) {
 
 			break;
 
-		case 'saveUpload':
-			$result = validateDatabaseName($_POST['databaseName']);
-			if ($result->success !== true) {
-				return $result;
-			}
-
-			$result = validateUploadIdentifier($_POST['uploadUUID']);
-			if ($result->success !== true) {
-				return $result;
-			}
-
-			return save_upload(
-				$authToken->projectDir, $_POST['uploadUUID'],
-				$_POST['databaseName']);
-
-			break;
-
 		case 'projectInfo':
 			return project_info($authToken);
 			break;
@@ -460,8 +497,8 @@ function executeQuery ($userID, AuthToken $authToken) {
 
 		default:
 			return negativeResult(
-				'INVALID_QUERY',
-				'An invalid query has been performed.'
+				'E_USER_INPUT',
+				'query'
 			);
 	}
 }

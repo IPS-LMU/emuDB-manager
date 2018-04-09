@@ -35,10 +35,12 @@ function fast_forward ($projectDir, $uploadUUID, $targetDB) {
 
 	if ($result->success !== true) {
 		return negativeResult(
-			$result,
-			"Could not pull changes from upload into database repository.\n"
-			. "Upload UUID: " . $uploadUUID . "\n"
-			. "Database: " . $targetDB
+			'E_FAST_FORWARD',
+			array(
+				basename($projectDir),
+				$uploadUUID,
+				$targetDB
+			)
 		);
 	}
 

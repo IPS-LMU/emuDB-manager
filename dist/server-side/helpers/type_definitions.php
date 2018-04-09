@@ -73,18 +73,16 @@ class BundleListItem
 }
 
 /**
- * Class BundleList
+ * Class BundleListStub
  *
- * Represents one bundle list inside an Emu speech database.
+ * Represents a stub of one bundle list inside an Emu speech database.
  */
-class BundleList
+class BundleListStub
 {
 	/** @var string Username of the editor this bundle list is assigned to */
 	public $name;
 	/** @var string Archive label assigned to this bundle list */
 	public $archiveLabel;
-	/** @var BundleListItem[] The items that make up this bundle list */
-	public $items;
 }
 
 /**
@@ -98,8 +96,8 @@ class Database
 	public $name;
 	/** @var EmuDBConfig Configuration object (as read from the _DBconfig .json) */
 	public $dbConfig;
-	/** @var BundleList[] The bundle lists associated with this database */
-	public $bundleLists;
+	/** @var BundleListStub[] The bundle lists associated with this database */
+	public $bundleListStubs;
 	/** @var Session[] The sessions that make up this database */
 	public $sessions;
 }
@@ -136,19 +134,39 @@ class Result
 	/**
 	 * @var mixed
 	 *
-	 * In case of success: result data
-	 *
-	 * In case of error: Error code (string) or reference to another Result
-	 * object, with the referenced object describing why the error happened
-	 * (this can be chained)
+	 * In case of success: result data.
+	 * In case of error: unset.
 	 */
 	public $data;
 
 	/**
-	 * @var string Human-readable error string, or empty string (in case of
-	 *      success)
+	 * @var EmuError
+	 * Error code (string) or reference to another Result
+	 * object, with the referenced object describing why the error happened
+	 * (this can be chained)
 	 */
-	public $message;
+	public $error;
+}
+
+/**
+ * Class EmuError
+ *
+ * Describes a server-side error to be passed to the client
+ */
+class EmuError {
+	/**
+	 * @var string
+	 *
+	 * Closed-vocabulary error code (currently all defined codes start with E_)
+	 */
+	public $code;
+
+	/**
+	 * @var mixed
+	 * Optional. Can further specify the error, e.g. for E_USER_INPUT,
+	 * specifies the fields in the user input that are bad.
+	 */
+	public $info;
 }
 
 /**
@@ -227,5 +245,5 @@ class Restrictions
 
 class Project {
 	public $name;
-	public $role;
+	public $permission;
 }

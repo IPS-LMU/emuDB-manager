@@ -11,17 +11,16 @@ require_once 'type_definitions.php';
 /**
  * Returns a Result object with success set to false.
  *
- * @param $data {string|Result} A machine-readable string describing the
- *        error, or a reference to another Result object (which describes why
- *        the error happened; this can be chained)
- * @param $humanReadable string A human-readable error message.
+ * @param $code string A closed-vocabulary string describing the error
+ * @param $info mixed Additional info to further specify the error
  * @return Result
  */
-function negativeResult ($data, $humanReadable) {
+function negativeResult ($code, $info = null) {
 	$result = new Result();
 	$result->success = false;
-	$result->data = $data;
-	$result->message = $humanReadable;
+	$result->error = new EmuError();
+	$result->error->code = $code;
+	$result->error->info = $info;
 	return $result;
 }
 
@@ -35,6 +34,5 @@ function positiveResult ($data) {
 	$result = new Result();
 	$result->success = true;
 	$result->data = $data;
-	$result->message = '';
 	return $result;
 }

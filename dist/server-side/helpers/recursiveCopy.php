@@ -12,14 +12,14 @@ function recursiveCopy ($src, $dst) {
 	$dir = opendir($src);
 	if ($dir === false) {
 		return negativeResult(
-			'COPY_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Could not copy bundle'
 		);
 	}
 
 	if (!mkdir($dst)) {
 		return negativeResult(
-			'COPY_FAILED',
+			'E_INTERNAL_SERVER_ERROR',
 			'Could not copy bundle'
 		);
 	}
@@ -34,7 +34,7 @@ function recursiveCopy ($src, $dst) {
 			} else {
 				if (!copy($src . '/' . $file, $dst . '/' . $file)) {
 					return negativeResult(
-						'COPY_FAILED',
+						'E_INTERNAL_SERVER_ERROR',
 						'Could not copy bundle'
 					);
 				}
