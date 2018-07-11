@@ -5,6 +5,8 @@
 $dataDirectory = '/var/emudb-manager-data';
 date_default_timezone_set('Europe/Berlin');
 
+$openIdUserinfoEndpoint = 'https://openid.example.com/userinfo';
+
 //////////
 // Database configuration
 //

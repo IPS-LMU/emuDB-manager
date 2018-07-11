@@ -91,6 +91,7 @@ function connectDatabase() {
 function authorize () {
 	global $dataDirectory;
 	global $dbh;
+    global $openIdUserinfoEndpoint;
 
 	//////////
 	// Look up user ID that belongs to a secret token
@@ -98,18 +99,32 @@ function authorize () {
 	$userID = '';
 
 	if (isset($_POST['secretToken'])) {
-		$stmt = $dbh->prepare("
-			SELECT *
-			FROM authtokens
-			WHERE token = :token AND validuntil > current_timestamp
-		");
+	    $token = $_POST['secretToken'];
 
-		$stmt->bindParam(':token', $_POST['secretToken']);
-		$stmt->execute();
+        if (preg_match('/^[a-zA-Z0-9\-_\.]+$/', $token) !== 1) {
+            die(json_encode(negativeResult(
+                'E_AUTHENTICATION'
+            )));
+        }
 
-		if ($row = $stmt->fetch()) {
-			$userID = $row['userid'];
+		if (function_exists("curl_init")) {
+		    $ch = curl_init();
+		    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	    	curl_setopt($ch, CURLOPT_URL, $openIdUserinfoEndpoint);
+		    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $token));
+		    $userinfo = curl_exec($ch);
+		    curl_close($ch);
+		} else {
+            // This is a fallback, passing the access token as a query parameter if curl is not installed.
+            // As per the Open ID connect spec, "it is RECOMMENDED that the request use the HTTP GET method
+            // and the Access Token be sent using the Authorization header field."
+			$userinfo = file_get_contents($openIdUserinfoEndpoint . "?access_token=" . $token);
 		}
+
+	    if ($userinfo) {
+            $userinfo = json_decode($userinfo);
+            $userID = $userinfo->sub;
+        }
 	} else {
 		// @todo This is where another auth mechanism (independent of our
 		// login app) might be implemented
