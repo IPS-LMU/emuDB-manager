@@ -5,6 +5,7 @@ import {getErrorMessage} from "../core/get-error-message.function";
 import {ManagerAPIService} from "../manager-api.service";
 import {ProjectDataService} from "../project-data.service";
 import {appConfig} from "../app.config";
+import {KeycloakService} from "../keycloak.service";
 
 @Component({
 	selector: 'emudbmanager-welcome',
@@ -27,18 +28,34 @@ export class WelcomeComponent implements OnInit {
 
 	constructor(private managerAPIService: ManagerAPIService,
 	            private projectDataService: ProjectDataService,
-	            private router:Router) {
-		let params = new URLSearchParams(window.location.search);
-		let secretToken = params.get('secretToken');
-		let project = params.get('project');
+	            private router:Router,
+	            private keycloakService: KeycloakService) {
 
-		if (/^[a-zA-Z_0-9-]+$/.test(project)) {
-			this.project = project;
-		}
+		if (appConfig.openIdConnect) {
+			this.keycloakService.init()
+				.success((authenticated) => {
+					this.secretToken = this.keycloakService.getInstance().token;
+					this.checkLogin();
+				})
+				.error(() => {
+					this.loginFailed = true;
+					this.unknownError = true;
+					this.unknownErrorMessage = 'Unknown problem with OpenID Connect';
+					console.log(this.keycloakService.getInstance());
+				});
+		} else {
+			let params = new URLSearchParams(window.location.search);
+			let secretToken = params.get('secretToken');
+			let project = params.get('project');
 
-		if (/^[a-fA-F0-9]+$/.test(secretToken)) {
-			this.secretToken = secretToken;
-			this.checkLogin();
+			if (/^[a-zA-Z_0-9-]+$/.test(project)) {
+				this.project = project;
+			}
+
+			if (/^[a-fA-F0-9]+$/.test(secretToken)) {
+				this.secretToken = secretToken;
+				this.checkLogin();
+			}
 		}
 	}
 

@@ -22,6 +22,7 @@ import {UploadsDashboardComponent} from "./project/uploads-dashboard/uploads-das
 import {EmudbmanagerTableComponent} from "./emudbmanager-table/emudbmanager-table.component";
 import {NgUploaderModule} from "ngx-uploader";
 import {ManagerAPIService} from "./manager-api.service";
+import {KeycloakService} from "./keycloak.service";
 
 @NgModule({
 	declarations: [
@@ -52,7 +53,8 @@ import {ManagerAPIService} from "./manager-api.service";
 	bootstrap: [AppComponent],
 	providers: [
 		ManagerAPIService,
-		ProjectDataService
+		ProjectDataService,
+		KeycloakService
 	]
 })
 export class AppModule {

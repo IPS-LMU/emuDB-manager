@@ -43,7 +43,7 @@ export class ProjectComponent implements OnInit,OnDestroy {
 	}
 
 	public logout():void {
-		if (appConfig.enableLoginForm) {
+		if (appConfig.enableLoginForm || appConfig.openIdConnect.enabled) {
 			this.managerAPIService.forgetAuthentication();
 			this.router.navigate(['/']);
 		} else {
