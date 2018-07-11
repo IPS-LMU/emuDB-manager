@@ -144,7 +144,7 @@ function authorize () {
 			");
 
 			$stmt->bindParam(':projectname', $_POST['project']);
-			$stmt->bindParam(':username', $row['userid']);
+			$stmt->bindParam(':username', $userID);
 			$stmt->execute();
 
 			if ($row = $stmt->fetch()) {
