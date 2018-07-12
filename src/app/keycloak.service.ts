@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {appConfig} from "./app.config";
-import Keycloak = require("keycloak-js");
+import * as Keycloak from "keycloak-js";
 
 @Injectable()
 export class KeycloakService {
