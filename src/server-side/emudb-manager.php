@@ -123,7 +123,7 @@ function authorize () {
 
 	    if ($userinfo) {
             $userinfo = json_decode($userinfo);
-            $userID = $userinfo->sub;
+            $userID = $userinfo->preferred_username;
         }
 	} else {
 		// @todo This is where another auth mechanism (independent of our
