@@ -1,5 +1,15 @@
 # emuDB Manager
 
+## Out of funding
+
+Unfortunately, the EMU-SDMS is currently out of funding.
+
+We at the IPS will do what we can to fix bugs, security issues or necessary adjustments to new versions of R; but we cannot currently work on new features or performance improvements.
+
+We would be very glad if funding in academia allowed for more technical staff to maintain software used by the research community.
+
+## Introduction
+
 The emuDB manager is a part of the [EMU Speech Database Management System](https://ips-lmu.github.io/EMU.html).
 
 The EMU-SDMS is a collection of software tools for the creation, manipulation and analysis of speech databases. At the core of the EMU-SDMS is a database search engine which allows the researcher to find various speech segments based on the sequential and hierarchical structure of the utterances in which they occur.
